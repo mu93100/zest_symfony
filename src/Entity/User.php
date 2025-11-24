@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -64,6 +66,41 @@ class User
 
     #[ORM\Column]
     private ?int $montant_adhesion = null;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?groupe $groupe = null;
+
+    /**
+     * @var Collection<int, recette>
+     */
+    #[ORM\OneToMany(targetEntity: recette::class, mappedBy: 'user')]
+    private Collection $recette;
+
+    /**
+     * @var Collection<int, pole>
+     */
+    #[ORM\ManyToMany(targetEntity: pole::class, inversedBy: 'membres')]
+    private Collection $pole;
+
+    /**
+     * @var Collection<int, ressource>
+     */
+    #[ORM\OneToMany(targetEntity: ressource::class, mappedBy: 'auteurice')]
+    private Collection $ressources;
+
+    /**
+     * @var Collection<int, motivation>
+     */
+    #[ORM\ManyToMany(targetEntity: motivation::class, inversedBy: 'users')]
+    private Collection $motivation;
+
+    public function __construct()
+    {
+        $this->recette = new ArrayCollection();
+        $this->pole = new ArrayCollection();
+        $this->ressources = new ArrayCollection();
+        $this->motivation = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -270,6 +307,126 @@ class User
     public function setMontantAdhesion(int $montant_adhesion): static
     {
         $this->montant_adhesion = $montant_adhesion;
+
+        return $this;
+    }
+
+    public function getGroupe(): ?groupe
+    {
+        return $this->groupe;
+    }
+
+    public function setGroupe(?groupe $groupe): static
+    {
+        $this->groupe = $groupe;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, recette>
+     */
+    public function getRecette(): Collection
+    {
+        return $this->recette;
+    }
+
+    public function addRecette(recette $recette): static
+    {
+        if (!$this->recette->contains($recette)) {
+            $this->recette->add($recette);
+            $recette->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecette(recette $recette): static
+    {
+        if ($this->recette->removeElement($recette)) {
+            // set the owning side to null (unless already changed)
+            if ($recette->getUser() === $this) {
+                $recette->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, pole>
+     */
+    public function getPole(): Collection
+    {
+        return $this->pole;
+    }
+
+    public function addPole(pole $pole): static
+    {
+        if (!$this->pole->contains($pole)) {
+            $this->pole->add($pole);
+        }
+
+        return $this;
+    }
+
+    public function removePole(pole $pole): static
+    {
+        $this->pole->removeElement($pole);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ressource>
+     */
+    public function getRessources(): Collection
+    {
+        return $this->ressources;
+    }
+
+    public function addRessource(ressource $ressource): static
+    {
+        if (!$this->ressources->contains($ressource)) {
+            $this->ressources->add($ressource);
+            $ressource->setAuteurice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRessource(ressource $ressource): static
+    {
+        if ($this->ressources->removeElement($ressource)) {
+            // set the owning side to null (unless already changed)
+            if ($ressource->getAuteurice() === $this) {
+                $ressource->setAuteurice(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, motivation>
+     */
+    public function getMotivation(): Collection
+    {
+        return $this->motivation;
+    }
+
+    public function addMotivation(motivation $motivation): static
+    {
+        if (!$this->motivation->contains($motivation)) {
+            $this->motivation->add($motivation);
+        }
+
+        return $this;
+    }
+
+    public function removeMotivation(motivation $motivation): static
+    {
+        $this->motivation->removeElement($motivation);
 
         return $this;
     }
