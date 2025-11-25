@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProduitRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -22,6 +24,17 @@ class Produit
 
     #[ORM\Column(length: 255)]
     private ?string $photo = null;
+
+    /**
+     * @var Collection<int, Producteur>
+     */
+    #[ORM\ManyToMany(targetEntity: Producteur::class, mappedBy: 'produit')]
+    private Collection $producteurs;
+
+    public function __construct()
+    {
+        $this->producteurs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -60,6 +73,33 @@ class Produit
     public function setPhoto(string $photo): static
     {
         $this->photo = $photo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Producteur>
+     */
+    public function getProducteurs(): Collection
+    {
+        return $this->producteurs;
+    }
+
+    public function addProducteur(Producteur $producteur): static
+    {
+        if (!$this->producteurs->contains($producteur)) {
+            $this->producteurs->add($producteur);
+            $producteur->addProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProducteur(Producteur $producteur): static
+    {
+        if ($this->producteurs->removeElement($producteur)) {
+            $producteur->removeProduit($this);
+        }
 
         return $this;
     }

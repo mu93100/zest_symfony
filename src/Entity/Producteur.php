@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProducteurRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,6 +36,17 @@ class Producteur
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
+
+    /**
+     * @var Collection<int, produit>
+     */
+    #[ORM\ManyToMany(targetEntity: produit::class, inversedBy: 'producteurs')]
+    private Collection $produit;
+
+    public function __construct()
+    {
+        $this->produit = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +133,30 @@ class Producteur
     public function setDescription(string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, produit>
+     */
+    public function getProduit(): Collection
+    {
+        return $this->produit;
+    }
+
+    public function addProduit(produit $produit): static
+    {
+        if (!$this->produit->contains($produit)) {
+            $this->produit->add($produit);
+        }
+
+        return $this;
+    }
+
+    public function removeProduit(produit $produit): static
+    {
+        $this->produit->removeElement($produit);
 
         return $this;
     }

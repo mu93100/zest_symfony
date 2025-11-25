@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RecetteRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -35,6 +37,17 @@ class Recette
     #[ORM\ManyToOne(inversedBy: 'recette')]
     private ?User $user = null;
 
+    /**
+     * @var Collection<int, produit>
+     */
+    #[ORM\ManyToMany(targetEntity: produit::class)]
+    private Collection $produit;
+
+    public function __construct()
+    {
+        $this->produit = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -48,6 +61,7 @@ class Recette
     public function setDatePublication(\DateTime $date_publication): static
     {
         $this->date_publication = $date_publication;
+
 
         return $this;
     }
@@ -120,6 +134,30 @@ class Recette
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, produit>
+     */
+    public function getProduit(): Collection
+    {
+        return $this->produit;
+    }
+
+    public function addProduit(produit $produit): static
+    {
+        if (!$this->produit->contains($produit)) {
+            $this->produit->add($produit);
+        }
+
+        return $this;
+    }
+
+    public function removeProduit(produit $produit): static
+    {
+        $this->produit->removeElement($produit);
 
         return $this;
     }
