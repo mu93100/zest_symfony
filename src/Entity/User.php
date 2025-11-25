@@ -3,18 +3,30 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\Column(length: 180)]
+    private ?string $email = null;
+
+    /** * @var list<string> The user roles */
+    #[ORM\Column]
+    private array $roles = [];
+
+    /** * @var string The hashed password */
+    #[ORM\Column]
+    private ?string $password = null;
 
     #[ORM\Column(length: 45)]
     private ?string $nom = null;
@@ -22,19 +34,13 @@ class User
     #[ORM\Column(length: 45)]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 180)]
-    private ?string $email = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $mot_de_passe = null;
-
     #[ORM\Column]
     private ?bool $is_admin = null;
 
     #[ORM\Column]
     private ?int $telephone = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $adresse = null;
 
     #[ORM\Column]
@@ -61,50 +67,91 @@ class User
     #[ORM\Column]
     private ?int $participation_dispo = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $competences = null;
 
     #[ORM\Column]
     private ?int $montant_adhesion = null;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?groupe $groupe = null;
-
-    /**
-     * @var Collection<int, recette>
-     */
-    #[ORM\OneToMany(targetEntity: recette::class, mappedBy: 'user')]
-    private Collection $recette;
-
-    /**
-     * @var Collection<int, pole>
-     */
-    #[ORM\ManyToMany(targetEntity: pole::class, inversedBy: 'membres')]
-    private Collection $pole;
-
-    /**
-     * @var Collection<int, ressource>
-     */
-    #[ORM\OneToMany(targetEntity: ressource::class, mappedBy: 'auteurice')]
-    private Collection $ressources;
-
-    /**
-     * @var Collection<int, motivation>
-     */
-    #[ORM\ManyToMany(targetEntity: motivation::class, inversedBy: 'users')]
-    private Collection $motivation;
-
-    public function __construct()
-    {
-        $this->recette = new ArrayCollection();
-        $this->pole = new ArrayCollection();
-        $this->ressources = new ArrayCollection();
-        $this->motivation = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
+     */
+    public function __serialize(): array
+    {
+        $data = (array) $this;
+        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+
+        return $data;
+    }
+
+    #[\Deprecated]
+    public function eraseCredentials(): void
+    {
+        // @deprecated, to be removed when upgrading to Symfony 8
     }
 
     public function getNom(): ?string
@@ -127,30 +174,6 @@ class User
     public function setPrenom(string $prenom): static
     {
         $this->prenom = $prenom;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function getMotDePasse(): ?string
-    {
-        return $this->mot_de_passe;
-    }
-
-    public function setMotDePasse(string $mot_de_passe): static
-    {
-        $this->mot_de_passe = $mot_de_passe;
 
         return $this;
     }
@@ -184,7 +207,7 @@ class User
         return $this->adresse;
     }
 
-    public function setAdresse(string $adresse): static
+    public function setAdresse(?string $adresse): static
     {
         $this->adresse = $adresse;
 
@@ -292,7 +315,7 @@ class User
         return $this->competences;
     }
 
-    public function setCompetences(?string $competences): static
+    public function setCompetences(string $competences): static
     {
         $this->competences = $competences;
 
@@ -307,126 +330,6 @@ class User
     public function setMontantAdhesion(int $montant_adhesion): static
     {
         $this->montant_adhesion = $montant_adhesion;
-
-        return $this;
-    }
-
-    public function getGroupe(): ?groupe
-    {
-        return $this->groupe;
-    }
-
-    public function setGroupe(?groupe $groupe): static
-    {
-        $this->groupe = $groupe;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, recette>
-     */
-    public function getRecette(): Collection
-    {
-        return $this->recette;
-    }
-
-    public function addRecette(recette $recette): static
-    {
-        if (!$this->recette->contains($recette)) {
-            $this->recette->add($recette);
-            $recette->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRecette(recette $recette): static
-    {
-        if ($this->recette->removeElement($recette)) {
-            // set the owning side to null (unless already changed)
-            if ($recette->getUser() === $this) {
-                $recette->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, pole>
-     */
-    public function getPole(): Collection
-    {
-        return $this->pole;
-    }
-
-    public function addPole(pole $pole): static
-    {
-        if (!$this->pole->contains($pole)) {
-            $this->pole->add($pole);
-        }
-
-        return $this;
-    }
-
-    public function removePole(pole $pole): static
-    {
-        $this->pole->removeElement($pole);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ressource>
-     */
-    public function getRessources(): Collection
-    {
-        return $this->ressources;
-    }
-
-    public function addRessource(ressource $ressource): static
-    {
-        if (!$this->ressources->contains($ressource)) {
-            $this->ressources->add($ressource);
-            $ressource->setAuteurice($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRessource(ressource $ressource): static
-    {
-        if ($this->ressources->removeElement($ressource)) {
-            // set the owning side to null (unless already changed)
-            if ($ressource->getAuteurice() === $this) {
-                $ressource->setAuteurice(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, motivation>
-     */
-    public function getMotivation(): Collection
-    {
-        return $this->motivation;
-    }
-
-    public function addMotivation(motivation $motivation): static
-    {
-        if (!$this->motivation->contains($motivation)) {
-            $this->motivation->add($motivation);
-        }
-
-        return $this;
-    }
-
-    public function removeMotivation(motivation $motivation): static
-    {
-        $this->motivation->removeElement($motivation);
 
         return $this;
     }
