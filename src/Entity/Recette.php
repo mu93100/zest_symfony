@@ -34,14 +34,18 @@ class Recette
     #[ORM\Column(length: 255)]
     private ?string $photo = null;
 
-    #[ORM\ManyToOne(inversedBy: 'recette')]
-    private ?User $user = null;
+    // #[ORM\ManyToOne(inversedBy: 'recette')]
+    // private ?User $user = null;
 
     /**
      * @var Collection<int, produit>
      */
     #[ORM\ManyToMany(targetEntity: produit::class)]
     private Collection $produit;
+
+    #[ORM\ManyToOne(inversedBy: 'recette')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $auteurice = null;
 
     public function __construct()
     {
@@ -126,17 +130,17 @@ class Recette
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
+    // public function getUser(): ?User
+    // {
+    //     return $this->user;
+    // }
 
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
+    // public function setUser(?User $user): static
+    // {
+    //     $this->user = $user;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, produit>
@@ -158,6 +162,18 @@ class Recette
     public function removeProduit(produit $produit): static
     {
         $this->produit->removeElement($produit);
+
+        return $this;
+    }
+
+    public function getAuteurice(): ?User
+    {
+        return $this->auteurice;
+    }
+
+    public function setAuteurice(?User $auteurice): static
+    {
+        $this->auteurice = $auteurice;
 
         return $this;
     }

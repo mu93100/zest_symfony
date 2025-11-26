@@ -87,12 +87,29 @@ CREATION BDD + entité (= table/ symfo nous demande de édfinir les champs en au
 QUAND on revient à Add another property? = on revient à l'entity à laquelle on voulait ajouter une FK
 (si on met ttes les FK à la fin : on refait php bin/console make:entity ((POUR CREATE ou UPDATE)))
 
+FK / relation unidirectionnelle (1FK enfant ds table parent) OU bidirectionnelle (1FK dans chaque table = )
+Pour**Do you want to activate orphanRemoval on your relationship?** => NO si on veut pouvoir modifier et updater. sinon SYMFONY SUPPRIME DES ENTREES
+
+- OneToMany / ManyToOne : une seule FK côté "Many".
+- ManyToMany : là oui, une table de jointure est créée avec deux FK (une vers chaque table).
+- orphanRemoval : ne change pas le nombre de FK, mais la façon dont Doctrine gère la suppression des entités liées.
+
+changerA User is "orphaned" when it is removed from its related montantAdhesion. e.g. $montantAdhesion->removeUser($user) NOTE: If a User may *change* from one montantAdhesion to another, answer "no". Do you want to automatically delete orphaned App\Entity\User objects (orphanRemoval)? (yes/no) [no]:
+
 si **php bin/console doctrine:schema:validate ne marche pas** = verif ds phpMyAdmin > ds opérations (en Ht à Dte) si moteur de stockage est en InnoDB et non pas MyISAM > remettre tout en InnoDB et
 >php bin/console doctrine:schema:update --force
 >php bin/console doctrine:schema:validate
 
 les entités sont créées /src/entity/User.php ... ETC
 + ça a créé des repo /src/repository/UserRepository.php ... ETC
+
+pour updater quand on a modifié des tables (en prenant en compte la dernière migration)
+php bin/console doctrine:migrations:version --add <numéro_de_version>
+OU forcer Doctrine à aligner directement la base sur tes entités :
+php bin/console doctrine:schema:update --force
+OU pour voir les requêtes sans les exécuter :
+php bin/console doctrine:schema:update --dump-sql
+⚠️ Attention : cette méthode peut supprimer ou modifier des colonnes sans garde-fou → risque de perte de données. Elle est utile en phase de développement, mais pas en production.
 
 on crée les controlleurs
 =======================

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CategorieRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategorieRepository::class)]
@@ -16,8 +18,13 @@ class Categorie
     #[ORM\Column(length: 100)]
     private ?string $nom = null;
 
-    #[ORM\Column]
-    private ?int $parent_id = null;
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Ressource::class)]
+    private Collection $ressources;
+
+    public function __construct()
+    {
+        $this->ressources = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -36,15 +43,30 @@ class Categorie
         return $this;
     }
 
-    public function getParentId(): ?int
+    /**
+     * @return Collection<int, Ressource>
+     */
+    public function getRessources(): Collection
     {
-        return $this->parent_id;
+        return $this->ressources;
     }
 
-    public function setParentId(int $parent_id): static
+    public function addRessource(Ressource $ressource): static
     {
-        $this->parent_id = $parent_id;
+        if (!$this->ressources->contains($ressource)) {
+            $this->ressources->add($ressource);
+            $ressource->setCategorie($this);
+        }
+        return $this;
+    }
 
+    public function removeRessource(Ressource $ressource): static
+    {
+        if ($this->ressources->removeElement($ressource)) {
+            if ($ressource->getCategorie() === $this) {
+                $ressource->setCategorie(null);
+            }
+        }
         return $this;
     }
 }

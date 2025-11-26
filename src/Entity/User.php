@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -64,14 +66,55 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $motivations_attentes = null;
 
-    #[ORM\Column]
-    private ?int $participation_dispo = null;
+    // #[ORM\Column]
+    // private ?int $participation_dispo = null; 
+    // PAS FK
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $competences = null;
 
-    #[ORM\Column]
-    private ?int $montant_adhesion = null;
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?adhesion $adhesion = null;
+
+    #[ORM\ManyToOne(inversedBy: 'membres')]
+    private ?groupe $groupe = null;
+
+    /**
+     * @var Collection<int, recette>
+     */
+    #[ORM\OneToMany(targetEntity: recette::class, mappedBy: 'auteurice')]
+    private Collection $recette;
+
+    /**
+     * @var Collection<int, pole>
+     */
+    #[ORM\ManyToMany(targetEntity: pole::class, inversedBy: 'users')]
+    private Collection $pole;
+
+    /**
+     * @var Collection<int, ressource>
+     */
+    #[ORM\OneToMany(targetEntity: ressource::class, mappedBy: 'auteurice')]
+    private Collection $ressource;
+
+    /**
+     * @var Collection<int, motivation>
+     */
+    #[ORM\ManyToMany(targetEntity: motivation::class, inversedBy: 'user_motiv')]
+    private Collection $motivation;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?participationDispo $participationDispo = null;
+
+    public function __construct()
+    {
+        $this->recette = new ArrayCollection();
+        $this->pole = new ArrayCollection();
+        $this->ressource = new ArrayCollection();
+        $this->motivation = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -298,17 +341,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getParticipationDispo(): ?int
-    {
-        return $this->participation_dispo;
-    }
+    // public function getParticipationDispo(): ?int
+    // {
+    //     return $this->participation_dispo;
+    // }
 
-    public function setParticipationDispo(int $participation_dispo): static
-    {
-        $this->participation_dispo = $participation_dispo;
+    // public function setParticipationDispo(int $participation_dispo): static
+    // {
+    //     $this->participation_dispo = $participation_dispo;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getCompetences(): ?string
     {
@@ -322,14 +365,146 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getMontantAdhesion(): ?int
+    public function getAdhesion(): ?adhesion
     {
-        return $this->montant_adhesion;
+        return $this->adhesion;
     }
 
-    public function setMontantAdhesion(int $montant_adhesion): static
+    public function setAdhesion(?adhesion $adhesion): static
     {
-        $this->montant_adhesion = $montant_adhesion;
+        $this->adhesion = $adhesion;
+
+        return $this;
+    }
+
+    public function getGroupe(): ?groupe
+    {
+        return $this->groupe;
+    }
+
+    public function setGroupe(?groupe $groupe): static
+    {
+        $this->groupe = $groupe;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, recette>
+     */
+    public function getRecette(): Collection
+    {
+        return $this->recette;
+    }
+
+    public function addRecette(recette $recette): static
+    {
+        if (!$this->recette->contains($recette)) {
+            $this->recette->add($recette);
+            $recette->setAuteurice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecette(recette $recette): static
+    {
+        if ($this->recette->removeElement($recette)) {
+            // set the owning side to null (unless already changed)
+            if ($recette->getAuteurice() === $this) {
+                $recette->setAuteurice(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, pole>
+     */
+    public function getPole(): Collection
+    {
+        return $this->pole;
+    }
+
+    public function addPole(pole $pole): static
+    {
+        if (!$this->pole->contains($pole)) {
+            $this->pole->add($pole);
+        }
+
+        return $this;
+    }
+
+    public function removePole(pole $pole): static
+    {
+        $this->pole->removeElement($pole);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ressource>
+     */
+    public function getRessource(): Collection
+    {
+        return $this->ressource;
+    }
+
+    public function addRessource(ressource $ressource): static
+    {
+        if (!$this->ressource->contains($ressource)) {
+            $this->ressource->add($ressource);
+            $ressource->setAuteurice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRessource(ressource $ressource): static
+    {
+        if ($this->ressource->removeElement($ressource)) {
+            // set the owning side to null (unless already changed)
+            if ($ressource->getAuteurice() === $this) {
+                $ressource->setAuteurice(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, motivation>
+     */
+    public function getMotivation(): Collection
+    {
+        return $this->motivation;
+    }
+
+    public function addMotivation(motivation $motivation): static
+    {
+        if (!$this->motivation->contains($motivation)) {
+            $this->motivation->add($motivation);
+        }
+
+        return $this;
+    }
+
+    public function removeMotivation(motivation $motivation): static
+    {
+        $this->motivation->removeElement($motivation);
+
+        return $this;
+    }
+
+    public function getParticipationDispo(): ?participationDispo
+    {
+        return $this->participationDispo;
+    }
+
+    public function setParticipationDispo(?participationDispo $participationDispo): static
+    {
+        $this->participationDispo = $participationDispo;
 
         return $this;
     }

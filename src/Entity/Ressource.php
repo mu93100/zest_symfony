@@ -34,9 +34,6 @@ class Ressource
     #[ORM\Column(length: 255)]
     private ?string $photos_supp = null;
 
-    #[ORM\ManyToOne(inversedBy: 'ressources')]
-    private ?User $auteurice = null;
-
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?categorie $categorie = null;
@@ -49,6 +46,10 @@ class Ressource
 
     #[ORM\ManyToOne]
     private ?pole $pole = null;
+
+    #[ORM\ManyToOne(inversedBy: 'ressource')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $auteurice = null;
 
     public function __construct()
     {
@@ -132,17 +133,6 @@ class Ressource
         return $this;
     }
 
-    public function getAuteurice(): ?User
-    {
-        return $this->auteurice;
-    }
-
-    public function setAuteurice(?User $auteurice): static
-    {
-        $this->auteurice = $auteurice;
-
-        return $this;
-    }
 
     public function getCategorie(): ?categorie
     {
@@ -188,6 +178,18 @@ class Ressource
     public function setPole(?pole $pole): static
     {
         $this->pole = $pole;
+
+        return $this;
+    }
+
+    public function getAuteurice(): ?User
+    {
+        return $this->auteurice;
+    }
+
+    public function setAuteurice(?User $auteurice): static
+    {
+        $this->auteurice = $auteurice;
 
         return $this;
     }

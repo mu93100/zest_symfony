@@ -32,12 +32,14 @@ class Pole
      * @var Collection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'pole')]
-    private Collection $membres;
+    private Collection $users;
 
     public function __construct()
     {
-        $this->membres = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
+
+    
 
     public function getId(): ?int
     {
@@ -95,25 +97,25 @@ class Pole
     /**
      * @return Collection<int, User>
      */
-    public function getMembres(): Collection
+    public function getUsers(): Collection
     {
-        return $this->membres;
+        return $this->users;
     }
 
-    public function addMembre(User $membre): static
+    public function addUser(User $user): static
     {
-        if (!$this->membres->contains($membre)) {
-            $this->membres->add($membre);
-            $membre->addPole($this);
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addPole($this);
         }
 
         return $this;
     }
 
-    public function removeMembre(User $membre): static
+    public function removeUser(User $user): static
     {
-        if ($this->membres->removeElement($membre)) {
-            $membre->removePole($this);
+        if ($this->users->removeElement($user)) {
+            $user->removePole($this);
         }
 
         return $this;

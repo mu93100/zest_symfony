@@ -31,11 +31,11 @@ class Groupe
      * @var Collection<int, User>
      */
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'groupe')]
-    private Collection $users;
+    private Collection $membres;
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+        $this->membres = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -91,30 +91,31 @@ class Groupe
         return $this;
     }
 
+
     /**
      * @return Collection<int, User>
      */
-    public function getUsers(): Collection
+    public function getMembres(): Collection
     {
-        return $this->users;
+        return $this->membres;
     }
 
-    public function addUser(User $user): static
+    public function addMembre(User $membre): static
     {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->setGroupe($this);
+        if (!$this->membres->contains($membre)) {
+            $this->membres->add($membre);
+            $membre->setGroupe($this);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): static
+    public function removeMembre(User $membre): static
     {
-        if ($this->users->removeElement($user)) {
+        if ($this->membres->removeElement($membre)) {
             // set the owning side to null (unless already changed)
-            if ($user->getGroupe() === $this) {
-                $user->setGroupe(null);
+            if ($membre->getGroupe() === $this) {
+                $membre->setGroupe(null);
             }
         }
 
