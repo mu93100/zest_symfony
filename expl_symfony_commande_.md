@@ -118,326 +118,158 @@ CONSOLE SYMFONY
 
 =======================
 
-
-
-Afficher toutes les commandes dispo ds symfo:
-
+**Afficher toutes les commandes dispo ds symfo:**
 php bin/console
 
 
 
-Lister les routes /Tu verras les chemins, les noms de routes, les contrôleurs associés, etc.
-
+**Lister les routes /Tu verras les chemins, les noms de routes, les contrôleurs associés, etc.**
 Idéal pour vérifier que tes routes sont bien configurées :
-
 php bin/console debug:router
 
 
 
-Lister les services :
-
+**Lister les services :**
 php bin/console debug:container
 
 (((Le conteneur de dépendances (aussi appelé service container) est un élément central dans Symfony. C’est lui qui gère tous les objets et services dont ton application a besoin pour fonctionner.
-
 Le conteneur de dépendances est comme un super gestionnaire d’objets. Il crée, configure et fournit les bons objets (services) au bon moment, sans que tu aies à les instancier toi-même.
 
 🔧 Exemple concret :
-
 Imaginons que tu as besoin d’envoyer un email. Tu pourrais créer manuellement un objet Mailer, mais Symfony peut le faire pour toi :
 
 php
-
 public function \_\_construct(MailerInterface $mailer)
-
 {
-
 &nbsp;   $this->mailer = $mailer;
-
 }
 
 ➡️ Ici, Symfony injecte automatiquement le service MailerInterface dans ton contrôleur grâce au conteneur.
 
 📦 Que contient ce conteneur ?
-
 \- Des services Symfony (comme le routeur, le cache, le mailer…)
-
 \- Tes propres services (ceux que tu crées dans /src/Service)
-
 \- Des services de bundles externes
-
-
 
 Tu peux les explorer avec : bash --> php bin/console debug:container
 
 🧩 Pourquoi c’est utile ?
-
 \- Gain de temps : pas besoin de créer manuellement chaque objet.
-
 \- Modularité : tu peux facilement remplacer un service par un autre.
-
 \- Testabilité : tu peux injecter des versions simulées (mock) de tes services.
 
-
-
-Vider le cache :
-
+**Vider le cache :**
 php bin/console cache:clear
-
 Utilisation : Pour vider le cache de Symfony (routes, services, templates compilés…).
-
 À faire après une modification importante de config ou en cas de bug étrange.
 
-
-
 Voir la version de Symfony : ((Utile pour vérifier la compatibilité avec des bundles ou des fonctionnalités.))
-
 php bin/console --version
 
-
-
-
-
 =======================
-
 GÉNÉRATION DE CODE
-
 =======================
-
-
-
-Créer un contrôleur :
-
+**Créer un contrôleur :**
 php bin/console make:controller NomController
 
+**Créer un utilisateur : MU  !!! CREER UNE TABLE USER AVEC ROLE ET password\_hashers +++ pour pouvoir créer le form de LOGIN)**
+php bin/console make:user
 
-
-Créer une entité (produits):
-
+**Créer une entité (produits)**:
 php bin/console make:entity
 
-
-
-Créer une migration :
-
+**Créer une migration :**
 php bin/console make:migration
 
-
-
-Appliquer une migration :
-
+**Appliquer une migration :**
 php bin/console doctrine:migrations:migrate
 
-
-
-Créer un formulaire :
-
+**Créer un formulaire :**
 php bin/console make:form NomType
 
-
-
-Créer un système d’auth :
-
+**Créer un système d’auth :**
 php bin/console make:auth
 
-
-
-Créer un utilisateur : MU  !!! CREER UNE TABLE USER AVEC ROLE ET password\_hashers +++ pour pouvoir créer le form de LOGIN)
-
-
-
-php bin/console make:user
-
-
-
-Créer une interface CRUD :
-
+**Créer une interface CRUD :**
 php bin/console make:crud Nom
 
-
-
-
-
 =======================
-
 DOCTRINE
-
 =======================
-
-
-
-Créer la base de données :
-
+**Créer la base de données :**
 php bin/console doctrine:database:create
 
-
-
-Voir les entités :
-
+**Voir les entités :**
 php bin/console doctrine:mapping:info
 
-
-
-Mise à jour schéma (à éviter en prod) :
-
+**Mise à jour schéma (à éviter en prod) :**
 php bin/console doctrine:schema:update --force
 
-
-
-Exécuter une requête SQL :
-
+**Exécuter une requête SQL :**
 php bin/console doctrine:query:sql 'SELECT \* FROM user'
 
-
-
-Drop la base (⚠️ destructif) :
-
+**Drop la base (⚠️ destructif) :**
 php bin/console doctrine:database:drop --force
 
-
-
-
-
 =======================
-
 SÉCURITÉ
-
 =======================
-
-
-
-Créer un authenticator :
-
+**Créer un authenticator :**
 php bin/console make:auth
 
-
-
-Créer un utilisateur :
-
+**Créer un utilisateur :**
 php bin/console make:user
 
-
-
-Créer un contrôleur de login :
-
+**Créer un contrôleur de login :**
 php bin/console make:controller SecurityController
 
-
-
-
-
 =======================
-
 DIVERS \& DEBUG
-
 =======================
-
-
-
-Créer un service :
-
+**Créer un service :**
 Créer un fichier dans src/Service/ et Symfony le détecte automatiquement
 
-
-
-Lister les commandes disponibles :
-
+**Lister les commandes disponibles :**
 php bin/console list
 
-
-
-Voir la config d’un service :
-
+**Voir la config d’un service :**
 php bin/console debug:container App\\Service\\TonService
 
-
-
-Voir les routes :
-
+**Voir les routes :**
 php bin/console debug:router
 
-
-
-Tester la BDD :
-
+**Tester la BDD :**
 php bin/console doctrine:query:sql 'SELECT NOW()'
 
-
-
 ------------------------------------------------------------------------
-
 BUNDLES
-
 config/bundles.php : des bundles s'ajoutent automatiquement ++ on peut en rajouter d'autres
-
-
-
 https://packagist.org
-
 https://symfony.com/bundles
-
-
 
 Les bundles dans Symfony sont comme des extensions ou des modules que tu peux ajouter à ton application pour lui donner de nouvelles fonctionnalités, sans tout coder toi-même. C’est un peu comme des plugins dans WordPress ou des apps sur ton téléphone 📱.
 
-
-
 🧩 Définition simple :
-
 Un bundle est un paquet de code réutilisable qui peut contenir :
-
-
-
 Des contrôleurs
-
-
-
 Des services
-
-
-
 Des templates
-
-
-
 Des configurations
-
-
-
 Des assets (CSS, JS…)
 
-
-
 🛠️ Pourquoi utiliser des bundles ?
-
 Pour gagner du temps : tu n’as pas besoin de tout développer toi-même.
-
-
-
 Pour ajouter des fonctionnalités rapidement (ex : sécurité, formulaire, API, etc.).
-
-
-
 Pour organiser ton code de manière modulaire et propre.
 
-
-
 📦 Exemples de bundles populaires :
-
 Bundle			Fonction principale
-
 -----------------------------------------------------------------------------
-
 DoctrineBundle		Intégration de Doctrine ORM (base de données)
-
 TwigBundle		Moteur de templates Twig
-
 SecurityBundle		Gestion des utilisateurs, rôles, authentification
-
 MakerBundle		Génération automatique de code (entités, contrôleurs…)
-
 ApiPlatformBundle	Création d’API REST et GraphQL
-
 DebugBundle		Outils de debug pendant le développement
 
 

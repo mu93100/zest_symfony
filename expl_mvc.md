@@ -90,3 +90,11 @@ Il appelle le Model (RecetteRepository) pour récupérer la recette en base.
 Il transmet les données à la View (show.html.twig).
 
 La vue est rendue en HTML et envoyée au navigateur.
+
+-----------------------------------
+🧩 Rôle dans le modèle MVC
+Model (Entity/Repository) → gère les données (tables, relations Doctrine).
+
+View (Twig templates) → gère l’affichage (HTML, CSS, design).
+
+Controller → gère la logique métier et les routes. Exemple : quand un utilisateur tape /recette/42, le controller va chercher la recette n°42 et l’envoyer à Twig pour l’afficher.

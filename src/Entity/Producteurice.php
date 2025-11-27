@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\ProducteurRepository;
+use App\Repository\ProducteuriceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ProducteurRepository::class)]
-class Producteur
+#[ORM\Entity(repositoryClass: ProducteuriceRepository::class)]
+class Producteurice
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -40,7 +40,7 @@ class Producteur
     /**
      * @var Collection<int, produit>
      */
-    #[ORM\ManyToMany(targetEntity: produit::class, inversedBy: 'producteurs')]
+    #[ORM\ManyToMany(targetEntity: produit::class, inversedBy: 'producteurices')]
     private Collection $produit;
 
     public function __construct()
