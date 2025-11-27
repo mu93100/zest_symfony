@@ -26,14 +26,14 @@ class Produit
     private ?string $photo = null;
 
     /**
-     * @var Collection<int, Producteur>
+     * @var Collection<int, Producteurice>
      */
-    #[ORM\ManyToMany(targetEntity: Producteur::class, mappedBy: 'produit')]
-    private Collection $producteurs;
+    #[ORM\ManyToMany(targetEntity: Producteurice::class, mappedBy: 'produit')]
+    private Collection $producteurices;
 
     public function __construct()
     {
-        $this->producteurs = new ArrayCollection();
+        $this->producteurices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -78,27 +78,27 @@ class Produit
     }
 
     /**
-     * @return Collection<int, Producteur>
+     * @return Collection<int, Producteurice>
      */
-    public function getProducteurs(): Collection
+    public function getProducteurices(): Collection
     {
-        return $this->producteurs;
+        return $this->producteurices;
     }
 
-    public function addProducteur(Producteur $producteur): static
+    public function addProducteurice(Producteurice $producteurice): static
     {
-        if (!$this->producteurs->contains($producteur)) {
-            $this->producteurs->add($producteur);
-            $producteur->addProduit($this);
+        if (!$this->producteurices->contains($producteurice)) {
+            $this->producteurices->add($producteurice);
+            $producteurice->addProduit($this);
         }
 
         return $this;
     }
 
-    public function removeProducteur(Producteur $producteur): static
+    public function removeProducteurice(Producteurice $producteurice): static
     {
-        if ($this->producteurs->removeElement($producteur)) {
-            $producteur->removeProduit($this);
+        if ($this->producteurices->removeElement($producteurice)) {
+            $producteurice->removeProduit($this);
         }
 
         return $this;

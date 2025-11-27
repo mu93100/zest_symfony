@@ -214,8 +214,21 @@ php bin/console doctrine:database:drop --force
 =======================
 SÉCURITÉ
 =======================
-**Créer un authenticator :**
+**Créer un authenticator :** 
 php bin/console make:auth
+=> Cette commande génère :
+Un SecurityController avec les routes de login/logout.
+Les fichiers Twig pour le formulaire de connexion.
+La configuration de sécurité dans security.yaml.
+⚡ Donc : connexion = make:auth (et pas un contrôleur classique).
+
+**créer reset password**
+php bin/console make:reset-password
+👉 Cette commande génère :
+Un ResetPasswordController.
+Les formulaires et services nécessaires pour envoyer un lien de réinitialisation par email.
+Les vues Twig pour saisir un nouveau mot de passe.
+⚡ Donc : réinitialisation MDP = make:reset-password (et pas un contrôleur classique).
 
 **Créer un utilisateur :**
 php bin/console make:user
@@ -241,8 +254,10 @@ php bin/console debug:router
 **Tester la BDD :**
 php bin/console doctrine:query:sql 'SELECT NOW()'
 
-------------------------------------------------------------------------
+-------------------------------------------------------------
+=======================
 BUNDLES
+=======================
 config/bundles.php : des bundles s'ajoutent automatiquement ++ on peut en rajouter d'autres
 https://packagist.org
 https://symfony.com/bundles

@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\Producteur;
+use App\Entity\Producteurice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Producteur>
+ * @extends ServiceEntityRepository<Producteurice>
  */
-class ProducteurRepository extends ServiceEntityRepository
+class ProducteuriceRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Producteur::class);
+        parent::__construct($registry, Producteurice::class);
     }
 
 //    /**
-//     * @return Producteur[] Returns an array of Producteur objects
+//     * @return Producteurice[] Returns an array of Producteurice objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -31,7 +31,7 @@ class ProducteurRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Producteur
+//    public function findOneBySomeField($value): ?Producteurice
 //    {
 //        return $this->createQueryBuilder('p')
 //            ->andWhere('p.exampleField = :val')
