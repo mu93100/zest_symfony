@@ -79,7 +79,7 @@ class Groupe
         return $this;
     }
 
-    public function isGroupeOpen(): ?bool
+    public function isGroupeOpen(): ?bool 
     {
         return $this->is_groupe_open;
     }

@@ -48,6 +48,9 @@ class Ressource
     #[ORM\OneToMany(targetEntity: Photos::class, mappedBy: 'photos_supp')]
     private Collection $photos_supp;
 
+    #[ORM\Column]
+    private ?bool $is_publication = null;
+
     public function __construct()
     {
         $this->photos_supp = new ArrayCollection();
@@ -180,6 +183,18 @@ class Ressource
                 $photosSupp->setPhotosSupp(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isPublication(): ?bool
+    {
+        return $this->is_publication;
+    }
+
+    public function setIsPublication(bool $is_publication): static
+    {
+        $this->is_publication = $is_publication;
 
         return $this;
     }
