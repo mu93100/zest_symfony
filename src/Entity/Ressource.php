@@ -28,32 +28,29 @@ class Ressource
     #[ORM\Column(type: Types::TEXT)]
     private ?string $ressource_texte = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $photo = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $photos_supp = null;
-
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?categorie $categorie = null;
+    private ?Categorie $categorie = null;
 
-    /**
-     * @var Collection<int, photos>
-     */
-    #[ORM\ManyToMany(targetEntity: photos::class, inversedBy: 'ressources')]
-    private Collection $photos;
 
     #[ORM\ManyToOne]
-    private ?pole $pole = null;
+    private ?Pole $pole = null;
 
     #[ORM\ManyToOne(inversedBy: 'ressource')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $auteurice = null;
+    private ?User $user = null;
+
+    #[ORM\OneToOne(inversedBy: 'photo_principale', cascade: ['persist', 'remove'])]
+    private ?Photos $photo_principale = null;
+
+    /**
+     * @var Collection<int, Photos>
+     */
+    #[ORM\OneToMany(targetEntity: Photos::class, mappedBy: 'photos_supp')]
+    private Collection $photos_supp;
 
     public function __construct()
     {
-        $this->photos = new ArrayCollection();
+        $this->photos_supp = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -109,87 +106,80 @@ class Ressource
         return $this;
     }
 
-    public function getPhoto(): ?string
-    {
-        return $this->photo;
-    }
-
-    public function setPhoto(string $photo): static
-    {
-        $this->photo = $photo;
-
-        return $this;
-    }
-
-    public function getPhotosSupp(): ?string
-    {
-        return $this->photos_supp;
-    }
-
-    public function setPhotosSupp(string $photos_supp): static
-    {
-        $this->photos_supp = $photos_supp;
-
-        return $this;
-    }
-
-
-    public function getCategorie(): ?categorie
+    public function getCategorie(): ?Categorie
     {
         return $this->categorie;
     }
 
-    public function setCategorie(?categorie $categorie): static
+    public function setCategorie(?Categorie $categorie): static
     {
         $this->categorie = $categorie;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, photos>
-     */
-    public function getPhotos(): Collection
-    {
-        return $this->photos;
-    }
-
-    public function addPhoto(photos $photo): static
-    {
-        if (!$this->photos->contains($photo)) {
-            $this->photos->add($photo);
-        }
-
-        return $this;
-    }
-
-    public function removePhoto(photos $photo): static
-    {
-        $this->photos->removeElement($photo);
-
-        return $this;
-    }
-
-    public function getPole(): ?pole
+    public function getPole(): ?Pole
     {
         return $this->pole;
     }
 
-    public function setPole(?pole $pole): static
+    public function setPole(?Pole $pole): static
     {
         $this->pole = $pole;
 
         return $this;
     }
 
-    public function getAuteurice(): ?User
+    public function getUser(): ?User
     {
-        return $this->auteurice;
+        return $this->user;
     }
 
-    public function setAuteurice(?User $auteurice): static
+    public function setUser(?User $user): static
     {
-        $this->auteurice = $auteurice;
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getPhotoPrincipale(): ?Photos
+    {
+        return $this->photo_principale;
+    }
+
+    public function setPhotoPrincipale(?Photos $photo_principale): static
+    {
+        $this->photo_principale = $photo_principale;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Photos>
+     */
+    public function getPhotosSupp(): Collection
+    {
+        return $this->photos_supp;
+    }
+
+    public function addPhotosSupp(Photos $photosSupp): static
+    {
+        if (!$this->photos_supp->contains($photosSupp)) {
+            $this->photos_supp->add($photosSupp);
+            $photosSupp->setPhotosSupp($this);
+        }
+
+        return $this;
+    }
+
+    public function removePhotosSupp(Photos $photosSupp): static
+    {
+        if ($this->photos_supp->removeElement($photosSupp)) {
+            // set the owning side to null (unless already changed)
+            if ($photosSupp->getPhotosSupp() === $this) {
+                $photosSupp->setPhotosSupp(null);
+            }
+        }
 
         return $this;
     }

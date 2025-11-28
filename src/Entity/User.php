@@ -7,11 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -75,45 +77,50 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?adhesion $adhesion = null;
+    private ?Adhesion $adhesion = null;
 
     #[ORM\ManyToOne(inversedBy: 'membres')]
-    private ?groupe $groupe = null;
+    private ?Groupe $groupe = null;
 
-    /**
-     * @var Collection<int, recette>
-     */
-    #[ORM\OneToMany(targetEntity: recette::class, mappedBy: 'auteurice')]
-    private Collection $recette;
+
 
     /**
      * @var Collection<int, pole>
      */
-    #[ORM\ManyToMany(targetEntity: pole::class, inversedBy: 'users')]
+    #[ORM\ManyToMany(targetEntity: Pole::class, inversedBy: 'users')]
     private Collection $pole;
-
-    /**
-     * @var Collection<int, ressource>
-     */
-    #[ORM\OneToMany(targetEntity: ressource::class, mappedBy: 'auteurice')]
-    private Collection $ressource;
 
     /**
      * @var Collection<int, motivation>
      */
-    #[ORM\ManyToMany(targetEntity: motivation::class, inversedBy: 'user_motiv')]
+    #[ORM\ManyToMany(targetEntity: Motivation::class, inversedBy: 'user_motiv')]
     private Collection $motivation;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?participationDispo $participationDispo = null;
+    private ?ParticipationDispo $participationDispo = null;
+
+    #[ORM\Column]
+    private bool $isVerified = false;
+
+    /**
+     * @var Collection<int, Ressource>
+     */
+    #[ORM\OneToMany(targetEntity: Ressource::class, mappedBy: 'user')]
+    private Collection $ressource;
+
+    /**
+     * @var Collection<int, Recette>
+     */
+    #[ORM\OneToMany(targetEntity: Recette::class, mappedBy: 'auteurice')]
+    private Collection $recette;
 
     public function __construct()
     {
         $this->recette = new ArrayCollection();
         $this->pole = new ArrayCollection();
-        $this->ressource = new ArrayCollection();
         $this->motivation = new ArrayCollection();
+        $this->ressource = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -389,35 +396,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, recette>
-     */
-    public function getRecette(): Collection
-    {
-        return $this->recette;
-    }
 
-    public function addRecette(recette $recette): static
-    {
-        if (!$this->recette->contains($recette)) {
-            $this->recette->add($recette);
-            $recette->setAuteurice($this);
-        }
+  
 
-        return $this;
-    }
 
-    public function removeRecette(recette $recette): static
-    {
-        if ($this->recette->removeElement($recette)) {
-            // set the owning side to null (unless already changed)
-            if ($recette->getAuteurice() === $this) {
-                $recette->setAuteurice(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, pole>
@@ -439,36 +421,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removePole(pole $pole): static
     {
         $this->pole->removeElement($pole);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ressource>
-     */
-    public function getRessource(): Collection
-    {
-        return $this->ressource;
-    }
-
-    public function addRessource(ressource $ressource): static
-    {
-        if (!$this->ressource->contains($ressource)) {
-            $this->ressource->add($ressource);
-            $ressource->setAuteurice($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRessource(ressource $ressource): static
-    {
-        if ($this->ressource->removeElement($ressource)) {
-            // set the owning side to null (unless already changed)
-            if ($ressource->getAuteurice() === $this) {
-                $ressource->setAuteurice(null);
-            }
-        }
 
         return $this;
     }
@@ -505,6 +457,78 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setParticipationDispo(?participationDispo $participationDispo): static
     {
         $this->participationDispo = $participationDispo;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ressource>
+     */
+    public function getRessource(): Collection
+    {
+        return $this->ressource;
+    }
+
+    public function addRessource(Ressource $ressource): static
+    {
+        if (!$this->ressource->contains($ressource)) {
+            $this->ressource->add($ressource);
+            $ressource->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRessource(Ressource $ressource): static
+    {
+        if ($this->ressource->removeElement($ressource)) {
+            // set the owning side to null (unless already changed)
+            if ($ressource->getUser() === $this) {
+                $ressource->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recette>
+     */
+    public function getRecette(): Collection
+    {
+        return $this->recette;
+    }
+
+    public function addRecette(Recette $recette): static
+    {
+        if (!$this->recette->contains($recette)) {
+            $this->recette->add($recette);
+            $recette->setAuteurice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecette(Recette $recette): static
+    {
+        if ($this->recette->removeElement($recette)) {
+            // set the owning side to null (unless already changed)
+            if ($recette->getAuteurice() === $this) {
+                $recette->setAuteurice(null);
+            }
+        }
 
         return $this;
     }

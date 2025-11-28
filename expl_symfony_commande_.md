@@ -1,83 +1,47 @@
 \# Commandes utiles Symfony – Récapitulatif
 NOV 2025
-
-CTRL +C --> pour quitter une commande symfo en plein milieu (Qd erreur)
-
-
+**CTRL +C --> pour quitter une commande symfo en plein milieu (Qd erreur)**
 
 ouvrir truc facu 
-
 ouvrir Wamp PUIS démarrer serveur local
-
-
 
 TOUT S'ECRIT DS TERMINAL
 
-
-
 pour commencer en clonant un doss de facundo
-
 4)-    php bin/console doctrine:database:create new
-
 5)-    php bin/console make:migration
-
 6)-    php bin/console doctrine:migrations:migrate
-
 1)-    symfony serve -d
-
 2)-    symfony serve
-
 3)-    composer install
 
-
-
-
-
 =================================================
-
 GÉNÉRATION DE BASE POUR Nx DOSS symfonysymfony serve
-
 =================================================
-
 SANS CLONE DE DOSS FACUNDO 	**ZEST**
 
 Créer un projet Symfony :
 
 >créer un doss sur ordi >ouvrir terminal
-
 **symfony new nom\_projet --webapp**
 
-
-
 Démarrer le serveur local : (ds VSCODE term bash)
-
 **symfony serve**
 
 **symfony serve -d**         # en arrière-plan --> tourne tjs en arr plan et pas de symfony serve à refaire à chaque fois que l'on ouvre le doss
-
 symfony open:local       # ouvre le navigateur (((ou **on click sur url ds rectangle vert http://127.0.0.1:8001**)
 
-
-
 Vérifier config :
-
 **symfony check:requirements**
-
-
-
 **> .env --> vérif si on est bien en SQL (avec PhpMyAdmin)** 
-
 **sinon --> DATABASE\_URL="mysql://root: MOT DE PASSE@127.0.0.1:3306/NOM BDD?serverVersion=8.0.32\&charset=utf8mb4"**
-
 **+ changer MDP et nom BDD**
 
-
-
 CREATION BDD + entité (= table/ symfo nous demande de édfinir les champs en auto)  
-
 -->**Nx terminal bash**
 
 **php bin/console doctrine:database:create**
+**1  php bin/console make:user**
 **php bin/console make:entity   ça crée des fichiers src/Entity/Entity.php** 
 **php bin/console make:migration**
 **php bin/console doctrine:migrations:migrate  pour appliquer les changements à BDD.**
@@ -89,7 +53,18 @@ QUAND on revient à Add another property? = on revient à l'entity à laquelle o
 
 FK / relation unidirectionnelle (1FK enfant ds table parent) OU bidirectionnelle (1FK dans chaque table = )
 Pour**Do you want to activate orphanRemoval on your relationship?** => NO si on veut pouvoir modifier et updater. sinon SYMFONY SUPPRIME DES ENTREES
+A T T E N T I O N   :  
+Your entity already exists! So let's add some new fields!
 
+ New property name (press <return> to stop adding fields):
+ > recette
+
+ Field type (enter ? to see all types) [string]:
+ > relation
+relation
+
+ What class should this entity be related to?:
+ > **Recette**  **ET NON PAS recette / avec MAJUSCULE**
 - OneToMany / ManyToOne : une seule FK côté "Many".
 - ManyToMany : là oui, une table de jointure est créée avec deux FK (une vers chaque table).
 - orphanRemoval : ne change pas le nombre de FK, mais la façon dont Doctrine gère la suppression des entités liées.
@@ -112,22 +87,34 @@ php bin/console doctrine:schema:update --dump-sql
 ⚠️ Attention : cette méthode peut supprimer ou modifier des colonnes sans garde-fou → risque de perte de données. Elle est utile en phase de développement, mais pas en production.
 
 on crée les controlleurs
-=======================
+**php bin/console make:controller NomController**
+on crée l'authentification login
+**php bin/console make:security:form-login**
 
+symfony demande le bundle reset password
+**composer require symfonycasts/reset-password-bundle**
+on crée le reset MDP / reinitialisation MDP
+**php bin/console make:reset-password**
+-> ça crée 4 fichiers twig ds templates/reset_password
+-> ca crée dans config/package reset_password.yaml
+**php bin/console make:migration**
+**php bin/console doctrine:migrations:migrate**
+
+créer un form d'enregistrement
+**php bin/console make:registration-form**           Create a new registration form system
+
+
+E C R I R E       E C R I R E           E C R I R E
+
+=======================
 CONSOLE SYMFONY
-
 =======================
-
 **Afficher toutes les commandes dispo ds symfo:**
 php bin/console
-
-
 
 **Lister les routes /Tu verras les chemins, les noms de routes, les contrôleurs associés, etc.**
 Idéal pour vérifier que tes routes sont bien configurées :
 php bin/console debug:router
-
-
 
 **Lister les services :**
 php bin/console debug:container
@@ -188,7 +175,7 @@ php bin/console doctrine:migrations:migrate
 php bin/console make:form NomType
 
 **Créer un système d’auth :**
-php bin/console make:auth
+php bin/console make:auth OU **php bin/console make:security:form-login**
 
 **Créer une interface CRUD :**
 php bin/console make:crud Nom
@@ -215,7 +202,7 @@ php bin/console doctrine:database:drop --force
 SÉCURITÉ
 =======================
 **Créer un authenticator :** 
-php bin/console make:auth
+php bin/console make:auth  OU **php bin/console make:security:form-login**
 => Cette commande génère :
 Un SecurityController avec les routes de login/logout.
 Les fichiers Twig pour le formulaire de connexion.

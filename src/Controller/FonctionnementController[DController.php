@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class FonctionnementController[DController extends AbstractController
+final class FonctionnementController extends AbstractController
 {
     #[Route('/fonctionnement/controller/d', name: 'app_fonctionnement_controller_d')]
     public function index(): Response
