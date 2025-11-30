@@ -18,14 +18,14 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'M E R C I  de valider les mentions légales',
-                    ]),
-                ],
-            ])
+            // ->add('agreeTerms', CheckboxType::class, [
+            //     'mapped' => false,
+            //     'constraints' => [
+            //         new IsTrue([
+            //             'message' => 'M E R C I  de valider les mentions légales',
+            //         ]),
+            //     ],
+            // ])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
@@ -43,8 +43,24 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add("prenom")
             ->add("nom")
+            ->add ("telephone")
+            ->add("adresse")
+            ->add("code_postal")
+            ->add("ville")
+            ->add("composition_foyer")
+            ->add("nombre_enfants")
             ->add("groupe")
+            ->add("nouveau_groupe")
+            ->add("is_referent")
+            ->add("is_open")
+            ->add("groupe")
+            ->add("groupe")
+            ->add("groupe")
+            ->add("groupe")
+
+        
         ;
     }
 
