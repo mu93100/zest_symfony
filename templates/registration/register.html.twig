@@ -8,12 +8,26 @@
     {{ form_errors(registrationForm) }}
 
     {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.prenom) }}
         {{ form_row(registrationForm.nom) }}
+        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.telephone) }}
+        {{ form_row(registrationForm.adresse) }}
+        {{ form_row(registrationForm.code_postal) }}
+        {{ form_row(registrationForm.date_de_naissance) }}
+        {{ form_row(registrationForm.composition_foyer) }}
+        {{ form_row(registrationForm.nombreenfants) }}
+        {# {{ form_row(registrationForm.groupe) }} #}
+        {{ form_row(registrationForm.is_referent) }}
+
         {{ form_row(registrationForm.plainPassword, {
             label: 'Mot de Passe'
         }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+
+
+        {{ form_row(registrationForm.agree_fonctionnement_participation) }}
+        {{ form_row(registrationForm.agree_rgpd) }}
+        {{ form_row(registrationForm.agree_infos_mail) }}
 
         <button type="submit" class="btn">s'enregistrer</button>
     {{ form_end(registrationForm) }}

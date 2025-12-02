@@ -5,15 +5,18 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Expr\Value;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -41,14 +44,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $is_admin = null;
 
-    #[ORM\Column]
-    private ?int $telephone = null;
+    #[ORM\Column(length: 10)]
+    #[Assert\NotBlank]
+    #[Assert\Regex(pattern: '/^\d{10}$/', message: 'Téléphone : exactement 10 chiffres.')]
+    private ?string $telephone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $adresse = null;
 
-    #[ORM\Column]
-    private ?int $code_postal = null;
+    #[ORM\Column(length: 5)]
+    #[Assert\NotBlank]
+    #[Assert\Regex(pattern: '/^\d{5}$/', message: 'Code postal : exactement 5 chiffres.')]
+    private ?string $code_postal = null;
 
     #[ORM\Column(length: 100)]
     private ?string $ville = null;
@@ -56,11 +63,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTime $date_de_naissance = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: 'integer', options: ['unsigned' => true], nullable: true)]
+    #[Assert\GreaterThanOrEqual(1)]
     private ?int $composition_foyer = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $nombre_enfants = null;
+    // #[ORM\Column(type: 'integer', options: ['unsigned' => true], nullable: true)]
+    // #[Assert\GreaterThanOrEqual(1, message: 'La composition du foyer doit être au moins 1.')]
+    // private ?int $composition_foyer = null;
+
+    #[ORM\Column(type: 'integer', options: ['unsigned' => true], nullable: true)]
+    #[Assert\GreaterThanOrEqual(1)]
+    private ?int $nombreenfants = null;
 
     #[ORM\Column]
     private ?bool $is_referent = null;
@@ -300,26 +313,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCompositionFoyer(): ?int
+    public function getCompositionFoyer(): ?int { return $this->composition_foyer; }
+public function setCompositionFoyer(?int $v): self {
+    if ($v !== null && $v < 1) {
+        throw new \InvalidArgumentException('La composition du foyer doit être au moins 1.');
+    }
+    $this->composition_foyer = $v; return $this;
+}
+    // public function getCompositionFoyer(): ?int
+    // {
+    //     return $this->composition_foyer;
+    // }
+
+    // public function setCompositionFoyer(?int $composition_foyer): static
+    // {
+    //     $this->composition_foyer = $composition_foyer;
+
+    //     return $this;
+    // }
+
+    public function getNombreenfants(): ?int
     {
-        return $this->composition_foyer;
+        return $this->nombreenfants;
     }
 
-    public function setCompositionFoyer(?int $composition_foyer): static
+    public function setNombreenfants(?int $nombreenfants): static
     {
-        $this->composition_foyer = $composition_foyer;
-
-        return $this;
-    }
-
-    public function getNombreEnfants(): ?int
-    {
-        return $this->nombre_enfants;
-    }
-
-    public function setNombreEnfants(?int $nombre_enfants): static
-    {
-        $this->nombre_enfants = $nombre_enfants;
+        $this->nombreenfants = $nombreenfants;
 
         return $this;
     }
