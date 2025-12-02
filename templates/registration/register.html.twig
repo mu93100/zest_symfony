@@ -3,7 +3,7 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>s'engistrer</h1>
+    <h1>s'enregistrer</h1>
 
     {{ form_errors(registrationForm) }}
 
@@ -16,8 +16,8 @@
         {{ form_row(registrationForm.code_postal) }}
         {{ form_row(registrationForm.date_de_naissance) }}
         {{ form_row(registrationForm.composition_foyer) }}
-        {{ form_row(registrationForm.nombreenfants) }}
-        {# {{ form_row(registrationForm.groupe) }} #}
+        {{ form_row(registrationForm.nombre_enfants) }}
+        {{ form_row(registrationForm.groupe) }}
         {{ form_row(registrationForm.is_referent) }}
 
         {{ form_row(registrationForm.plainPassword, {

@@ -51,3 +51,17 @@ Donc :
 “mappé” = champ lié à l’entité (rempli / sauvegardé automatiquement).
 
 “non mappé” = champ utilisé juste pour la logique du formulaire, pas stocké directement dans l’entité.
+---------------------------
+cascade: ['persist', 'remove'] **a rajouter**
+cascade: ['persist', 'remove'] : quand tu sauvegardes ou supprimes cet objet, Doctrine applique automatiquement la même action sur l’objet User lié.
+persist : si tu fais persist() sur cette entité, le User associé sera aussi persisté.
+remove : si tu supprimes cette entité, le User associé sera aussi supprimé.
+
+“persister” veut dire “préparer pour être enregistré en base de données”.
+
+Quand tu fais \$entityManager->persist($objet);, tu dis à Doctrine : “prends cet objet en charge, il devra être sauvegardé ou mis à jour dans la base”.​
+
+Rien n’est encore écrit en base à ce moment-là. L’écriture réelle se fait au \$entityManager->flush();, qui envoie les INSERT / UPDATE nécessaires.​
+
+Donc “une entité est persistée” = elle est gérée par Doctrine et ses données sont synchronisées avec la base (ajout ou mise à jour) après le flush().
+--------------------------------------

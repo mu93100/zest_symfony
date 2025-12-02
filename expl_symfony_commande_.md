@@ -275,4 +275,24 @@ ApiPlatformBundle	Création d’API REST et GraphQL
 DebugBundle		Outils de debug pendant le développement
 
 
+--------------------------------------
+**DASHBOARD ADMIN**
+ajouter bundle easyadmin
+composer require easycorp/easyadmin-bundle
+php bin/console make:admin:dashboard
 
+**aller ds DashboardController.php**
+
+ajouter toutes les entités concernées par des modifications:
+use App\Entity\User;
+use App\Entity\Pole; ...ETC 
+
+dans public function index(): Response
+    {
+**LAISSER**  return parent::index(); **pour travailler avec dashboard easyadmin**
+et apres ::: yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+**on rajoute**
+yield MenuItem::linkToCrud('The Label', 'fas fa-user', User::class);
+yield MenuItem::linkToCrud('The Label', 'fas fa-pole', Pole::class); ...ETC 
+
+php bin/console make:admin:crud

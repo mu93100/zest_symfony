@@ -41,9 +41,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 45)]
     private ?string $prenom = null;
 
-    #[ORM\Column]
-    private ?bool $is_admin = null;
-
     #[ORM\Column(length: 10)]
     #[Assert\NotBlank]
     #[Assert\Regex(pattern: '/^\d{10}$/', message: 'Téléphone : exactement 10 chiffres.')]
@@ -67,13 +64,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\GreaterThanOrEqual(1)]
     private ?int $composition_foyer = null;
 
-    // #[ORM\Column(type: 'integer', options: ['unsigned' => true], nullable: true)]
-    // #[Assert\GreaterThanOrEqual(1, message: 'La composition du foyer doit être au moins 1.')]
-    // private ?int $composition_foyer = null;
-
     #[ORM\Column(type: 'integer', options: ['unsigned' => true], nullable: true)]
     #[Assert\GreaterThanOrEqual(1)]
-    private ?int $nombreenfants = null;
+    private ?int $nombre_enfants = null;
 
     #[ORM\Column]
     private ?bool $is_referent = null;
@@ -81,41 +74,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $motivations_attentes = null;
 
-    // #[ORM\Column]
-    // private ?int $participation_dispo = null; 
-    // PAS FK
-
     #[ORM\Column(type: Types::TEXT)]
     private ?string $competences = null;
 
+
+//----------------r e l a t i o n s ManyToOne
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Adhesion $adhesion = null;
 
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?ParticipationDispo $participationDispo = null;
+
     #[ORM\ManyToOne(inversedBy: 'membres')]
     private ?Groupe $groupe = null;
-
-
-
+    
+//----------------r e l a t i o n s ManyToMany
     /**
      * @var Collection<int, pole>
      */
     #[ORM\ManyToMany(targetEntity: Pole::class, inversedBy: 'users')]
     private Collection $pole;
-
     /**
      * @var Collection<int, motivation>
      */
     #[ORM\ManyToMany(targetEntity: Motivation::class, inversedBy: 'user_motiv')]
     private Collection $motivation;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?ParticipationDispo $participationDispo = null;
-
-    #[ORM\Column]
-    private bool $isVerified = false;
-
+//----------------r e l a t i o n s OneToMany
     /**
      * @var Collection<int, Ressource>
      */
@@ -128,6 +115,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Recette::class, mappedBy: 'auteurice')]
     private Collection $recette;
 
+
+//----------------f u n c t i o n s
     public function __construct()
     {
         $this->recette = new ArrayCollection();
@@ -241,18 +230,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isAdmin(): ?bool
-    {
-        return $this->is_admin;
-    }
-
-    public function setIsAdmin(bool $is_admin): static
-    {
-        $this->is_admin = $is_admin;
-
-        return $this;
-    }
-
     public function getTelephone(): ?int
     {
         return $this->telephone;
@@ -313,33 +290,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCompositionFoyer(): ?int { return $this->composition_foyer; }
-public function setCompositionFoyer(?int $v): self {
-    if ($v !== null && $v < 1) {
-        throw new \InvalidArgumentException('La composition du foyer doit être au moins 1.');
-    }
-    $this->composition_foyer = $v; return $this;
-}
-    // public function getCompositionFoyer(): ?int
-    // {
-    //     return $this->composition_foyer;
-    // }
-
-    // public function setCompositionFoyer(?int $composition_foyer): static
-    // {
-    //     $this->composition_foyer = $composition_foyer;
-
-    //     return $this;
-    // }
-
-    public function getNombreenfants(): ?int
-    {
-        return $this->nombreenfants;
+    public function getCompositionFoyer(): ?int 
+    { 
+        return $this->composition_foyer; 
     }
 
-    public function setNombreenfants(?int $nombreenfants): static
+    public function setCompositionFoyer(?int $v): self 
     {
-        $this->nombreenfants = $nombreenfants;
+        // if ($v !== null && $v < 1) {
+        //     throw new \InvalidArgumentException('La composition du foyer doit être au moins 1.');
+        // }
+        $this->composition_foyer = $v; 
+        
+        return $this;
+    }
+
+    public function getNombreEnfants(): ?int
+    {
+        return $this->nombre_enfants;
+    }
+
+    public function setNombreEnfants(?int $nombre_enfants): static
+    {
+        $this->nombre_enfants = $nombre_enfants;
 
         return $this;
     }
@@ -368,17 +341,6 @@ public function setCompositionFoyer(?int $v): self {
         return $this;
     }
 
-    // public function getParticipationDispo(): ?int
-    // {
-    //     return $this->participation_dispo;
-    // }
-
-    // public function setParticipationDispo(int $participation_dispo): static
-    // {
-    //     $this->participation_dispo = $participation_dispo;
-
-    //     return $this;
-    // }
 
     public function getCompetences(): ?string
     {
@@ -416,8 +378,6 @@ public function setCompositionFoyer(?int $v): self {
         return $this;
     }
 
-
-  
 
 
 
@@ -481,18 +441,6 @@ public function setCompositionFoyer(?int $v): self {
         return $this;
     }
 
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setIsVerified(bool $isVerified): static
-    {
-        $this->isVerified = $isVerified;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Ressource>
      */
@@ -552,4 +500,11 @@ public function setCompositionFoyer(?int $v): self {
 
         return $this;
     }
+
+
+
+
+
+
+
 }
