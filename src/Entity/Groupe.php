@@ -27,6 +27,9 @@ class Groupe
     #[ORM\Column]
     private ?bool $is_groupe_open = null;
 
+    #[ORM\Column(type: 'datetime_immutable')]
+    private ?\DateTimeImmutable $createdAt = null;
+
     /**
      * @var Collection<int, User>
      */
@@ -36,6 +39,7 @@ class Groupe
     public function __construct()
     {
         $this->membres = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -121,4 +125,10 @@ class Groupe
 
         return $this;
     }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    
 }

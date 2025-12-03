@@ -61,7 +61,8 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
 
-        // 🔹 Utilisateurs & Groupes
+        // Organisation dashboard si beaucoup d’entités -> avec menu et sous menu
+        // Utilisateurs & Groupes
         yield MenuItem::subMenu('Adhérents', 'fas fa-users')->setSubItems([
             MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class),
             MenuItem::linkToCrud('Motivations', 'fas fa-lightbulb', Motivation::class),
@@ -69,20 +70,20 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Adhésions', 'fas fa-id-card', Adhesion::class),
         ]);
 
-        // 🔹 Organisation interne
+        // Organisation interne
         yield MenuItem::subMenu('Organisation', 'fas fa-sitemap')->setSubItems([
             MenuItem::linkToCrud('Pôles', 'fas fa-network-wired', Pole::class),
             MenuItem::linkToCrud('Groupes', 'fas fa-layer-group', Groupe::class),
         ]);
 
-        // 🔹 Contenus & médias
+        // Contenus & médias
         yield MenuItem::subMenu('Contenus', 'fas fa-photo-video')->setSubItems([
             MenuItem::linkToCrud('Photos', 'fas fa-image', Photos::class),
             MenuItem::linkToCrud('Recettes', 'fas fa-utensils', Recette::class),
             MenuItem::linkToCrud('Ressources', 'fas fa-book', Ressource::class),
         ]);
 
-        // 🔹 Produits & producteurs
+        // Produits & producteurs
         yield MenuItem::subMenu('Produits', 'fas fa-shopping-basket')->setSubItems([
             MenuItem::linkToCrud('Catégories', 'fas fa-tags', Categorie::class),
             MenuItem::linkToCrud('Produits', 'fas fa-carrot', Produit::class),
@@ -90,10 +91,3 @@ class DashboardController extends AbstractDashboardController
         ]);
     }
 }
-// Organisation : si tu as beaucoup d’entités, tu peux regrouper avec :
-
-// php
-// yield MenuItem::subMenu('Gestion', 'fas fa-cogs')->setSubItems([
-//     MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class),
-//     MenuItem::linkToCrud('Pôles', 'fas fa-building', Pole::class),
-// ]);

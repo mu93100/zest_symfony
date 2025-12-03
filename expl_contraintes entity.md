@@ -1,3 +1,5 @@
+contraintes (EX: MDP de 6 caractères min ...)**METTRE LE + DE CONTRAINTES DANS LES ENTITY si ça apparait dans plusierus formulaires**
+
 **RAJOUTER** 
 use Symfony\Component\Validator\Constraints as Assert;
 

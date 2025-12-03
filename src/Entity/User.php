@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['email'], message: '[! email déjà utilisé !]')]
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -31,9 +31,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
+//----------------p a s s w o r d
     /** * @var string The hashed password */
     #[ORM\Column]
     private ?string $password = null;
+    #[Assert\NotBlank(message: '[M E R C I  de renseigner ton mot de passe]')]
+    #[Assert\Length(min: 6, minMessage: '[M I N I M U M  {{ limit }} caractères]')]
+    private ?string $plainPassword = null;
+// plainPassword est un champ temporaire non mappé : sert uniquement à la saisie en clair dans les formulaires
 
     #[ORM\Column(length: 45)]
     private ?string $nom = null;
@@ -43,7 +48,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 10)]
     #[Assert\NotBlank]
-    #[Assert\Regex(pattern: '/^\d{10}$/', message: 'Téléphone : exactement 10 chiffres.')]
+    #[Assert\Regex(pattern: '/^\d{10}$/', message: '[Téléphone : exactement 10 chiffres]')]
     private ?string $telephone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -51,7 +56,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 5)]
     #[Assert\NotBlank]
-    #[Assert\Regex(pattern: '/^\d{5}$/', message: 'Code postal : exactement 5 chiffres.')]
+    #[Assert\Regex(pattern: '/^\d{5}$/', message: '[Code postal : exactement 5 chiffres]')]
     private ?string $code_postal = null;
 
     #[ORM\Column(length: 100)]
@@ -69,7 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $nombre_enfants = null;
 
     #[ORM\Column]
-    private ?bool $is_referent = null;
+    private ?bool $is_referent = false;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $motivations_attentes = null;
@@ -173,7 +178,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
+//----------------p a s s w o r d
     /**
      * @see PasswordAuthenticatedUserInterface
      */
@@ -189,9 +194,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
-     */
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): static
+    {
+        $this->plainPassword = $plainPassword;
+        return $this;
+    }
+    // sérialisation CRC32C : pour remplacer le vrai hash du mot de passe par une empreinte courte dans la session 
     public function __serialize(): array
     {
         $data = (array) $this;
@@ -199,12 +212,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $data;
     }
-
     #[\Deprecated]
     public function eraseCredentials(): void
     {
         // @deprecated, to be removed when upgrading to Symfony 8
+        // Si tu utilises un champ temporaire plainPassword, on l'efface ici
+        $this->plainPassword = null;
     }
+//----------------fin  p a s s w o r d
 
     public function getNom(): ?string
     {
@@ -230,7 +245,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getTelephone(): ?int
+    public function getTelephone(): ?string
     {
         return $this->telephone;
     }
@@ -254,7 +269,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCodePostal(): ?int
+    public function getCodePostal(): ?string
     {
         return $this->code_postal;
     }
@@ -322,7 +337,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->is_referent;
     }
 
-    public function setIsReferent(bool $is_referent): static
+    public function setIsReferent(bool $is_referent): self
     {
         $this->is_referent = $is_referent;
 

@@ -276,7 +276,7 @@ DebugBundle		Outils de debug pendant le développement
 
 
 --------------------------------------
-**DASHBOARD ADMIN**
+BUNDLE **DASHBOARD ADMIN**
 ajouter bundle easyadmin
 composer require easycorp/easyadmin-bundle
 php bin/console make:admin:dashboard
@@ -296,3 +296,46 @@ yield MenuItem::linkToCrud('The Label', 'fas fa-user', User::class);
 yield MenuItem::linkToCrud('The Label', 'fas fa-pole', Pole::class); ...ETC 
 
 php bin/console make:admin:crud
+**ca crée DashboardController.php et . UserCrudController.php**
+
+Personnaliser les champs sensibles
+
+⚠️ password : ne pas l’afficher ni l’éditer directement dans EasyAdmin (risque de stocker du texte brut).
+
+roles : remplacer JsonField par un ChoiceField avec cases à cocher pour plus d’ergonomie :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Doctrine flush() 
+La méthode flush() sur l'EntityManager (ou ObjectManager) exécute toutes les requêtes SQL en attente pour persister les entités en base de données, après les appels à persist(). Appelez-la une fois à la fin d'une séquence de créations/modifications pour optimiser les performances (ex. : dans fixtures ou contrôleurs Doctrine ORM).​
+
+Utilisation pratique
+php
+$entity = new User();
+$em->persist($entity);  // Marque pour insertion, sans requête SQL
+$em->flush();           // Exécute INSERT/UPDATE/DELETE [web:49]
+Dans vos fixtures Symfony : créez plusieurs entités, persist() chacune, puis un seul flush() final pour charger rapidement (ex. : php bin/console doctrine:fixtures:load).​
+
+Bonnes pratiques
+Évitez flush() après chaque persist() (ralentit) ; regroupez-les.​

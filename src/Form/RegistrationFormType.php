@@ -30,6 +30,7 @@ class RegistrationFormType extends AbstractType
             ->add('telephone')
             ->add('adresse')
             ->add('code_postal')
+            ->add('ville')
             ->add('date_de_naissance')
             ->add('composition_foyer', IntegerType::class, [
                 'property_path' => 'composition_foyer', 
@@ -64,23 +65,14 @@ class RegistrationFormType extends AbstractType
                 // TOUJOURS = password est lu et encodé dans le controller et non dans entity
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
-                'constraints' => [
-                    new NotBlank(['message' => 'M E R C I  de renseigner ton mot de passe',]),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'M I N I M U M  {{ limit }} caractères',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
-                    ]),
-                ],
             ])
-            
+            // contraintes IsTrue -> rend les cases obligatoires à cocher / 'mapped' => false -> pas de données stockées dans entité
             ->add('agree_fonctionnement_participation', CheckboxType::class, [
                 'mapped' => false,
                 'label' => "Je m'engage à respecter les règles de fonctionnement du GAS et à participer activement * [ documents à lire : statuts - RI - charte ]",
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'M E R C I  de valider les mentions légales',  
+                        'message' => '[M E R C I  de valider les mentions légales]',  
                     ]),
                 ],
             ])    
@@ -89,7 +81,7 @@ class RegistrationFormType extends AbstractType
                 'label' => "J'accepte que mes données personnelles soient utilisées à des fins statistiques et logistiques dans le cadre du fonctionnement du GAS * [ document à lire : Mentions légales - RGPD ]",
                 'constraints' => [
                     new IsTrue([
-                        'message' => "M E R C I  de valider l'utilisation des données personnelles | dans le cas contraire : veuillez contacter le CA ca@cortozest.org",
+                        'message' => "[M E R C I  de valider l'utilisation des données personnelles | dans le cas contraire : veuillez contacter le CA ca@cortozest.org]",
                     ]),
                 ],
             ])
@@ -98,7 +90,7 @@ class RegistrationFormType extends AbstractType
                 'label' => "J'accepte de recevoir des informations par email sur les activités du GAS *",
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'impossible de fonctionner autrement',
+                        'message' => '[I M P O S S I B L E  de fonctionner autrement]',
                     ]),
                 ],
             ]);
@@ -114,26 +106,8 @@ class RegistrationFormType extends AbstractType
                     'label' => 'Le groupe est ouvert',
                     'required' => false,
                 ]);
-                // +++++RAJOUT JS
-                // document.addEventListener('DOMContentLoaded', () => {
-                //     const referentCheckbox = document.querySelector('#registration_form_is_referent');
-                //     const isOpenField = document.querySelector('#registration_form_is_open').closest('.form-group');
-
-                //     isOpenField.style.display = 'none';
-
-                //     referentCheckbox.addEventListener('change', () => {
-                //         if (referentCheckbox.checked) {
-                //             isOpenField.style.display = 'block';
-                //         } else {
-                //             isOpenField.style.display = 'none';
-                //         }
-                //     });
-                // });
-
-
-
             }
-        });
+            });
     }
 
 
