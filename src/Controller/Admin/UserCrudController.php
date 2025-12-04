@@ -11,9 +11,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\JsonField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 
 class UserCrudController extends AbstractCrudController
 {
@@ -39,7 +39,15 @@ class UserCrudController extends AbstractCrudController
             TextareaField::new('competences'),
             BooleanField::new('isAdmin')->setLabel('Admin ?'),
             BooleanField::new('isVerified')->setLabel('Vérifié ?'),
-            JsonField::new('roles'),
+            ChoiceField::new('roles')
+                ->setLabel('Rôles')
+                ->setChoices([
+                    'Administrateur' => 'ROLE_ADMIN',
+                    'Utilisateur' => 'ROLE_USER',
+                    'Vérifié' => 'ROLE_VERIFIED',
+                ])
+                ->allowMultipleChoices()
+                ->renderExpanded(), // cases à cocher
             AssociationField::new('groupe'),
             AssociationField::new('adhesion'),
             AssociationField::new('participationDispo'),

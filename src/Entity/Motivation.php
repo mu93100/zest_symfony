@@ -26,7 +26,6 @@ class Motivation
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
         $this->user_motiv = new ArrayCollection();
     }
 

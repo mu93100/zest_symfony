@@ -298,12 +298,30 @@ yield MenuItem::linkToCrud('The Label', 'fas fa-pole', Pole::class); ...ETC
 php bin/console make:admin:crud
 **ca crée DashboardController.php et . UserCrudController.php**
 
-Personnaliser les champs sensibles
+on fait OK OK
 
 ⚠️ password : ne pas l’afficher ni l’éditer directement dans EasyAdmin (risque de stocker du texte brut).
 
-roles : remplacer JsonField par un ChoiceField avec cases à cocher pour plus d’ergonomie :
+⚠️ roles : remplacer JsonField par un ChoiceField avec cases à cocher pour plus d’ergonomie :
+ds UserCrudController;php
+public function configureFields(string $pageName): iterable
+    {
+        return [
+            TextField::new('prenom'),
+            ...
+            ChoiceField::new('roles')
+                ->setLabel('Rôles')
+                ->setChoices([
+                    'Administrateur' => 'ROLE_ADMIN',
+                    'Utilisateur' => 'ROLE_USER',
+                    'Vérifié' => 'ROLE_VERIFIED',
+                ])
+                ->allowMultipleChoices()
+                ->renderExpanded(), // cases à cocher
+            ...
+        ];}
 
+**ON FAIT php bin/console make:admin:crud pour tous les entity que l'on veut pouvoir modifier créer ETC**
 
 
 

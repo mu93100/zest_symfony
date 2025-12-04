@@ -4,7 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Entity\Pole;
-use App\Entity\motivation;
+use App\Entity\Motivation;
 use App\Entity\Groupe;
 use App\Entity\Adhesion;
 use App\Entity\ParticipationDispo;
@@ -26,8 +26,10 @@ class DashboardController extends AbstractDashboardController
 {
     public function index(): Response
     {
-        return parent::index();
-
+        // symfony ::: return parent::index();
+        // IA ::: Redirige vers une entité par défaut (ex: User)
+        return $this->redirectToRoute('admin_user_index');
+        
         // Option 1. You can make your dashboard redirect to some common page of your backend
         //
         // 1.1) If you have enabled the "pretty URLs" feature:
