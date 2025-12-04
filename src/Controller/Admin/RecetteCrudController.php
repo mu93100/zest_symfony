@@ -2,17 +2,17 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Adhesion;
+use App\Entity\Recette;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-class Adhesion2CrudController extends AbstractCrudController
+class RecetteCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Adhesion::class;
+        return Recette::class;
     }
 
     /*

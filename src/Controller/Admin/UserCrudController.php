@@ -37,8 +37,7 @@ class UserCrudController extends AbstractCrudController
             TextareaField::new('compositionFoyer'),
             TextareaField::new('motivationsAttentes'),
             TextareaField::new('competences'),
-            BooleanField::new('isAdmin')->setLabel('Admin ?'),
-            BooleanField::new('isVerified')->setLabel('Vérifié ?'),
+            // BooleanField::new('isVerified')->setLabel('Vérifié ?'), pas de vérification par mail pour le moment
             ChoiceField::new('roles')
                 ->setLabel('Rôles')
                 ->setChoices([

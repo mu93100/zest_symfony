@@ -22,19 +22,27 @@ class Groupe
     private ?string $ville = null;
 
     #[ORM\Column]
-    private ?bool $is_referent = null;
+    private ?bool $is_referent = false;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $referentNom = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $referentEmail = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $referentTelephone = null;
 
     #[ORM\Column]
-    private ?bool $is_groupe_open = null;
+    private ?bool $is_groupe_open = false;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $createdAt = null;
 
-    /**
-     * @var Collection<int, User>
-     */
+//----------------r e l a t i o n s OneToMany
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'groupe')]
     private Collection $membres;
+//----------------
 
     public function __construct()
     {
@@ -83,6 +91,39 @@ class Groupe
         return $this;
     }
 
+        public function getReferentNom(): ?string
+    {
+        return $this->referentNom;
+    }
+
+    public function setReferentNom(?string $referentNom): static
+    {
+        $this->referentNom = $referentNom;
+        return $this;
+    }
+
+    public function getReferentEmail(): ?string
+    {
+        return $this->referentEmail;
+    }
+
+    public function setReferentEmail(?string $referentEmail): static
+    {
+        $this->referentEmail = $referentEmail;
+        return $this;
+    }
+
+    public function getReferentTelephone(): ?string
+    {
+        return $this->referentTelephone;
+    }
+
+    public function setReferentTelephone(?string $referentTelephone): static
+    {
+        $this->referentTelephone = $referentTelephone;
+        return $this;
+    }
+
     public function isGroupeOpen(): ?bool 
     {
         return $this->is_groupe_open;
@@ -95,10 +136,24 @@ class Groupe
         return $this;
     }
 
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
 
-    /**
-     * @return Collection<int, User>
-     */
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+//----------------r e l a t i o n s  OneToMany  
+// --------------- pour que le groupe (nom) soit affiché dans colonne groupe de user 
+    public function __toString(): string
+    {
+        return $this->nom ?? 'Groupe';
+    }
+// ----------------
+    /** @return Collection<int, User> */
     public function getMembres(): Collection
     {
         return $this->membres;
@@ -110,25 +165,16 @@ class Groupe
             $this->membres->add($membre);
             $membre->setGroupe($this);
         }
-
         return $this;
     }
 
     public function removeMembre(User $membre): static
     {
         if ($this->membres->removeElement($membre)) {
-            // set the owning side to null (unless already changed)
             if ($membre->getGroupe() === $this) {
                 $membre->setGroupe(null);
             }
         }
-
         return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-    
+    } 
 }

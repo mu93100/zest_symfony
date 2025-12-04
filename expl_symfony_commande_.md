@@ -291,6 +291,9 @@ dans public function index(): Response
     {
 **LAISSER**  return parent::index(); **pour travailler avec dashboard easyadmin**
 et apres ::: yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+OU  I A, car page admin ne s'affiche pas :
+return $this->redirectToRoute('admin_user_index');
+
 **on rajoute**
 yield MenuItem::linkToCrud('The Label', 'fas fa-user', User::class);
 yield MenuItem::linkToCrud('The Label', 'fas fa-pole', Pole::class); ...ETC 
