@@ -342,12 +342,28 @@ public function configureFields(string $pageName): iterable
 
 
 
+-------------------------------------
+**pour FORM**
+data_class: User::class === le form est lié à entity USER -> Symfony va automatiquement hydrater les propriétés de User avec les champs du formulaire. avec  ->add('email') ETC
 
+**si on des champs qui vont remplir d'autres entity (via des FK)** on a 'mapped' => false === c'est un champs non mappé
+->add('nouveau_groupe', TextType::class, [
+    'mapped' => false,
+])
+Tu devras récupérer sa valeur manuellement dans ton **contrôleur** avec
+$nouveauNom = $form->get('nouveau_groupe')->getData();
 
+Champ mappé → lié à une propriété de l’entité, Symfony hydrate automatiquement.
 
+Champ non mappé → pas lié à l’entité, tu dois gérer sa valeur manuellement dans ton contrôleur ou via un event listener.
+**utilité**
+Ça permet d’ajouter des champs “temporaires” ou “techniques” dans un formulaire, qui ne correspondent pas directement à une propriété de l’entité.
 
-
-
+Exemple typique :
+- Champ “nouveau_groupe” → sert à créer un nouvel objet Groupe.
+- Champ “mot_de_passe_confirmation” → sert à vérifier que l’utilisateur a bien tapé deux fois le même mot de passe, mais n’est pas stocké dans la base.
+- Champ “captcha” → utilisé pour la sécurité, mais pas enregistré dans l’entité
+-------------------------------------
 Doctrine flush() 
 La méthode flush() sur l'EntityManager (ou ObjectManager) exécute toutes les requêtes SQL en attente pour persister les entités en base de données, après les appels à persist(). Appelez-la une fois à la fin d'une séquence de créations/modifications pour optimiser les performances (ex. : dans fixtures ou contrôleurs Doctrine ORM).​
 

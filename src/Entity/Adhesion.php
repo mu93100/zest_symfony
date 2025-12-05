@@ -16,7 +16,7 @@ class Adhesion
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    private ?string $libelle_adhesion = null;
+    private ?string $libelle = null;
 
     /**
      * @var Collection<int, User>
@@ -34,14 +34,14 @@ class Adhesion
         return $this->id;
     }
 
-    public function getLibelleAdhesion(): ?string
+    public function getLibelle(): ?string
     {
-        return $this->libelle_adhesion;
+        return $this->libelle;
     }
 
-    public function setLibelleAdhesion(string $libelle_adhesion): static
+    public function setLibelle(string $libelle): static
     {
-        $this->libelle_adhesion = $libelle_adhesion;
+        $this->libelle = $libelle;
 
         return $this;
     }

@@ -25,7 +25,7 @@ class GroupeCrudController extends AbstractCrudController
             TextField::new('referentNom'),
             TextField::new('referentEmail'),
             TextField::new('referentTelephone'),
-            BooleanField::new('isGroupeOpen'),
+            BooleanField::new('isOpen'),
 
             // Champ calculé : liste des membres
             TextField::new('membres')

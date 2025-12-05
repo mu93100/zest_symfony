@@ -41,13 +41,13 @@ class RegistrationController extends AbstractController
                 $user->setGroupe($groupe);
             }
 
-            if ($form->get('is_referent')->getData()) {
+            if ($form->get('isReferent')->getData()) {
                 $user->setIsReferent(true);
 
-                // Si le champ is_open est présent et coché
-                $isOpen = $form->has('is_open') ? $form->get('is_open')->getData() : false;
+                // Si le champ isOpen est présent et coché
+                $isOpen = $form->has('isOpen') ? $form->get('isOpen')->getData() : false;
                 if ($user->getGroupe()) {
-                    $user->getGroupe()->setIsGroupeOpen($isOpen);
+                    $user->getGroupe()->setIsOpen($isOpen);
                 }
             }
 

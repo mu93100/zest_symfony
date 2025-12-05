@@ -74,7 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $nombre_enfants = null;
 
     #[ORM\Column]
-    private ?bool $is_referent = false;
+    private ?bool $isReferent = false;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $motivations_attentes = null;
@@ -330,12 +330,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function isReferent(): ?bool
     {
-        return $this->is_referent;
+        return $this->isReferent;
     }
 
-    public function setIsReferent(bool $is_referent): self
+    public function setIsReferent(bool $isReferent): self
     {
-        $this->is_referent = $is_referent;
+        $this->isReferent = $isReferent;
 
         return $this;
     }

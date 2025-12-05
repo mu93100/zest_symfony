@@ -10,8 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
+// use Symfony\Component\Validator\Constraints\Length;
+// use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -43,7 +43,7 @@ class RegistrationFormType extends AbstractType
                 'attr' => ['min' => 0, 'step' => 1],
                 ])
 
-            //groupe : liste déroulante + champ "nouveau groupe"
+            //groupe : liste déroulante (avec EntityType) + champ "nouveau groupe"
             ->add('groupe', EntityType::class, [
                 'class' => Groupe::class,
                 'choice_label' => 'nom',
@@ -55,8 +55,8 @@ class RegistrationFormType extends AbstractType
                 'required' => false,
                 'label' => 'Nom du nouveau groupe',
             ])
-            //si is_referent = true -> case + champ "is_open" dans entity groupe (voir plus bas)
-            ->add('is_referent', CheckboxType::class, [
+            //si isReferent = true -> case + champ "isOpen" dans entity groupe (voir plus bas)
+            ->add('isReferent', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Je suis référent.e de mon groupe',
             ])
@@ -99,15 +99,15 @@ class RegistrationFormType extends AbstractType
             $form = $event->getForm();
             $user = $event->getData();
 
-            // si is_referent = true -> on ajoute le champ is_open du groupe
+            // si isReferent = true -> on ajoute le champ isOpen du groupe
             if ($user && $user->isReferent()) {
-                $form->add('is_open', CheckboxType::class, [
-                    'mapped' => false, // car is_open est dans Groupe, pas User
-                    'label' => 'Le groupe est ouvert',
+                $form->add('isOpen', CheckboxType::class, [
+                    'mapped' => false, // car isOpen est dans Groupe, pas User
+                    'label' => 'Le groupe peut accueillir de nouvelleaux adhérent.es',
                     'required' => false,
                 ]);
             }
-            });
+        });
     }
 
 

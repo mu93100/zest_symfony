@@ -65,31 +65,31 @@ class DashboardController extends AbstractDashboardController
 
         // Organisation dashboard si beaucoup d’entités -> avec menu et sous menu
         // Utilisateurs & Groupes
-        yield MenuItem::subMenu('Adhérents', 'fas fa-users')->setSubItems([
-            MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class),
-            MenuItem::linkToCrud('Motivations', 'fas fa-lightbulb', Motivation::class),
-            MenuItem::linkToCrud('Disponibilités', 'fas fa-calendar-check', ParticipationDispo::class),
-            MenuItem::linkToCrud('Adhésions', 'fas fa-id-card', Adhesion::class),
+        yield MenuItem::subMenu('A D H E R E N T S')->setSubItems([
+            MenuItem::linkToCrud('Users', '', User::class),
+            MenuItem::linkToCrud('Motivations', '', Motivation::class),
+            MenuItem::linkToCrud('Disponibilités', '', ParticipationDispo::class),
+            MenuItem::linkToCrud('Adhésions', '', Adhesion::class),
         ]);
 
         // Organisation interne
-        yield MenuItem::subMenu('Organisation', 'fas fa-sitemap')->setSubItems([
-            MenuItem::linkToCrud('Pôles', 'fas fa-network-wired', Pole::class),
-            MenuItem::linkToCrud('Groupes', 'fas fa-layer-group', Groupe::class),
+        yield MenuItem::subMenu('O R G A N I S A T I O N', '')->setSubItems([
+            MenuItem::linkToCrud('Pôles', '', Pole::class),
+            MenuItem::linkToCrud('Groupes', '', Groupe::class),
         ]);
 
         // Contenus & médias
-        yield MenuItem::subMenu('Contenus', 'fas fa-photo-video')->setSubItems([
-            MenuItem::linkToCrud('Photos', 'fas fa-image', Photos::class),
-            MenuItem::linkToCrud('Recettes', 'fas fa-utensils', Recette::class),
-            MenuItem::linkToCrud('Ressources', 'fas fa-book', Ressource::class),
+        yield MenuItem::subMenu('C O N T E N U S', '')->setSubItems([
+            MenuItem::linkToCrud('Recettes', '', Recette::class),
+            MenuItem::linkToCrud('Ressources', '', Ressource::class),
+            MenuItem::linkToCrud('Catégories', '', Categorie::class),
+            MenuItem::linkToCrud('Photos', '', Photos::class),
         ]);
 
         // Produits & producteurs
-        yield MenuItem::subMenu('Produits', 'fas fa-shopping-basket')->setSubItems([
-            MenuItem::linkToCrud('Catégories', 'fas fa-tags', Categorie::class),
-            MenuItem::linkToCrud('Produits', 'fas fa-carrot', Produit::class),
-            MenuItem::linkToCrud('Producteur·ices', 'fas fa-tractor', Producteurice::class),
+        yield MenuItem::subMenu('P R O D U I T S', '')->setSubItems([
+            MenuItem::linkToCrud('Produits', '', Produit::class),
+            MenuItem::linkToCrud('Producteur·ices', '', Producteurice::class),
         ]);
     }
 }

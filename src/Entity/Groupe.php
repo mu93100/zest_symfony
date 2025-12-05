@@ -22,7 +22,7 @@ class Groupe
     private ?string $ville = null;
 
     #[ORM\Column]
-    private ?bool $is_referent = false;
+    private ?bool $isReferent = false;
 
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $referentNom = null;
@@ -34,7 +34,7 @@ class Groupe
     private ?string $referentTelephone = null;
 
     #[ORM\Column]
-    private ?bool $is_groupe_open = false;
+    private ?bool $isOpen = false;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $createdAt = null;
@@ -81,12 +81,12 @@ class Groupe
 
     public function isReferent(): ?bool
     {
-        return $this->is_referent;
+        return $this->isReferent;
     }
 
-    public function setIsReferent(bool $is_referent): static
+    public function setIsReferent(bool $isReferent): static
     {
-        $this->is_referent = $is_referent;
+        $this->isReferent = $isReferent;
 
         return $this;
     }
@@ -124,14 +124,14 @@ class Groupe
         return $this;
     }
 
-    public function isGroupeOpen(): ?bool 
+    public function isOpen(): ?bool 
     {
-        return $this->is_groupe_open;
+        return $this->isOpen;
     }
 
-    public function setIsGroupeOpen(bool $is_groupe_open): static
+    public function setIsOpen(bool $isOpen): static
     {
-        $this->is_groupe_open = $is_groupe_open;
+        $this->isOpen = $isOpen;
 
         return $this;
     }

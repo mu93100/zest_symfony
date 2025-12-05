@@ -13,14 +13,16 @@
                 'class' => Pole::class,
                 'choice_label' => 'nom',
                 'multiple' => false,
-                'expanded' => false, // liste déroulante
+                'expanded' => false, // liste déroulante avec 1 seul choix possible
+                'placeholder' => 'Pôle(s) de travail auquel(s) je souhaite participer', 
             ])
-
             // 🔹 Adhesion : liste déroulante
             ->add('adhesion', EntityType::class, [
                 'class' => Adhesion::class,
-                'choice_label' => 'nom',
-                'placeholder' => 'Choisir une adhésion',
+                'choice_label' => 'libelle',
+                'multiple' => false,
+                'expanded' => false, // liste déroulante avec 1 seul choix possible
+                'placeholder' => 'montant de mon adhésion',
             ])
 
             // 🔹 Participation dispo : cases à cocher
@@ -29,4 +31,12 @@
                 'choice_label' => 'libelle',
                 'multiple' => true,
                 'expanded' => true, // cases à cocher
+            ])
+            // 🔹 groupe                        : liste déroulante
+            ->add('groupe', EntityType::class, [
+                'class' => Adhesion::groupe,
+                'choice_label' => 'nom',
+                'multiple' => false,
+                'expanded' => false, // liste déroulante avec 1 seul choix possible
+                'placeholder' => ' ',
             ])
