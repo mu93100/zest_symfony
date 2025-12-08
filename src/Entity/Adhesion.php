@@ -15,9 +15,6 @@ class Adhesion
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 9)]
-    private string $saison; // ex: "2024/2025"
-
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $dateAdhesion;
 
@@ -39,8 +36,12 @@ class Adhesion
     #[ORM\ManyToOne(targetEntity: Groupe::class, inversedBy: 'adhesions')]
     private ?Groupe $groupe = null;
 
-    #[ORM\ManyToOne(targetEntity: MontantAdhesion::class)]
+    #[ORM\ManyToOne(targetEntity: MontantAdhesion::class, )]
     private ?MontantAdhesion $montantAdhesion = null;
+
+    #[ORM\ManyToOne(targetEntity: Saison::class, inversedBy: 'adhesions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Saison $saison = null;
 
     //----------------r e l a t i o n s  ManyToMany
     #[ORM\ManyToMany(targetEntity: Motivation::class)]
@@ -67,15 +68,14 @@ class Adhesion
         return $this->id;
     }
 
-    public function getSaison(): string
+    public function getSaison(): ?Saison
     {
         return $this->saison;
     }
 
-    public function setSaison(string $saison): self
+    public function setSaison(Saison $saison): static
     {
         $this->saison = $saison;
-
         return $this;
     }
 
@@ -237,52 +237,6 @@ class Adhesion
 
 }   
 
-// ADHESION
-// création saisons ADMIN
-//     L’admin clique sur “Créer nouvelle saison”.
-//     Une commande Symfony ou une action en back-office génère les nouvelles adhésions 
-//     pour tous les utilisateurs existants, avec la nouvelle valeur saison.
-// src/Command/CreateNewSeasonCommand.php
-#[AsCommand(name: 'app:create-new-season')]
-class CreateNewSeasonCommand extends Command
-{
-    public function __construct(
-        private EntityManagerInterface $em,
-        private UserRepository $userRepository
-    ) {
-        parent::__construct();
-    }
-
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $nouvelleSaison = '2026/2027';
-        $users = $this->userRepository->findAll();
-
-        foreach ($users as $user) {
-            $adhesion = new Adhesion();
-            $adhesion->setUser($user);
-            $adhesion->setGroupe($user->getGroupe());
-            $adhesion->setSaison($nouvelleSaison);
-            $adhesion->setDateAdhesion(new \DateTime());
-
-            $this->em->persist($adhesion);
-        }
-
-        $this->em->flush();
-        $output->writeln("Nouvelle saison $nouvelleSaison créée !");
-        return Command::SUCCESS;
-    }
-}
-    // Chaque adhésion est liée à un user, un groupe, et une saison.   
-    // Tu peux ensuite filtrer facilement les adhésions par saison avec une requête Doctrine :
-    $adhesions2024 = $adhesionRepository->findBy(['saison' => '2024/2025']);   
-$adhesions = $adhesionRepository->findBy(['saison' => '2025/2026']);
-$adhesions2025 = $adhesionRepository->findBy(['saison' => '2025/2026']);
-$adhesions2026 = $adhesionRepository->findBy(['saison' => '2026/2027']);
-$adhesions = $adhesionRepository->findBy(['saison' => '2025/2026']);
-$adhesions2025 = $adhesionRepository->findBy(['saison' => '2025/2026']);
-$adhesions2026 = $adhesionRepository->findBy(['saison' =>
-    '2026/2027']);
 
 
 

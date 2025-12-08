@@ -102,6 +102,12 @@ on crée le reset MDP / reinitialisation MDP
 créer un form d'enregistrement
 **php bin/console make:registration-form**           Create a new registration form system
 
+créer un fichier dans un dossier existant
+**php bin/console make:command MailTestCommand**
+
+créer un dossier
+**mkdir src/Command**
+
 
 E C R I R E       E C R I R E           E C R I R E
 

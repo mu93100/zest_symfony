@@ -75,25 +75,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?bool $isReferent = false;
-    // à enlever pour nouveau fonctionnement avec entity Adhesion complète
-    // #[ORM\Column(type: Types::TEXT, nullable: true)]
-    // private ?string $motivationsAttentes = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $competences = null;
 
 
     //----------------r e l a t i o n s  ManyToOne
-    // à enlever pour nouveau fonctionnement avec entity Adhesion complète
-    // #[ORM\ManyToOne(inversedBy: 'users')]
-    // #[ORM\JoinColumn(nullable: false)]
-    // private ?Adhesion $adhesion = null;
-
-    // à enlever pour nouveau fonctionnement avec entity Adhesion complète    
-    // #[ORM\ManyToOne(inversedBy: 'users')]
-    // #[ORM\JoinColumn(nullable: false)]
-    // private ?ParticipationDispo $participationDispo = null;
-
     #[ORM\ManyToOne(inversedBy: 'membres')]
     private ?Groupe $groupe = null;
     
@@ -103,12 +90,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\ManyToMany(targetEntity: Pole::class, inversedBy: 'users')]
     private Collection $pole;
-// à enlever pour nouveau fonctionnement avec entity Adhesion complète
-    // /**
-    //  * @var Collection<int, motivation>
-    //  */
-    // #[ORM\ManyToMany(targetEntity: Motivation::class, inversedBy: 'userMotiv')]
-    // private Collection $motivation;
 
 //----------------r e l a t i o n s  OneToMany
 
@@ -128,8 +109,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->recette = new ArrayCollection();
         $this->pole = new ArrayCollection();
-        // à enlever pour nouveau fonctionnement avec entity Adhesion complète
-        // $this->motivation = new ArrayCollection();
         $this->ressource = new ArrayCollection();
         $this->adhesions = new ArrayCollection();
     }
@@ -312,9 +291,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setCompositionFoyer(?int $v): self 
     {
-        // if ($v !== null && $v < 1) {
-        //     throw new \InvalidArgumentException('La composition du foyer doit être au moins 1.');
-        // }
         $this->compositionFoyer = $v; 
         
         return $this;
@@ -344,20 +320,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    // à enlever pour nouveau fonctionnement avec entity Adhesion complète
-        // public function getMotivationsAttentes(): ?string
-    // {
-    //     return $this->motivationsAttentes;
-    // }
-
-    // public function setMotivationsAttentes(?string $motivationsAttentes): static
-    // {
-    //     $this->motivationsAttentes = $motivationsAttentes;
-
-    //     return $this;
-    // }
-
-
     public function getCompetences(): ?string
     {
         return $this->competences;
@@ -369,19 +331,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-    // à enlever pour nouveau fonctionnement avec entity Adhesion complète
-    // public function getAdhesion(): ?adhesion
-    // {
-    //     return $this->adhesion;
-    // }
-
-    // public function setAdhesion(?adhesion $adhesion): static
-    // {
-    //     $this->adhesion = $adhesion;
-
-    //     return $this;
-    // }
 
     public function getGroupe(): ?groupe
     {
@@ -443,43 +392,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-// à enlever pour nouveau fonctionnement avec entity Adhesion complète
-    // /**
-    //  * @return Collection<int, motivation>
-    //  */
-    // public function getMotivation(): Collection
-    // {
-    //     return $this->motivation;
-    // }
-
-    // public function addMotivation(motivation $motivation): static
-    // {
-    //     if (!$this->motivation->contains($motivation)) {
-    //         $this->motivation->add($motivation);
-    //     }
-
-    //     return $this;
-    // }
-
-    // public function removeMotivation(motivation $motivation): static
-    // {
-    //     $this->motivation->removeElement($motivation);
-
-    //     return $this;
-    // }
-    // à enlever pour nouveau fonctionnement avec entity Adhesion complète
-    // public function getParticipationDispo(): ?participationDispo
-    // {
-    //     return $this->participationDispo;
-    // }
-
-    // public function setParticipationDispo(?participationDispo $participationDispo): static
-    // {
-    //     $this->participationDispo = $participationDispo;
-
-    //     return $this;
-    // }
-
     /**
      * @return Collection<int, Ressource>
      */
@@ -539,11 +451,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-
-
-
-
-
-
 }
