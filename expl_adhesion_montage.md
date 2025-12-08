@@ -63,3 +63,9 @@ php bin/console make:listener AdhesionListener
  ça crée un fichier src/ EventListener/AdhesionListener.php (qu'il faut réécrire !)
 
  ds template >créer doss emails + un fichier twig adhesion_non_payee
+
+POUR TESTER ENVOI DE MAIL
+ src/Command/MailTestCommand.php
+ https://mailtrap.io/inboxes/4239226/messages/5231620545 
+ AVEC DANS .env :
+ MAILER_DSN="smtp://8fdadb6b9f8175:45c71c0e36e002@sandbox.smtp.mailtrap.io:2525"

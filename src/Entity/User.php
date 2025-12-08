@@ -86,7 +86,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     
 //----------------r e l a t i o n s  ManyToMany
     /**
-     * @var Collection<int, pole>
+     * @var Collection<int, Pole>
      */
     #[ORM\ManyToMany(targetEntity: Pole::class, inversedBy: 'users')]
     private Collection $pole;
@@ -229,7 +229,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->telephone;
     }
 
-    public function setTelephone(int $telephone): static
+    public function setTelephone(string $telephone): static
     {
         $this->telephone = $telephone;
 
@@ -253,7 +253,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->codePostal;
     }
 
-    public function setCodePostal(int $codePostal): static
+    public function setCodePostal(string $codePostal): static
     {
         $this->codePostal = $codePostal;
 
@@ -332,12 +332,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getGroupe(): ?groupe
+    public function getGroupe(): ?Groupe
     {
         return $this->groupe;
     }
 
-    public function setGroupe(?groupe $groupe): static
+    public function setGroupe(?Groupe $groupe): static
     {
         $this->groupe = $groupe;
 
@@ -345,14 +345,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, pole>
+     * @return Collection<int, Pole>
      */
     public function getPole(): Collection
     {
         return $this->pole;
     }
 
-    public function addPole(pole $pole): static
+    public function addPole(Pole $pole): static
     {
         if (!$this->pole->contains($pole)) {
             $this->pole->add($pole);
@@ -361,7 +361,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removePole(pole $pole): static
+    public function removePole(Pole $pole): static
     {
         $this->pole->removeElement($pole);
 
