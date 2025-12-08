@@ -23,12 +23,12 @@ class Ressource
     private ?string $titre = null;
 
     #[ORM\Column(length: 300, nullable: true)]
-    private ?string $sous_titre = null;
+    private ?string $sousTitre = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $ressource_texte = null;
+    private ?string $ressourceTexte = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'ressources')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Categorie $categorie = null;
 
@@ -39,21 +39,21 @@ class Ressource
     #[ORM\ManyToOne(inversedBy: 'ressource')]
     private ?User $user = null;
 
-    #[ORM\OneToOne(inversedBy: 'photo_principale', cascade: ['persist', 'remove'])]
-    private ?Photos $photo_principale = null;
+    #[ORM\OneToOne(inversedBy: 'photoPrincipale', cascade: ['persist', 'remove'])]
+    private ?Photos $photoPrincipale = null;
 
     /**
      * @var Collection<int, Photos>
      */
-    #[ORM\OneToMany(targetEntity: Photos::class, mappedBy: 'photos_supp')]
-    private Collection $photos_supp;
+    #[ORM\OneToMany(targetEntity: Photos::class, mappedBy: 'photosSupp')]
+    private Collection $photosSupp;
 
     #[ORM\Column]
-    private ?bool $is_publication = null;
+    private ?bool $isPublication = null;
 
     public function __construct()
     {
-        $this->photos_supp = new ArrayCollection();
+        $this->photosSupp = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -87,24 +87,24 @@ class Ressource
 
     public function getSousTitre(): ?string
     {
-        return $this->sous_titre;
+        return $this->sousTitre;
     }
 
-    public function setSousTitre(?string $sous_titre): static
+    public function setSousTitre(?string $sousTitre): static
     {
-        $this->sous_titre = $sous_titre;
+        $this->sousTitre = $sousTitre;
 
         return $this;
     }
 
     public function getRessourceTexte(): ?string
     {
-        return $this->ressource_texte;
+        return $this->ressourceTexte;
     }
 
-    public function setRessourceTexte(string $ressource_texte): static
+    public function setRessourceTexte(string $ressourceTexte): static
     {
-        $this->ressource_texte = $ressource_texte;
+        $this->ressourceTexte = $ressourceTexte;
 
         return $this;
     }
@@ -147,12 +147,12 @@ class Ressource
 
     public function getPhotoPrincipale(): ?Photos
     {
-        return $this->photo_principale;
+        return $this->photoPrincipale;
     }
 
-    public function setPhotoPrincipale(?Photos $photo_principale): static
+    public function setPhotoPrincipale(?Photos $photoPrincipale): static
     {
-        $this->photo_principale = $photo_principale;
+        $this->photoPrincipale = $photoPrincipale;
 
         return $this;
     }
@@ -162,13 +162,13 @@ class Ressource
      */
     public function getPhotosSupp(): Collection
     {
-        return $this->photos_supp;
+        return $this->photosSupp;
     }
 
     public function addPhotosSupp(Photos $photosSupp): static
     {
-        if (!$this->photos_supp->contains($photosSupp)) {
-            $this->photos_supp->add($photosSupp);
+        if (!$this->photosSupp->contains($photosSupp)) {
+            $this->photosSupp->add($photosSupp);
             $photosSupp->setPhotosSupp($this);
         }
 
@@ -177,7 +177,7 @@ class Ressource
 
     public function removePhotosSupp(Photos $photosSupp): static
     {
-        if ($this->photos_supp->removeElement($photosSupp)) {
+        if ($this->photosSupp->removeElement($photosSupp)) {
             // set the owning side to null (unless already changed)
             if ($photosSupp->getPhotosSupp() === $this) {
                 $photosSupp->setPhotosSupp(null);
@@ -189,12 +189,12 @@ class Ressource
 
     public function isPublication(): ?bool
     {
-        return $this->is_publication;
+        return $this->isPublication;
     }
 
-    public function setIsPublication(bool $is_publication): static
+    public function setIsPublication(bool $isPublication): static
     {
-        $this->is_publication = $is_publication;
+        $this->isPublication = $isPublication;
 
         return $this;
     }

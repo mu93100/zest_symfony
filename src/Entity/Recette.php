@@ -17,13 +17,13 @@ class Recette
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?\DateTime $date_publication = null;
+    private ?\DateTime $datePublication = null;
 
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
 
     #[ORM\Column]
-    private ?int $nombre_mangeurs = null;
+    private ?int $nombreMangeurs = null;
 
     #[ORM\Column(length: 255)]
     private ?string $ingredients = null;
@@ -61,12 +61,12 @@ class Recette
 
     public function getDatePublication(): ?\DateTime
     {
-        return $this->date_publication;
+        return $this->datePublication;
     }
 
-    public function setDatePublication(\DateTime $date_publication): static
+    public function setDatePublication(\DateTime $datePublication): static
     {
-        $this->date_publication = $date_publication;
+        $this->datePublication = $datePublication;
 
 
         return $this;
@@ -86,12 +86,12 @@ class Recette
 
     public function getNombreMangeurs(): ?int
     {
-        return $this->nombre_mangeurs;
+        return $this->nombreMangeurs;
     }
 
-    public function setNombreMangeurs(int $nombre_mangeurs): static
+    public function setNombreMangeurs(int $nombreMangeurs): static
     {
-        $this->nombre_mangeurs = $nombre_mangeurs;
+        $this->nombreMangeurs = $nombreMangeurs;
 
         return $this;
     }

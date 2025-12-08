@@ -57,77 +57,81 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 5)]
     #[Assert\NotBlank]
     #[Assert\Regex(pattern: '/^\d{5}$/', message: '[Code postal : exactement 5 chiffres]')]
-    private ?string $code_postal = null;
+    private ?string $codePostal = null;
 
     #[ORM\Column(length: 100)]
     private ?string $ville = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTime $date_de_naissance = null;
+    private ?\DateTime $dateDeNaissance = null;
 
     #[ORM\Column(type: 'integer', options: ['unsigned' => true], nullable: true)]
     #[Assert\GreaterThanOrEqual(1)]
-    private ?int $composition_foyer = null;
+    private ?int $compositionFoyer = null;
 
     #[ORM\Column(type: 'integer', options: ['unsigned' => true], nullable: true)]
     #[Assert\GreaterThanOrEqual(1)]
-    private ?int $nombre_enfants = null;
+    private ?int $nombreEnfants = null;
 
     #[ORM\Column]
     private ?bool $isReferent = false;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $motivations_attentes = null;
+    // à enlever pour nouveau fonctionnement avec entity Adhesion complète
+    // #[ORM\Column(type: Types::TEXT, nullable: true)]
+    // private ?string $motivationsAttentes = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $competences = null;
 
 
-//----------------r e l a t i o n s ManyToOne
-    #[ORM\ManyToOne(inversedBy: 'users')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Adhesion $adhesion = null;
+    //----------------r e l a t i o n s  ManyToOne
+    // à enlever pour nouveau fonctionnement avec entity Adhesion complète
+    // #[ORM\ManyToOne(inversedBy: 'users')]
+    // #[ORM\JoinColumn(nullable: false)]
+    // private ?Adhesion $adhesion = null;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?ParticipationDispo $participationDispo = null;
+    // à enlever pour nouveau fonctionnement avec entity Adhesion complète    
+    // #[ORM\ManyToOne(inversedBy: 'users')]
+    // #[ORM\JoinColumn(nullable: false)]
+    // private ?ParticipationDispo $participationDispo = null;
 
     #[ORM\ManyToOne(inversedBy: 'membres')]
     private ?Groupe $groupe = null;
     
-//----------------r e l a t i o n s ManyToMany
+//----------------r e l a t i o n s  ManyToMany
     /**
      * @var Collection<int, pole>
      */
     #[ORM\ManyToMany(targetEntity: Pole::class, inversedBy: 'users')]
     private Collection $pole;
-    /**
-     * @var Collection<int, motivation>
-     */
-    #[ORM\ManyToMany(targetEntity: Motivation::class, inversedBy: 'user_motiv')]
-    private Collection $motivation;
+// à enlever pour nouveau fonctionnement avec entity Adhesion complète
+    // /**
+    //  * @var Collection<int, motivation>
+    //  */
+    // #[ORM\ManyToMany(targetEntity: Motivation::class, inversedBy: 'userMotiv')]
+    // private Collection $motivation;
 
-//----------------r e l a t i o n s OneToMany
-    /**
-     * @var Collection<int, Ressource>
-     */
+//----------------r e l a t i o n s  OneToMany
+
     #[ORM\OneToMany(targetEntity: Ressource::class, mappedBy: 'user')]
     private Collection $ressource;
 
-    /**
-     * @var Collection<int, Recette>
-     */
     #[ORM\OneToMany(targetEntity: Recette::class, mappedBy: 'auteurice')]
     private Collection $recette;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Adhesion::class, cascade: ['persist', 'remove'])]
+    private Collection $adhesions;
 
-//----------------f u n c t i o n s
+
+
+    //----------------f u n c t i o n s
     public function __construct()
     {
         $this->recette = new ArrayCollection();
         $this->pole = new ArrayCollection();
-        $this->motivation = new ArrayCollection();
+        // à enlever pour nouveau fonctionnement avec entity Adhesion complète
+        // $this->motivation = new ArrayCollection();
         $this->ressource = new ArrayCollection();
+        $this->adhesions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -267,12 +271,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getCodePostal(): ?string
     {
-        return $this->code_postal;
+        return $this->codePostal;
     }
 
-    public function setCodePostal(int $code_postal): static
+    public function setCodePostal(int $codePostal): static
     {
-        $this->code_postal = $code_postal;
+        $this->codePostal = $codePostal;
 
         return $this;
     }
@@ -291,19 +295,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getDateDeNaissance(): ?\DateTime
     {
-        return $this->date_de_naissance;
+        return $this->dateDeNaissance;
     }
 
-    public function setDateDeNaissance(?\DateTime $date_de_naissance): static
+    public function setDateDeNaissance(?\DateTime $dateDeNaissance): static
     {
-        $this->date_de_naissance = $date_de_naissance;
+        $this->dateDeNaissance = $dateDeNaissance;
 
         return $this;
     }
 
     public function getCompositionFoyer(): ?int 
     { 
-        return $this->composition_foyer; 
+        return $this->compositionFoyer; 
     }
 
     public function setCompositionFoyer(?int $v): self 
@@ -311,19 +315,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // if ($v !== null && $v < 1) {
         //     throw new \InvalidArgumentException('La composition du foyer doit être au moins 1.');
         // }
-        $this->composition_foyer = $v; 
+        $this->compositionFoyer = $v; 
         
         return $this;
     }
 
     public function getNombreEnfants(): ?int
     {
-        return $this->nombre_enfants;
+        return $this->nombreEnfants;
     }
 
-    public function setNombreEnfants(?int $nombre_enfants): static
+    public function setNombreEnfants(?int $nombreEnfants): static
     {
-        $this->nombre_enfants = $nombre_enfants;
+        $this->nombreEnfants = $nombreEnfants;
 
         return $this;
     }
@@ -340,17 +344,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getMotivationsAttentes(): ?string
-    {
-        return $this->motivations_attentes;
-    }
+    // à enlever pour nouveau fonctionnement avec entity Adhesion complète
+        // public function getMotivationsAttentes(): ?string
+    // {
+    //     return $this->motivationsAttentes;
+    // }
 
-    public function setMotivationsAttentes(?string $motivations_attentes): static
-    {
-        $this->motivations_attentes = $motivations_attentes;
+    // public function setMotivationsAttentes(?string $motivationsAttentes): static
+    // {
+    //     $this->motivationsAttentes = $motivationsAttentes;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
 
     public function getCompetences(): ?string
@@ -365,17 +370,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAdhesion(): ?adhesion
-    {
-        return $this->adhesion;
-    }
+    // à enlever pour nouveau fonctionnement avec entity Adhesion complète
+    // public function getAdhesion(): ?adhesion
+    // {
+    //     return $this->adhesion;
+    // }
 
-    public function setAdhesion(?adhesion $adhesion): static
-    {
-        $this->adhesion = $adhesion;
+    // public function setAdhesion(?adhesion $adhesion): static
+    // {
+    //     $this->adhesion = $adhesion;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getGroupe(): ?groupe
     {
@@ -388,9 +394,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-
-
 
     /**
      * @return Collection<int, pole>
@@ -416,41 +419,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, motivation>
-     */
-    public function getMotivation(): Collection
+    public function getAdhesions(): Collection
     {
-        return $this->motivation;
+        return $this->adhesions;
     }
 
-    public function addMotivation(motivation $motivation): static
+    public function addAdhesion(Adhesion $adhesion): self
     {
-        if (!$this->motivation->contains($motivation)) {
-            $this->motivation->add($motivation);
+        if (!$this->adhesions->contains($adhesion)) {
+            $this->adhesions->add($adhesion);
+            $adhesion->setUser($this);
         }
-
         return $this;
     }
 
-    public function removeMotivation(motivation $motivation): static
+    public function removeAdhesion(Adhesion $adhesion): self
     {
-        $this->motivation->removeElement($motivation);
-
+        if ($this->adhesions->removeElement($adhesion)) {
+            if ($adhesion->getUser() === $this) {
+                $adhesion->setUser(null);
+            }
+        }
         return $this;
     }
 
-    public function getParticipationDispo(): ?participationDispo
-    {
-        return $this->participationDispo;
-    }
+// à enlever pour nouveau fonctionnement avec entity Adhesion complète
+    // /**
+    //  * @return Collection<int, motivation>
+    //  */
+    // public function getMotivation(): Collection
+    // {
+    //     return $this->motivation;
+    // }
 
-    public function setParticipationDispo(?participationDispo $participationDispo): static
-    {
-        $this->participationDispo = $participationDispo;
+    // public function addMotivation(motivation $motivation): static
+    // {
+    //     if (!$this->motivation->contains($motivation)) {
+    //         $this->motivation->add($motivation);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
+
+    // public function removeMotivation(motivation $motivation): static
+    // {
+    //     $this->motivation->removeElement($motivation);
+
+    //     return $this;
+    // }
+    // à enlever pour nouveau fonctionnement avec entity Adhesion complète
+    // public function getParticipationDispo(): ?participationDispo
+    // {
+    //     return $this->participationDispo;
+    // }
+
+    // public function setParticipationDispo(?participationDispo $participationDispo): static
+    // {
+    //     $this->participationDispo = $participationDispo;
+
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, Ressource>

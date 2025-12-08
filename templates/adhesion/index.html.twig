@@ -2,6 +2,7 @@
 
 {% block title %}adhesion{% endblock %}
 
+
 {% block body %}
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
@@ -9,32 +10,46 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/EDW2425/Desktop/zest_symfony/src/Controller/AdhesionController.php</code></li>
-        <li>Your template at <code>C:/Users/EDW2425/Desktop/zest_symfony/templates/adhesion/index.html.twig</code></li>
-    </ul>
-</div>
-{% endblock %}
-
-{# 
-
-{% block title %}Register{% endblock %}
-
-{% block body %}
     <h1>adhésion</h1>
 
-    {{ form_errors(registrationForm) }}
+     {{ form_errors(adhesionForm) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
+    {{ form_start(adhesionForm) }}
+        {{ form_row(adhesionForm.email) }}
+        {{ form_row(adhesionForm.groupe) }}
+        {{ form_row(adhesionForm.nouveauGroupe) }}
+        {{ form_row(adhesionForm.isReferent) }}
+        {{ form_row(adhesionForm.isOpen) }}
+        {{ form_row(adhesionForm.motivation) }}
+        {{ form_row(adhesionForm.participationDispo) }}
+        {{ form_row(adhesionForm.pole) }}
+        {{ form_row(adhesionForm.competences) }}
+        {{ form_row(adhesionForm.engagement) }}
+        {{ form_row(adhesionForm.paiement) }}
+        {{ form_row(adhesionForm.adhesion) }}
+        {{ form_row(adhesionForm.infos) }}
+        {{ form_row(adhesionForm.paiement) }}
+
+        {{ form_row(adhesionForm.agree_fonctionnement_participation) }}
+        {{ form_row(adhesionForm.agree_rgpd) }}
+        {{ form_row(adhesionForm.agree_infos_mail) }}
+        
+
+        <button type="submit" class="btn">adhérer</button>
+    {{ form_end(adhesionForm) }}
+</div>
+{% endblock %} 
+
+{# 
+    {{ form_errors(adhesionForm) }}
+
+    {{ form_start(adhesionForm) }}
+        {{ form_row(adhesionForm.email) }}
+        {{ form_row(adhesionForm.plainPassword, {
             label: 'Mot de Passe'
         }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+        {{ form_row(adhesionForm.agreeTerms) }}
 
         <button type="submit" class="btn">se connecter</button>
-    {{ form_end(registrationForm) }}
-{% endblock %} #}
+    {{ form_end(adhesionForm) }}
+    #}

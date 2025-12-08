@@ -22,11 +22,11 @@ class Motivation
      * @var Collection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'motivation')]
-    private Collection $user_motiv;
+    private Collection $userMotiv;
 
     public function __construct()
     {
-        $this->user_motiv = new ArrayCollection();
+        $this->userMotiv = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -52,13 +52,13 @@ class Motivation
      */
     public function getUserMotiv(): Collection
     {
-        return $this->user_motiv;
+        return $this->userMotiv;
     }
 
     public function addUserMotiv(User $userMotiv): static
     {
-        if (!$this->user_motiv->contains($userMotiv)) {
-            $this->user_motiv->add($userMotiv);
+        if (!$this->userMotiv->contains($userMotiv)) {
+            $this->userMotiv->add($userMotiv);
             $userMotiv->addMotivation($this);
         }
 
@@ -67,7 +67,7 @@ class Motivation
 
     public function removeUserMotiv(User $userMotiv): static
     {
-        if ($this->user_motiv->removeElement($userMotiv)) {
+        if ($this->userMotiv->removeElement($userMotiv)) {
             $userMotiv->removeMotivation($this);
         }
 

@@ -16,7 +16,7 @@ class ParticipationDispo
     private ?int $id = null;
 
     #[ORM\Column(length: 45)]
-    private ?string $libelle_dispo = null;
+    private ?string $libelleDispo = null;
 
     /**
      * @var Collection<int, User>
@@ -36,12 +36,12 @@ class ParticipationDispo
 
     public function getLibelleDispo(): ?string
     {
-        return $this->libelle_dispo;
+        return $this->libelleDispo;
     }
 
-    public function setLibelleDispo(string $libelle_dispo): static
+    public function setLibelleDispo(string $libelleDispo): static
     {
-        $this->libelle_dispo = $libelle_dispo;
+        $this->libelleDispo = $libelleDispo;
 
         return $this;
     }

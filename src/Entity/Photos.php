@@ -18,11 +18,11 @@ class Photos
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
-    #[ORM\OneToOne(mappedBy: 'photo_principale', cascade: ['persist', 'remove'])]
-    private ?Ressource $photo_principale = null;
+    #[ORM\OneToOne(mappedBy: 'photoPrincipale', cascade: ['persist', 'remove'])]
+    private ?Ressource $photoPrincipale = null;
 
-    #[ORM\ManyToOne(inversedBy: 'photos_supp')]
-    private ?Ressource $photos_supp = null;
+    #[ORM\ManyToOne(inversedBy: 'photosSupp')]
+    private ?Ressource $photosSupp = null;
 
     public function getId(): ?int
     {
@@ -43,34 +43,34 @@ class Photos
 
     public function getPhotoPrincipale(): ?Ressource
     {
-        return $this->photo_principale;
+        return $this->photoPrincipale;
     }
 
-    public function setPhotoPrincipale(?Ressource $photo_principale): static
+    public function setPhotoPrincipale(?Ressource $photoPrincipale): static
     {
         // unset the owning side of the relation if necessary
-        if ($photo_principale === null && $this->photo_principale !== null) {
-            $this->photo_principale->setPhotoPrincipale(null);
+        if ($photoPrincipale === null && $this->photoPrincipale !== null) {
+            $this->photoPrincipale->setPhotoPrincipale(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($photo_principale !== null && $photo_principale->getPhotoPrincipale() !== $this) {
-            $photo_principale->setPhotoPrincipale($this);
+        if ($photoPrincipale !== null && $photoPrincipale->getPhotoPrincipale() !== $this) {
+            $photoPrincipale->setPhotoPrincipale($this);
         }
 
-        $this->photo_principale = $photo_principale;
+        $this->photoPrincipale = $photoPrincipale;
 
         return $this;
     }
 
     public function getPhotosSupp(): ?Ressource
     {
-        return $this->photos_supp;
+        return $this->photosSupp;
     }
 
-    public function setPhotosSupp(?Ressource $photos_supp): static
+    public function setPhotosSupp(?Ressource $photosSupp): static
     {
-        $this->photos_supp = $photos_supp;
+        $this->photosSupp = $photosSupp;
 
         return $this;
     }

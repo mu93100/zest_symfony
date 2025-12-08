@@ -8,13 +8,12 @@ ouvrir Wamp PUIS démarrer serveur local
 TOUT S'ECRIT DS TERMINAL
 
 pour commencer en clonant un doss de facundo
-4)-    php bin/console doctrine:database:create new
-5)-    php bin/console make:migration
-6)-    php bin/console doctrine:migrations:migrate
 1)-    symfony serve -d
 2)-    symfony serve
 3)-    composer install
-
+4)-    php bin/console doctrine:database:create new
+5)-    php bin/console make:migration
+6)-    php bin/console doctrine:migrations:migrate
 =================================================
 GÉNÉRATION DE BASE POUR Nx DOSS symfonysymfony serve
 =================================================

@@ -13,17 +13,16 @@
         {{ form_row(registrationForm.email) }}
         {{ form_row(registrationForm.telephone) }}
         {{ form_row(registrationForm.adresse) }}
-        {{ form_row(registrationForm.code_postal) }}
-        {{ form_row(registrationForm.date_de_naissance) }}
-        {{ form_row(registrationForm.composition_foyer) }}
-        {{ form_row(registrationForm.nombre_enfants) }}
+        {{ form_row(registrationForm.codePostal) }}
+        {{ form_row(registrationForm.dateDeNaissance) }}
+        {{ form_row(registrationForm.compositionFoyer) }}
+        {{ form_row(registrationForm.nombreEnfants) }}
         {{ form_row(registrationForm.groupe) }}
-        {{ form_row(registrationForm.is_referent) }}
+        {{ form_row(registrationForm.isReferent) }}
 
         {{ form_row(registrationForm.plainPassword, {
             label: 'Mot de Passe'
         }) }}
-
 
         {{ form_row(registrationForm.agree_fonctionnement_participation) }}
         {{ form_row(registrationForm.agree_rgpd) }}
@@ -34,8 +33,8 @@
 {% endblock %}
                 {# // +++++RAJOUT JS DS TWIG APRES
                 // document.addEventListener('DOMContentLoaded', () => {
-                //     const referentCheckbox = document.querySelector('#registration_form_is_referent');
-                //     const isOpenField = document.querySelector('#registration_form_is_open').closest('.form-group');
+                //     const referentCheckbox = document.querySelector('#registration_form_isReferent');
+                //     const isOpenField = document.querySelector('#registration_form_isOpen').closest('.form-group');
 
                 //     isOpenField.style.display = 'none';
 

@@ -23,13 +23,13 @@ class Producteurice
     private ?string $produits = null;
 
     #[ORM\Column]
-    private ?bool $is_coop = null;
+    private ?bool $isCoop = null;
 
     #[ORM\Column(length: 255)]
     private ?string $site = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $lien_produits = null;
+    private ?string $lienProduits = null;
 
     #[ORM\Column(length: 255)]
     private ?string $logo = null;
@@ -79,12 +79,12 @@ class Producteurice
 
     public function isCoop(): ?bool
     {
-        return $this->is_coop;
+        return $this->isCoop;
     }
 
-    public function setIsCoop(bool $is_coop): static
+    public function setIsCoop(bool $isCoop): static
     {
-        $this->is_coop = $is_coop;
+        $this->isCoop = $isCoop;
 
         return $this;
     }
@@ -103,12 +103,12 @@ class Producteurice
 
     public function getLienProduits(): ?string
     {
-        return $this->lien_produits;
+        return $this->lienProduits;
     }
 
-    public function setLienProduits(?string $lien_produits): static
+    public function setLienProduits(?string $lienProduits): static
     {
-        $this->lien_produits = $lien_produits;
+        $this->lienProduits = $lienProduits;
 
         return $this;
     }

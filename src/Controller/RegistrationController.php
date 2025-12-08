@@ -33,7 +33,7 @@ class RegistrationController extends AbstractController
             // hashage password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
-            $nouveauGroupe = $form->get('nouveau_groupe')->getData();
+            $nouveauGroupe = $form->get('nouveauGroupe')->getData();
             if ($nouveauGroupe) {
                 $groupe = new Groupe();
                 $groupe->setNom($nouveauGroupe);

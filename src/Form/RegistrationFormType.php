@@ -29,16 +29,16 @@ class RegistrationFormType extends AbstractType
             ->add('email')
             ->add('telephone')
             ->add('adresse')
-            ->add('code_postal')
+            ->add('codePostal')
             ->add('ville')
-            ->add('date_de_naissance')
-            ->add('composition_foyer', IntegerType::class, [
-                'property_path' => 'composition_foyer', 
+            ->add('dateDeNaissance')
+            ->add('compositionFoyer', IntegerType::class, [
+                'property_path' => 'compositionFoyer', 
                 'required' => false,
                 'attr' => ['min' => 1, 'step' => 1],
                 ])
-            ->add('nombre_enfants', IntegerType::class, [
-                'property_path' => 'nombre_enfants', 
+            ->add('nombreEnfants', IntegerType::class, [
+                'property_path' => 'nombreEnfants', 
                 'required' => false,
                 'attr' => ['min' => 0, 'step' => 1],
                 ])
@@ -50,7 +50,7 @@ class RegistrationFormType extends AbstractType
                 'placeholder' => 'Nouveau groupe',
                 'required' => false,
             ])
-            ->add('nouveau_groupe', TextType::class, [
+            ->add('nouveauGroupe', TextType::class, [
                 'mapped' => false, // champ libre, pas lié directement à User
                 'required' => false,
                 'label' => 'Nom du nouveau groupe',

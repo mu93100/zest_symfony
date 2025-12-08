@@ -28,10 +28,9 @@ class AdhesionFormType extends AbstractType
             ->add('groupe', EntityType::class, [
                 'class' => Groupe::class,
                 'choice_label' => 'nom',
-                'placeholder' => 'Nouveau groupe',
                 'required' => false,
             ])
-            ->add('nouveau_groupe', TextType::class, [
+            ->add('nouveauGroupe', TextType::class, [
                 'mapped' => false, // champ libre, pas lié directement à User
                 'label' => 'Nom du nouveau groupe',
                 'required' => false,
@@ -83,7 +82,7 @@ class AdhesionFormType extends AbstractType
                 'choice_label' => 'nom',
                 'placeholder' => 'Choisir une adhésion',
             ])
-            ->add('newsletter', CheckboxType::class, [
+            ->add('infos', CheckboxType::class, [
                 'label' => 'J\'accepte de recevoir des informations par email',
                 'required' => false,
             ]);

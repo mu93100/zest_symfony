@@ -15,18 +15,51 @@ class Adhesion
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100)]
-    private ?string $libelle = null;
+    #[ORM\Column(length: 9)]
+    private string $saison; // ex: "2024/2025"
 
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'montant_adhesion')]
-    private Collection $users;
+    #[ORM\Column(type: 'datetime')]
+    private \DateTimeInterface $dateAdhesion;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $attentesTexte = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $competencesTexte = null;
+
+    // paiement validé par admin
+    #[ORM\Column(type: 'boolean')]
+    private bool $paiement = false;
+
+    //----------------r e l a t i o n s  ManyToOne
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'adhesion')]
+    private ?User $user = null;
+    // relation ManyToOne car un user aura plusieurs adhesions :: une par saison
+
+    #[ORM\ManyToOne(targetEntity: Groupe::class, inversedBy: 'adhesions')]
+    private ?Groupe $groupe = null;
+
+    #[ORM\ManyToOne(targetEntity: MontantAdhesion::class)]
+    private ?MontantAdhesion $montantAdhesion = null;
+
+    //----------------r e l a t i o n s  ManyToMany
+    #[ORM\ManyToMany(targetEntity: Motivation::class)]
+    private Collection $motivations;
+
+    #[ORM\ManyToMany(targetEntity: ParticipationDispo::class)]
+    private Collection $participations;
+
+    #[ORM\ManyToMany(targetEntity: Pole::class)]
+    private Collection $poles;
+
+
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+        $this->motivations = new ArrayCollection();
+        $this->participations = new ArrayCollection();
+        $this->poles = new ArrayCollection();
+        $this->dateAdhesion = new \DateTime();
     }
 
     public function getId(): ?int
@@ -34,45 +67,237 @@ class Adhesion
         return $this->id;
     }
 
-    public function getLibelle(): ?string
+    public function getSaison(): string
     {
-        return $this->libelle;
+        return $this->saison;
     }
 
-    public function setLibelle(string $libelle): static
+    public function setSaison(string $saison): self
     {
-        $this->libelle = $libelle;
+        $this->saison = $saison;
+
+        return $this;
+    }
+
+    public function getDateAdhesion(): \DateTimeInterface
+    {
+        return $this->dateAdhesion;
+    }
+
+    public function setDateAdhesion(\DateTimeInterface $dateAdhesion): self
+    {
+        $this->dateAdhesion = $dateAdhesion;
+
+        return $this;
+    }
+
+    public function getAttentesTexte(): ?string
+    {
+        return $this->attentesTexte;
+    }   
+    public function setAttentesTexte(?string $attentesTexte): self
+    {
+        $this->attentesTexte = $attentesTexte;
+
+        return $this;
+    }
+
+    public function getCompetencesTexte(): ?string
+    {
+        return $this->competencesTexte;
+    }
+
+    public function setCompetencesTexte(?string $competencesTexte): self
+    {
+        $this->competencesTexte = $competencesTexte;
+
+        return $this;
+    }
+
+    public function isPaiement(): bool
+    {
+        return $this->paiement;
+    }
+
+    public function setPaiement(bool $paiement): self
+    {
+        $this->paiement = $paiement;
+
+        return $this;
+    }
+// on récupère le user connecté
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getGroupe(): ?Groupe
+    {
+        return $this->groupe;
+    }
+
+    public function setGroupe(?Groupe $groupe): self
+    {
+        $this->groupe = $groupe;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, User>
+     * @return Collection<int, Motivation>
      */
-    public function getUsers(): Collection
+
+    public function getMotivations(): Collection
     {
-        return $this->users;
+        return $this->motivations;
     }
 
-    public function addUser(User $user): static
+    public function addMotivation(Motivation $motivation): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->setAdhesion($this);
+        if (!$this->motivations->contains($motivation)) {
+            $this->motivations->add($motivation);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): static
+    public function removeMotivation(Motivation $motivation): self
     {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getAdhesion() === $this) {
-                $user->setAdhesion(null);
-            }
+        $this->motivations->removeElement($motivation);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ParticipationDispo>
+     */
+    public function getParticipations(): Collection
+    {
+        return $this->participations;
+    }
+
+    public function addParticipation(ParticipationDispo $participation): self
+    {
+        if (!$this->participations->contains($participation)) {
+            $this->participations->add($participation);
         }
 
         return $this;
+    }
+
+    public function removeParticipation(ParticipationDispo $participation): self
+    {
+        $this->participations->removeElement($participation);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Pole>
+     */
+    public function getPoles(): Collection
+    {
+        return $this->poles;
+    }
+
+    public function addPole(Pole $pole): self
+    {
+        if (!$this->poles->contains($pole)) {
+            $this->poles->add($pole);
+        }
+
+        return $this;
+    }
+
+    public function removePole(Pole $pole): self
+    {
+        $this->poles->removeElement($pole);
+
+        return $this;
+    }
+
+    public function getMontantAdhesion(): ?MontantAdhesion 
+    { 
+        return $this->montantAdhesion; 
+    }
+
+    public function setMontantAdhesion(?MontantAdhesion $montant): self 
+    { 
+        $this->montantAdhesion = $montant; 
+        
+        return $this; 
+    }
+
+}   
+
+// ADHESION
+// création saisons ADMIN
+//     L’admin clique sur “Créer nouvelle saison”.
+//     Une commande Symfony ou une action en back-office génère les nouvelles adhésions 
+//     pour tous les utilisateurs existants, avec la nouvelle valeur saison.
+// src/Command/CreateNewSeasonCommand.php
+#[AsCommand(name: 'app:create-new-season')]
+class CreateNewSeasonCommand extends Command
+{
+    public function __construct(
+        private EntityManagerInterface $em,
+        private UserRepository $userRepository
+    ) {
+        parent::__construct();
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $nouvelleSaison = '2026/2027';
+        $users = $this->userRepository->findAll();
+
+        foreach ($users as $user) {
+            $adhesion = new Adhesion();
+            $adhesion->setUser($user);
+            $adhesion->setGroupe($user->getGroupe());
+            $adhesion->setSaison($nouvelleSaison);
+            $adhesion->setDateAdhesion(new \DateTime());
+
+            $this->em->persist($adhesion);
+        }
+
+        $this->em->flush();
+        $output->writeln("Nouvelle saison $nouvelleSaison créée !");
+        return Command::SUCCESS;
     }
 }
+    // Chaque adhésion est liée à un user, un groupe, et une saison.   
+    // Tu peux ensuite filtrer facilement les adhésions par saison avec une requête Doctrine :
+    $adhesions2024 = $adhesionRepository->findBy(['saison' => '2024/2025']);   
+$adhesions = $adhesionRepository->findBy(['saison' => '2025/2026']);
+$adhesions2025 = $adhesionRepository->findBy(['saison' => '2025/2026']);
+$adhesions2026 = $adhesionRepository->findBy(['saison' => '2026/2027']);
+$adhesions = $adhesionRepository->findBy(['saison' => '2025/2026']);
+$adhesions2025 = $adhesionRepository->findBy(['saison' => '2025/2026']);
+$adhesions2026 = $adhesionRepository->findBy(['saison' =>
+    '2026/2027']);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
