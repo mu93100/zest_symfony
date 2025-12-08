@@ -67,15 +67,16 @@ class DashboardController extends AbstractDashboardController
         // Utilisateurs & Groupes
         yield MenuItem::subMenu('A D H E R E N T S')->setSubItems([
             MenuItem::linkToCrud('Users', '', User::class),
-            MenuItem::linkToCrud('Motivations', '', Motivation::class),
-            MenuItem::linkToCrud('Disponibilités', '', ParticipationDispo::class),
-            MenuItem::linkToCrud('Adhésions', '', Adhesion::class),
+            
         ]);
 
         // Organisation interne
         yield MenuItem::subMenu('O R G A N I S A T I O N', '')->setSubItems([
             MenuItem::linkToCrud('Pôles', '', Pole::class),
             MenuItem::linkToCrud('Groupes', '', Groupe::class),
+            MenuItem::linkToCrud('Adhésions', '', Adhesion::class),
+            MenuItem::linkToCrud('Motivations', '', Motivation::class),
+            MenuItem::linkToCrud('Disponibilités', '', ParticipationDispo::class),
         ]);
 
         // Contenus & médias

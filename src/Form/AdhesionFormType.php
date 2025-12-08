@@ -3,11 +3,14 @@
 namespace App\Form;
 
 use App\Entity\Adhesion;
+use App\Entity\User;
 use App\Entity\Groupe;
+use App\Entity\Saison;
+use App\Entity\MontantAdhesion;
 use App\Entity\Motivation;
 use App\Entity\ParticipationDispo;
 use App\Entity\Pole;
-use App\Entity\User;
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,92 +26,125 @@ class AdhesionFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
-            //groupe : liste déroulante (avec EntityType) + champ "nouveau groupe"
+            // Relations ManyToOne
+            ->add('user', EntityType::class, [
+                'class' => User::class,
+                'choice_label' => 'email',
+                'label' => 'Adhérent·e',
+            ])
             ->add('groupe', EntityType::class, [
                 'class' => Groupe::class,
                 'choice_label' => 'nom',
+                'label' => 'Groupe',
+                'placeholder' => 'Choisir un groupe',
                 'required' => false,
             ])
-            ->add('nouveauGroupe', TextType::class, [
-                'mapped' => false, // champ libre, pas lié directement à User
-                'label' => 'Nom du nouveau groupe',
+            ->add('saison', EntityType::class, [
+                'class' => Saison::class,
+                'choice_label' => 'nom',
+                'label' => 'Saison',
+                'placeholder' => 'Choisir une saison',
+            ])
+            ->add('montantAdhesion', EntityType::class, [
+                'class' => MontantAdhesion::class,
+                'choice_label' => 'label',
+                'label' => 'Montant de l’adhésion',
+                'placeholder' => 'Choisir un montant',
                 'required' => false,
+            ])
+
+            // Champs non mappés
+            ->add('nouveauGroupe', TextType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Créer un nouveau groupe',
             ])
             ->add('isReferent', CheckboxType::class, [
-                'label' => 'Je suis référent.e de mon groupe',
+                'mapped' => false,
                 'required' => false,
+                'label' => 'Je suis référent·e de mon groupe',
             ])
             ->add('isOpen', CheckboxType::class, [
-                'label' => 'Mon groupe peut accueillir de nouveaux adhérents',
+                'mapped' => false,
                 'required' => false,
+                'label' => 'Mon groupe peut accueillir de nouvelles adhésions',
             ])
-            ->add('motivation', EntityType::class, [
+
+            // ManyToMany
+            ->add('motivations', EntityType::class, [
                 'class' => Motivation::class,
-                'choice_label' => 'titre',
+                'choice_label' => 'label',
                 'multiple' => true,
-                'expanded' => true, // cases à cocher
-            ])
-            ->add('attentes', TextareaType::class, [
-                'label' => 'Décris tes attentes spécifiques',
+                'expanded' => true,
                 'required' => false,
             ])
-            ->add('participationDispo', EntityType::class, [
+            ->add('participations', EntityType::class, [
                 'class' => ParticipationDispo::class,
-                'choice_label' => 'libelle',
+                'choice_label' => 'label',
                 'multiple' => true,
-                'expanded' => true, // cases à cocher
+                'expanded' => true,
+                'required' => false,
             ])
-            ->add('pole', EntityType::class, [
+            ->add('poles', EntityType::class, [
                 'class' => Pole::class,
                 'choice_label' => 'nom',
-                'placeholder' => 'Pôle(s) de travail auquel(s) je souhaite participer',
-            ])
-            ->add('competences', TextareaType::class, [
-                'label' => 'Quelles compétences particulières peux-tu partager ?',
+                'multiple' => true,
+                'expanded' => true,
                 'required' => false,
             ])
 
-            ->add('engagement', CheckboxType::class, [
-                'label' => 'Je m\'engage à respecter les règles du GAS',
-                'required' => true,
+            // Textes libres
+            ->add('attentesTexte', TextareaType::class, [
+                'required' => false,
+                'label' => 'Tes attentes spécifiques',
             ])
+            ->add('competencesTexte', TextareaType::class, [
+                'required' => false,
+                'label' => 'Compétences à partager',
+            ])
+
+            // Consentements
+            ->add('agree_fonctionnement_participation', CheckboxType::class, [
+                'mapped' => false,
+                'required' => true,
+                'label' => 'Je m’engage à respecter les règles et participer activement',
+            ])
+            ->add('agree_rgpd', CheckboxType::class, [
+                'mapped' => false,
+                'required' => true,
+                'label' => 'J’accepte le traitement de mes données (RGPD)',
+            ])
+            ->add('agree_infos_mail', CheckboxType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'J’accepte de recevoir des informations par email',
+            ])
+
+            // Paiement
             ->add('paiement', CheckboxType::class, [
-                'label' => 'Je règle mon adhésion annuelle par virement',
-                'required' => true,
-            ])
-            ->add('adhesion', EntityType::class, [
-                'class' => Adhesion::class,
-                'choice_label' => 'nom',
-                'placeholder' => 'Choisir une adhésion',
-            ])
-            ->add('infos', CheckboxType::class, [
-                'label' => 'J\'accepte de recevoir des informations par email',
                 'required' => false,
+                'label' => 'Paiement validé (administration)',
             ]);
-            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $form = $event->getForm();
-            $user = $event->getData();
 
-            // si isReferent = true -> on ajoute le champ isOpen du groupe
-            if ($user && $user->isReferent()) {
+        // EventListener placé correctement
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $adhesion = $event->getData();
+            $form = $event->getForm();
+
+            if ($adhesion && $adhesion->getUser() && $adhesion->getUser()->isReferent()) {
                 $form->add('isOpen', CheckboxType::class, [
-                    'mapped' => false, // car isOpen est dans Groupe, pas User
-                    'label' => 'Le groupe peut accueillir de nouvelleaux adhérent.es',
+                    'mapped' => false,
+                    'label' => 'Le groupe peut accueillir de nouvelles adhésions',
                     'required' => false,
                 ]);
             }
         });
     }
-    
-
-
-
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            'data_class' => Adhesion::class,
         ]);
     }
 }

@@ -32,4 +32,9 @@ il a:
     //            ->getQuery()
     //            ->getOneOrNullResult()
     //        ;
-    //    }
+    //    } 
+
+--------------------------------
+private ?string $nom = null; // accepte "Corto-Zest" ou null
+private string $nom;         // accepte uniquement une chaîne, jamais null
+si on rajoute #[ORM\Column(length: 45, nullable: false)] === ca ne peut JAMAIS etre null

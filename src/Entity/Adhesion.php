@@ -29,7 +29,7 @@ class Adhesion
     private bool $paiement = false;
 
     //----------------r e l a t i o n s  ManyToOne
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'adhesion')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'adhesions')]
     private ?User $user = null;
     // relation ManyToOne car un user aura plusieurs adhesions :: une par saison
 
@@ -235,23 +235,4 @@ class Adhesion
         return $this; 
     }
 
-}   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}

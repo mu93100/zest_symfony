@@ -15,8 +15,8 @@ class Groupe
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 45)]
-    private ?string $nom = null;
+    #[ORM\Column(length: 45, nullable: false)]
+    private string $nom;
 
     #[ORM\Column(length: 45)]
     private ?string $ville = null;
@@ -24,16 +24,16 @@ class Groupe
     #[ORM\Column]
     private ?bool $isReferent = false;
 
-    #[ORM\Column(length: 100, nullable: true)]
-    private ?string $referentNom = null;
+    // #[ORM\Column(length: 100, nullable: true)]
+    // private ?string $referentNom = null;
 
-    #[ORM\Column(length: 100, nullable: true)]
-    private ?string $referentEmail = null;
+    // #[ORM\Column(length: 100, nullable: true)]
+    // private ?string $referentEmail = null;
 
-    #[ORM\Column(length: 20, nullable: true)]
-    private ?string $referentTelephone = null;
+    // #[ORM\Column(length: 20, nullable: true)]
+    // private ?string $referentTelephone = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'boolean')]
     private ?bool $isOpen = false;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -91,37 +91,15 @@ class Groupe
         return $this;
     }
 
-        public function getReferentNom(): ?string
+    // Fo qui renvoie le user référent du groupe (ou null si aucun).
+    public function getReferent(): ?User
     {
-        return $this->referentNom;
-    }
-
-    public function setReferentNom(?string $referentNom): static
-    {
-        $this->referentNom = $referentNom;
-        return $this;
-    }
-
-    public function getReferentEmail(): ?string
-    {
-        return $this->referentEmail;
-    }
-
-    public function setReferentEmail(?string $referentEmail): static
-    {
-        $this->referentEmail = $referentEmail;
-        return $this;
-    }
-
-    public function getReferentTelephone(): ?string
-    {
-        return $this->referentTelephone;
-    }
-
-    public function setReferentTelephone(?string $referentTelephone): static
-    {
-        $this->referentTelephone = $referentTelephone;
-        return $this;
+        foreach ($this->membres as $membre) {
+            if ($membre->isReferent()) {
+                return $membre;
+            }
+        }
+        return null;
     }
 
     public function isOpen(): ?bool 
