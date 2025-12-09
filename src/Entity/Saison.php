@@ -25,6 +25,8 @@ class Saison
     #[ORM\OneToMany(mappedBy: 'saison', targetEntity: Adhesion::class, cascade: ['remove'])]
     private Collection $adhesions;
 
+
+    
     public function __construct(string $nom)
     {
         $this->nom = $nom;

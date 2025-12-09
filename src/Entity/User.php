@@ -73,13 +73,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\GreaterThanOrEqual(1)]
     private ?int $nombreEnfants = null;
 
-    #[ORM\Column]
-    private ?bool $isReferent = false;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $competences = null;
-
-
     //----------------r e l a t i o n s  ManyToOne
     #[ORM\ManyToOne(inversedBy: 'membres')]
     private ?Groupe $groupe = null;
@@ -304,30 +297,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNombreEnfants(?int $nombreEnfants): static
     {
         $this->nombreEnfants = $nombreEnfants;
-
-        return $this;
-    }
-
-    public function isReferent(): ?bool
-    {
-        return $this->isReferent;
-    }
-
-    public function setIsReferent(bool $isReferent): self
-    {
-        $this->isReferent = $isReferent;
-
-        return $this;
-    }
-
-    public function getCompetences(): ?string
-    {
-        return $this->competences;
-    }
-
-    public function setCompetences(string $competences): static
-    {
-        $this->competences = $competences;
 
         return $this;
     }

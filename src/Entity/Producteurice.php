@@ -37,11 +37,15 @@ class Producteurice
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
+    //----------------r e l a t i o n   ManyToMany
     /**
      * @var Collection<int, Produit>
      */
     #[ORM\ManyToMany(targetEntity: Produit::class, inversedBy: 'producteurices')]
     private Collection $produit;
+
+
+
 
     public function __construct()
     {

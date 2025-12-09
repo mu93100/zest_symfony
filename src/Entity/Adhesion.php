@@ -47,7 +47,7 @@ class Adhesion
     #[ORM\ManyToMany(targetEntity: Motivation::class)]
     private Collection $motivations;
 
-    #[ORM\ManyToMany(targetEntity: ParticipationDispo::class)]
+    #[ORM\ManyToMany(targetEntity: ParticipationDispo::class, inversedBy: 'adhesions')]
     private Collection $participations;
 
     #[ORM\ManyToMany(targetEntity: Pole::class)]

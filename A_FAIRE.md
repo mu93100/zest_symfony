@@ -53,7 +53,7 @@ Ajouter éventuellement des filtres (par ville, par groupe ouvert/fermé, etc.).
 Personnaliser les labels pour que ce soit clair pour les admins.
 
 5. Côté base de données
-Lancer une migration Doctrine (php bin/console make:migration puis php bin/console doctrine:migrations:migrate) pour que les champs ajoutés (createdAt, isOpen, etc.) soient bien en base.
+Lancer une migration Doctrine (php bin/console make:migration puis php bin/console doctrine:migrations:migrate) pour que les champs ajoutés (dateCreation, isOpen, etc.) soient bien en base.
 
 Vérifier dans phpMyAdmin que la table groupe contient bien created_at, is_open, etc.
 

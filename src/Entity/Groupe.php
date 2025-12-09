@@ -24,20 +24,11 @@ class Groupe
     #[ORM\Column]
     private ?bool $isReferent = false;
 
-    // #[ORM\Column(length: 100, nullable: true)]
-    // private ?string $referentNom = null;
-
-    // #[ORM\Column(length: 100, nullable: true)]
-    // private ?string $referentEmail = null;
-
-    // #[ORM\Column(length: 20, nullable: true)]
-    // private ?string $referentTelephone = null;
-
     #[ORM\Column(type: 'boolean')]
     private ?bool $isOpen = false;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?\DateTimeImmutable $dateCreation = null;
 
 //----------------r e l a t i o n s OneToMany
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'groupe')]
@@ -47,7 +38,7 @@ class Groupe
     public function __construct()
     {
         $this->membres = new ArrayCollection();
-        $this->createdAt = new \DateTimeImmutable();
+        $this->dateCreation = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -114,14 +105,14 @@ class Groupe
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCateCreation(): ?\DateTimeImmutable
     {
-        return $this->createdAt;
+        return $this->dateCreation;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setCateCreation(\DateTimeImmutable $dateCreation): static
     {
-        $this->createdAt = $createdAt;
+        $this->dateCreation = $dateCreation;
         return $this;
     }
 //----------------r e l a t i o n s  OneToMany  

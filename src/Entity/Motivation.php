@@ -18,15 +18,18 @@ class Motivation
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 
+   //----------------r e l a t i o n s  ManyToMany   
     /**
-     * @var Collection<int, User>
+     * @var Collection<int, Adhesion>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'motivation')]
-    private Collection $userMotiv;
+    #[ORM\ManyToMany(targetEntity: Adhesion::class, mappedBy: 'motivation')]
+    private Collection $adhesionMotiv;
+
+
 
     public function __construct()
     {
-        $this->userMotiv = new ArrayCollection();
+        $this->adhesionMotiv = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -48,27 +51,27 @@ class Motivation
     
 
     /**
-     * @return Collection<int, User>
+     * @return Collection<int, Adhesion>
      */
-    public function getUserMotiv(): Collection
+    public function getAdhesionMotiv(): Collection
     {
-        return $this->userMotiv;
+        return $this->adhesionMotiv;
     }
 
-    public function addUserMotiv(User $userMotiv): static
+    public function addAdhesionMotiv(Adhesion $adhesionMotiv): static
     {
-        if (!$this->userMotiv->contains($userMotiv)) {
-            $this->userMotiv->add($userMotiv);
-            $userMotiv->addMotivation($this);
+        if (!$this->adhesionMotiv->contains($adhesionMotiv)) {
+            $this->adhesionMotiv->add($adhesionMotiv);
+            $adhesionMotiv->addMotivation($this);
         }
 
         return $this;
     }
 
-    public function removeUserMotiv(User $userMotiv): static
+    public function removeAdhesionMotiv(Adhesion $adhesionMotiv): static
     {
-        if ($this->userMotiv->removeElement($userMotiv)) {
-            $userMotiv->removeMotivation($this);
+        if ($this->adhesionMotiv->removeElement($adhesionMotiv)) {
+            $adhesionMotiv->removeMotivation($this);
         }
 
         return $this;

@@ -25,7 +25,7 @@ class Recette
     #[ORM\Column]
     private ?int $nombreMangeurs = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 500)]
     private ?string $ingredients = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -36,13 +36,14 @@ class Recette
 
     // #[ORM\ManyToOne(inversedBy: 'recette')]
     // private ?User $user = null;
-
+//----------------r e l a t i o n s  ManyToMany
     /**
      * @var Collection<int, Produit>
      */
     #[ORM\ManyToMany(targetEntity: Produit::class)]
     private Collection $produit;
-
+    
+//----------------r e l a t i o n s  ManyToOne
     #[ORM\ManyToOne(inversedBy: 'recette')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $auteurice = null;

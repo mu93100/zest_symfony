@@ -15,18 +15,19 @@ class ParticipationDispo
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 45)]
+    #[ORM\Column(length: 200 )]
     private ?string $libelleDispo = null;
 
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'participationDispo')]
-    private Collection $users;
+   //----------------r e l a t i o n s  ManyToMany  
+    #[ORM\ManyToMany(targetEntity: Adhesion::class, mappedBy: 'participations')]
+    private Collection $adhesions;
+
+
+
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+        $this->adhesions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -47,31 +48,25 @@ class ParticipationDispo
     }
 
     /**
-     * @return Collection<int, User>
+     * @return Collection<int, Adhesion>
      */
-    public function getUsers(): Collection
+    public function getAdhesions(): Collection
     {
-        return $this->users;
+        return $this->adhesions;
     }
 
-    public function addUser(User $user): static
+    public function addAdhesion(Adhesion $adhesion): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->setParticipationDispo($this);
+        if (!$this->adhesions->contains($adhesion)) {
+            $this->adhesions->add($adhesion);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): static
+    public function removeAdhesion(Adhesion $adhesion): self
     {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getParticipationDispo() === $this) {
-                $user->setParticipationDispo(null);
-            }
-        }
+        $this->adhesions->removeElement($adhesion);
 
         return $this;
     }

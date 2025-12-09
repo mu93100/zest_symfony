@@ -28,6 +28,7 @@ class Ressource
     #[ORM\Column(type: Types::TEXT)]
     private ?string $ressourceTexte = null;
 
+    //----------------r e l a t i o n s  ManyToOne
     #[ORM\ManyToOne(inversedBy: 'ressources')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Categorie $categorie = null;

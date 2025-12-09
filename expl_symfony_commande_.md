@@ -71,8 +71,8 @@ relation
 changerA User is "orphaned" when it is removed from its related montantAdhesion. e.g. $montantAdhesion->removeUser($user) NOTE: If a User may *change* from one montantAdhesion to another, answer "no". Do you want to automatically delete orphaned App\Entity\User objects (orphanRemoval)? (yes/no) [no]:
 
 si **php bin/console doctrine:schema:validate ne marche pas** = verif ds phpMyAdmin > ds opérations (en Ht à Dte) si moteur de stockage est en InnoDB et non pas MyISAM > remettre tout en InnoDB et
->php bin/console doctrine:schema:update --force
->php bin/console doctrine:schema:validate
+**> php bin/console doctrine:schema:update --force**
+**> php bin/console doctrine:schema:validate**
 
 les entités sont créées /src/entity/User.php ... ETC
 + ça a créé des repo /src/repository/UserRepository.php ... ETC
