@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RessourceRepository::class)]
 class Ressource
@@ -17,22 +18,43 @@ class Ressource
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?\DateTime $date = null;
+    private ?\DateTimeImmutable $datePublication = null;
 
-    #[ORM\Column(length: 300)]
+    #[ORM\Column(length: 150)]
+    #[Assert\Length(max: 150, maxMessage: 'Titre trop long (150 max)')]
     private ?string $titre = null;
 
-    #[ORM\Column(length: 300, nullable: true)]
+    #[ORM\Column(length: 200)]
+    #[Assert\Length(max: 200, maxMessage: 'Sous-titre trop long (200 max)')]
     private ?string $sousTitre = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $ressourceTexte = null;
+    
+    #[ORM\Column(length: 500, nullable: true)]
+    private ?string $lienExterne1 = null;
+
+    #[ORM\Column(length: 500, nullable: true)]
+    private ?string $lienExterne2 = null;
+
+    #[ORM\Column(length: 500, nullable: true)]
+    private ?string $lienExterne3 = null;
+
+    #[ORM\Column(length: 20)]
+    private ?string $statut = 'non_validée'; 
+    // choix multiple pour Admin, avec dans RessourceCrudController : 
+    // ChoiceField::new('statut')
+    // ->setLabel('Statut')
+    // ->setChoices([
+    //     'Non validée' => 'non_validée',
+    //     'Publiée'     => 'publiée',
+    //     'Archivée'    => 'archivée',
+    // ]);
 
     //----------------r e l a t i o n s  ManyToOne
     #[ORM\ManyToOne(inversedBy: 'ressources')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Categorie $categorie = null;
-
 
     #[ORM\ManyToOne]
     private ?Pole $pole = null;
@@ -40,17 +62,20 @@ class Ressource
     #[ORM\ManyToOne(inversedBy: 'ressource')]
     private ?User $user = null;
 
-    #[ORM\OneToOne(inversedBy: 'photoPrincipale', cascade: ['persist', 'remove'])]
+    //----------------r e l a t i o n s  OneToOne
+    #[ORM\OneToOne(inversedBy: 'ressourcePrincipale', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: true)] 
     private ?Photos $photoPrincipale = null;
 
+    //----------------r e l a t i o n s  OneToMany
     /**
      * @var Collection<int, Photos>
      */
-    #[ORM\OneToMany(targetEntity: Photos::class, mappedBy: 'photosSupp')]
+    #[ORM\OneToMany(mappedBy: 'ressource', targetEntity: Photos::class)]
     private Collection $photosSupp;
 
-    #[ORM\Column]
-    private ?bool $isPublication = null;
+
+
 
     public function __construct()
     {
@@ -62,14 +87,14 @@ class Ressource
         return $this->id;
     }
 
-    public function getDate(): ?\DateTime
+    public function getDatePublication(): ?\DateTimeImmutable
     {
-        return $this->date;
+        return $this->datePublication;
     }
 
-    public function setDate(\DateTime $date): static
+    public function setDatePublication(\DateTimeImmutable $datePublication): self
     {
-        $this->date = $date;
+        $this->datePublication = $datePublication;
 
         return $this;
     }
@@ -109,7 +134,61 @@ class Ressource
 
         return $this;
     }
+    
+        public function getLienExterne1(): ?string
+    {
+        return $this->lienExterne1;
+    }
 
+    public function setLienExterne1(?string $lienExterne1): static
+    {
+        $this->lienExterne1 = $lienExterne1;
+
+        return $this;
+        
+    }
+
+    public function getLienExterne2(): ?string
+    {
+        return $this->lienExterne2;
+    }
+
+    public function setLienExterne2(?string $lienExterne2): static
+    {
+        $this->lienExterne2 = $lienExterne2;
+
+        return $this;
+    }
+
+    public function getLienExterne3(): ?string
+    {
+        return $this->lienExterne3;
+    }
+
+    public function setLienExterne3(?string $lienExterne3): static
+    {
+        $this->lienExterne3 = $lienExterne3;
+
+        return $this;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+public function setStatut(string $statut): self
+{
+    $this->statut = $statut;
+
+    if ($statut === 'publiée') {
+        $this->datePublication = new \DateTimeImmutable();
+    }
+
+    return $this;
+}
+
+    
     public function getCategorie(): ?Categorie
     {
         return $this->categorie;
@@ -146,15 +225,15 @@ class Ressource
         return $this;
     }
 
+    // --- Photo principale ---
     public function getPhotoPrincipale(): ?Photos
     {
         return $this->photoPrincipale;
     }
 
-    public function setPhotoPrincipale(?Photos $photoPrincipale): static
+    public function setPhotoPrincipale(?Photos $photoPrincipale): self
     {
         $this->photoPrincipale = $photoPrincipale;
-
         return $this;
     }
 
@@ -166,37 +245,22 @@ class Ressource
         return $this->photosSupp;
     }
 
-    public function addPhotosSupp(Photos $photosSupp): static
+    public function addPhotosSupp(Photos $photo): self
     {
-        if (!$this->photosSupp->contains($photosSupp)) {
-            $this->photosSupp->add($photosSupp);
-            $photosSupp->setPhotosSupp($this);
+        if (!$this->photosSupp->contains($photo)) {
+            $this->photosSupp->add($photo);
+            $photo->setRessource($this); // lien côté Photos
         }
-
         return $this;
     }
 
-    public function removePhotosSupp(Photos $photosSupp): static
+    public function removePhotosSupp(Photos $photo): self
     {
-        if ($this->photosSupp->removeElement($photosSupp)) {
-            // set the owning side to null (unless already changed)
-            if ($photosSupp->getPhotosSupp() === $this) {
-                $photosSupp->setPhotosSupp(null);
+        if ($this->photosSupp->removeElement($photo)) {
+            if ($photo->getRessource() === $this) {
+                $photo->setRessource(null);
             }
         }
-
-        return $this;
-    }
-
-    public function isPublication(): ?bool
-    {
-        return $this->isPublication;
-    }
-
-    public function setIsPublication(bool $isPublication): static
-    {
-        $this->isPublication = $isPublication;
-
         return $this;
     }
 }

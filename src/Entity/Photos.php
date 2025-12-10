@@ -18,11 +18,14 @@ class Photos
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
+    //----------------r e l a t i o n s  OneToOne
     #[ORM\OneToOne(mappedBy: 'photoPrincipale', cascade: ['persist', 'remove'])]
-    private ?Ressource $photoPrincipale = null;
+    private ?Ressource $ressourcePrincipale = null;
 
+    //----------------r e l a t i o n s  ManyToOne
     #[ORM\ManyToOne(inversedBy: 'photosSupp')]
-    private ?Ressource $photosSupp = null;
+    private ?Ressource $ressource = null;
+
 
     public function getId(): ?int
     {
@@ -41,37 +44,27 @@ class Photos
         return $this;
     }
 
-    public function getPhotoPrincipale(): ?Ressource
+    // --- Lien vers la ressource principale ---
+    public function getRessourcePrincipale(): ?Ressource
     {
-        return $this->photoPrincipale;
+        return $this->ressourcePrincipale;
     }
 
-    public function setPhotoPrincipale(?Ressource $photoPrincipale): static
+    public function setRessourcePrincipale(?Ressource $ressource): self
     {
-        // unset the owning side of the relation if necessary
-        if ($photoPrincipale === null && $this->photoPrincipale !== null) {
-            $this->photoPrincipale->setPhotoPrincipale(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($photoPrincipale !== null && $photoPrincipale->getPhotoPrincipale() !== $this) {
-            $photoPrincipale->setPhotoPrincipale($this);
-        }
-
-        $this->photoPrincipale = $photoPrincipale;
-
+        $this->ressourcePrincipale = $ressource;
         return $this;
     }
 
-    public function getPhotosSupp(): ?Ressource
+    // --- Lien vers la ressource (photos supplémentaires) ---
+    public function getRessource(): ?Ressource
     {
-        return $this->photosSupp;
+        return $this->ressource;
     }
 
-    public function setPhotosSupp(?Ressource $photosSupp): static
+    public function setRessource(?Ressource $ressource): self
     {
-        $this->photosSupp = $photosSupp;
-
+        $this->ressource = $ressource;
         return $this;
     }
 }

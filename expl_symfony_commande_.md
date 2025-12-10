@@ -43,7 +43,8 @@ CREATION BDD + entité (= table/ symfo nous demande de édfinir les champs en au
 **1  php bin/console make:user**
 **php bin/console make:entity   ça crée des fichiers src/Entity/Entity.php** 
 **php bin/console make:migration**
-**php bin/console doctrine:migrations:migrate  pour appliquer les changements à BDD.**
+**
+  pour appliquer les changements à BDD.**
 **php bin/console doctrine:schema:validate   pour verif mapping doctrine correspond bien à la BDD**
 
 **
