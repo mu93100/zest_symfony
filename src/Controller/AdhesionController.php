@@ -11,6 +11,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+
+
+
+// ajout perplexity : 
+// $adhesion = new Adhesion();
+// $form = $this->createForm(AdhesionFormType::class, $adhesion, [
+//     'user' => $this->getUser()
+// ]);
+
 final class AdhesionController extends AbstractController
 {
     #[Route('/adhesion', name: 'app_adhesion')]

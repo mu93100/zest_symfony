@@ -31,13 +31,15 @@ class AdhesionFormType extends AbstractType
                 'class' => User::class,
                 'choice_label' => 'email',
                 'label' => 'Adhérent·e',
+                'data' => $this->security->getUser(),  // ← Auto-sélection DU user connecté
+                'disabled' => true,  // ← Non modifiable
             ])
             ->add('groupe', EntityType::class, [
                 'class' => Groupe::class,
                 'choice_label' => 'nom',
                 'label' => 'Groupe',
-                'placeholder' => 'Choisir un groupe',
-                'required' => false,
+                'data' => $options['user']->getGroupe(),  // ← Pré-rempli
+                'required' => true,  // ← Obligatoire
             ])
             ->add('saison', EntityType::class, [
                 'class' => Saison::class,
@@ -144,7 +146,8 @@ class AdhesionFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Adhesion::class,
+            'data_class' => Adhesion::class,// ← LIEN ENTITÉ/FORMULAIRE pour mapper les data vers adhesion
         ]);
+        $resolver->setRequired('user');  // ← Pour pré-remplir
     }
 }
