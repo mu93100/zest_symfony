@@ -330,7 +330,10 @@ public function configureFields(string $pageName): iterable
             ...
         ];}
 
-**ON FAIT php bin/console make:admin:crud pour tous les entity que l'on veut pouvoir modifier créer ETC**
+**POUR CrudController : ON FAIT** 
+**php bin/console make:admin:crud** pour tous les entity que l'on veut pouvoir modifier créer ETC
+
+on choisit le N° de l'entity
 
 
 
@@ -382,3 +385,8 @@ Dans vos fixtures Symfony : créez plusieurs entités, persist() chacune, puis u
 
 Bonnes pratiques
 Évitez flush() après chaque persist() (ralentit) ; regroupez-les.​
+
+---------------------------------------
+
+**VOIR TOUS LES FICHIERS : STRUCTURE**
+ls -R src OU templates ETC...

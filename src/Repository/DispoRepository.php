@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\ParticipationDispo;
+use App\Entity\Dispo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<ParticipationDispo>
+ * @extends ServiceEntityRepository<Dispo>
  */
-class ParticipationDispoRepository extends ServiceEntityRepository
+class DispoRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ParticipationDispo::class);
+        parent::__construct($registry, Dispo::class);
     }
 
     //    /**
-    //     * @return ParticipationDispo[] Returns an array of ParticipationDispo objects
+    //     * @return Dispo[] Returns an array of Dispo objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -31,7 +31,7 @@ class ParticipationDispoRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?ParticipationDispo
+    //    public function findOneBySomeField($value): ?Dispo
     //    {
     //        return $this->createQueryBuilder('p')
     //            ->andWhere('p.exampleField = :val')

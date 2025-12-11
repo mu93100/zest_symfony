@@ -7,58 +7,51 @@ use App\Entity\Pole;
 use App\Entity\Motivation;
 use App\Entity\Groupe;
 use App\Entity\Adhesion;
-use App\Entity\ParticipationDispo;
+use App\Entity\Dispo;
 use App\Entity\Ressource;
 use App\Entity\Photos;
 use App\Entity\Categorie;
 use App\Entity\Producteurice;
 use App\Entity\Produit;
 use App\Entity\Recette;
-
+use App\Entity\Saison;
+use App\Repository\SaisonRepository;
+use App\Repository\AdhesionRepository;
+use Doctrine\Migrations\Configuration\Connection\ConnectionRegistryConnection;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+
 
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
 {
-    public function index(): Response
+    public function index(Request $request, SaisonRepository $saisonRepository): Response
     {
-        // symfony ::: return parent::index();
-        // IA ::: Redirige vers une entité par défaut (ex: User)
-        return $this->redirectToRoute('admin_user_index');
-        
-        // Option 1. You can make your dashboard redirect to some common page of your backend
-        //
-        // 1.1) If you have enabled the "pretty URLs" feature:
-        // return $this->redirectToRoute('admin_user_index');
-        //
-        // 1.2) Same example but using the "ugly URLs" that were used in previous EasyAdmin versions:
-        // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        // return $this->redirect($adminUrlGenerator->setController(OneOfYourCrudController::class)->generateUrl());
+        // 1) Choix de la saison: paramètre GET 'saison' ou saison en cours par défaut
+        $saisonId = $request->query->get('saison');
+        $saisonEnCours = $saisonId
+            ? $saisonRepository->find($saisonId)
+            : $saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
 
-        // Option 2. You can make your dashboard redirect to different pages depending on the user
-        //
-        // if ('jane' === $this->getUser()->getUsername()) {
-        //     return $this->redirectToRoute('...');
-        // }
+        // 2) Liste des saisons pour le sélecteur
+        $toutesSaisons = $saisonRepository->findAll();
 
-        // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
-        // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
-        //
-        // return $this->render('some/path/my-dashboard.html.twig');
+        // Compteur d’adhésions pour la saison sélectionnée
+        $nbAdhesions = $saisonEnCours
+            ? $adhesionRepository->count(['saison' => $saisonEnCours])
+            : 0;        
+
+        // 3) Rendu du dashboard personnalisé
+        return $this->render('admin/dashboard.html.twig', [
+            'saisonEnCours' => $saisonEnCours,
+            'saisons' => $toutesSaisons,
+        'nbAdhesions' => $nbAdhesions,
+        ]);
     }
-
-    public function configureDashboard(): Dashboard
-    {
-        return Dashboard::new()
-            ->setTitle('C O R T O - Z E S T admin')
-            // ->setFaviconPath('favicon.ico')
-            ;
-    }
-
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
@@ -76,7 +69,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Groupes', '', Groupe::class),
             MenuItem::linkToCrud('Adhésions', '', Adhesion::class),
             MenuItem::linkToCrud('Motivations', '', Motivation::class),
-            MenuItem::linkToCrud('Disponibilités', '', ParticipationDispo::class),
+            MenuItem::linkToCrud('Disponibilités', '', Dispo::class),
         ]);
 
         // Contenus & médias
@@ -93,4 +86,34 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Producteur·ices', '', Producteurice::class),
         ]);
     }
+
 }
+
+
+// CORRECTION
+// public function index(
+//     Request $request,
+//     SaisonRepository $saisonRepository,
+//     AdhesionRepository $adhesionRepository
+// ): Response
+// {
+//     // 1) Choix de la saison: paramètre GET 'saison' ou saison en cours par défaut
+//     $saisonId = $request->query->get('saison');
+//     $saisonEnCours = $saisonId
+//         ? $saisonRepository->find($saisonId)
+//         : $saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
+
+//     // 2) Liste des saisons pour le sélecteur
+//     $toutesSaisons = $saisonRepository->findAll();
+
+//     // 3) Compteur d’adhésions pour la saison sélectionnée
+//     $nbAdhesions = $saisonEnCours
+//         ? $adhesionRepository->count(['saison' => $saisonEnCours])
+//         : 0;
+
+//     // 4) Rendu du dashboard personnalisé
+//     return $this->render('admin/dashboard.html.twig', [
+//         'saisonEnCours' => $saisonEnCours,
+//         'saisons' => $toutesSaisons,
+//         'nbAdhesions' => $nbAdhesions,
+    

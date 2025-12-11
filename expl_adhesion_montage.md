@@ -69,3 +69,5 @@ POUR TESTER ENVOI DE MAIL
  https://mailtrap.io/inboxes/4239226/messages/5231620545 
  AVEC DANS .env :
  MAILER_DSN="smtp://8fdadb6b9f8175:45c71c0e36e002@sandbox.smtp.mailtrap.io:2525"
+
+compte mailtrap avec email

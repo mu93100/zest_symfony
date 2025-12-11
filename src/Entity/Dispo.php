@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ParticipationDispoRepository;
+use App\Repository\DispoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ParticipationDispoRepository::class)]
-class ParticipationDispo
+#[ORM\Entity(repositoryClass: DispoRepository::class)]
+class Dispo
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,10 +18,12 @@ class ParticipationDispo
     #[ORM\Column(length: 200 )]
     private ?string $libelleDispo = null;
 
+    /**
+     * @var Collection<int, Adhesion>
+     */
    //----------------r e l a t i o n s  ManyToMany  
-    #[ORM\ManyToMany(targetEntity: Adhesion::class, mappedBy: 'participations')]
+    #[ORM\ManyToMany(targetEntity: Adhesion::class, mappedBy: 'dispos')]
     private Collection $adhesions;
-
 
 
 

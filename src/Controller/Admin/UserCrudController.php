@@ -49,7 +49,7 @@ class UserCrudController extends AbstractCrudController
                 ->renderExpanded(), // cases à cocher
             AssociationField::new('groupe'),
             AssociationField::new('adhesion'),
-            AssociationField::new('participationDispo'),
+            AssociationField::new('dispo'),
         ];
     }
     /*

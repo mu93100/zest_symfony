@@ -11,9 +11,9 @@ use Symfony\Component\Validator\Constraints as Assert;​
 Type DateTimeImmutable (si tu l’utilises en type hint) : pas de use nécessaire pour \DateTimeImmutable (utiliser le FQCN avec antislash ou import facultatif)
 use DateTimeImmutable; // optionnel, tu peux aussi écrire \DateTimeImmutable dans la propriété​
 
-Si tu utilises des relations vers d’autres entités (ex : User, ParticipationDispo) :
+Si tu utilises des relations vers d’autres entités (ex : User, Dispo) :
 use App\Entity\User;
-use App\Entity\ParticipationDispo;
+use App\Entity\Dispo;
 // ou le namespace correct de tes entités
 
 Si tu utilises des types spécifiques EasyAdmin / form fields (dans un Controller/CRUD) :
@@ -32,5 +32,5 @@ use Doctrine\Common\Collections\ArrayCollection;​
 use Doctrine\Common\Collections\Collection;​
 use Symfony\Component\Validator\Constraints as Assert;​
 use App\Entity\User; // si relation avec User
-use App\Entity\ParticipationDispo; // si relation avec ParticipationDispo
+use App\Entity\Dispo; // si relation avec Dispo
 // (optionnel) use DateTimeImmutable;

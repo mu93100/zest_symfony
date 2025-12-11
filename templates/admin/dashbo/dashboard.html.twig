@@ -1,0 +1,28 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content %}
+	<h1>Dashboard Adhésions</h1>
+
+	<form method="get" action="{{ path('admin') }}">
+		<label for="saison">Choisir une saison :</label>
+		<select name="saison" id="saison">
+			{% for saison in saisons %}
+				<option value="{{ saison.id }}" {% if saisonEnCours and saison.id == saisonEnCours.id %} selected {% endif %}>
+					{{ saison.nom }}
+				</option>
+			{% endfor %}
+		</select>
+		<button type="submit">Afficher</button>
+	</form>
+
+	{% if saisonEnCours %}
+		<p>Saison sélectionnée :
+			<strong>{{ saisonEnCours.nom }}</strong>
+		</p>
+		<p>Nombre d’adhésions :
+			<strong>{{ nbAdhesions }}</strong>
+		</p>
+	{% else %}
+		<p>Aucune saison trouvée.</p>
+	{% endif %}
+{% endblock %}

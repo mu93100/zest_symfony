@@ -10,36 +10,50 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>adhésion</h1>
+    <h1>adhésion saison {{ saison.nom }}</h1>
+    <p>[ {{ app.user.prenom }} ({{ app.user.email }}) du groupe {{ app.user.groupe.nom }} ]</p>
 
-     {{ form_errors(adhesionForm) }}
+    {{ form_errors(adhesionForm) }}
 
     {{ form_start(adhesionForm) }}
-        {{ form_row(adhesionForm.email) }}
         {{ form_row(adhesionForm.groupe) }}
+        {{ form_row(adhesionForm.changeGroupe) }}
         {{ form_row(adhesionForm.nouveauGroupe) }}
         {{ form_row(adhesionForm.isReferent) }}
         {{ form_row(adhesionForm.isOpen) }}
         {{ form_row(adhesionForm.motivation) }}
-        {{ form_row(adhesionForm.participationDispo) }}
+        {{ form_row(adhesionForm.attentesText) }}
+        {{ form_row(adhesionForm.dispo) }}
+        {{ form_row(adhesionForm.competencesText) }}
         {{ form_row(adhesionForm.pole) }}
-        {{ form_row(adhesionForm.competences) }}
-        {{ form_row(adhesionForm.engagement) }}
-        {{ form_row(adhesionForm.paiement) }}
-        {{ form_row(adhesionForm.adhesion) }}
+
         {{ form_row(adhesionForm.infos) }}
-        {{ form_row(adhesionForm.paiement) }}
 
-        {{ form_row(adhesionForm.agree_fonctionnement_participation) }}
+        {{ form_row(adhesionForm.agree_fonctionnement) }}
         {{ form_row(adhesionForm.agree_rgpd) }}
-        {{ form_row(adhesionForm.agree_infos_mail) }}
-        
+        {{ form_row(adhesionForm.montantAdhesion) }}        
 
-        <button type="submit" class="btn">adhérer</button>
+        <button type="submit" class="btn">J’adhère pour la saison</button>
     {{ form_end(adhesionForm) }}
 </div>
 {% endblock %} 
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const changeCheckbox = document.querySelector('.change-groupe-checkbox');
+    const nouveauSelect = document.querySelector('.nouveau-groupe-select');
+    
+    changeCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            nouveauSelect.style.display = 'block';
+            nouveauSelect.required = true;
+        } else {
+            nouveauSelect.style.display = 'none';
+            nouveauSelect.required = false;
+        }
+    });
+});
+</script>
 {# 
     {{ form_errors(adhesionForm) }}
 

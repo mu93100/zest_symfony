@@ -18,8 +18,8 @@ class Saison
     #[ORM\Column(length: 9, unique: true)]
     private ?string $nom = null;
 
-    #[ORM\Column(type: 'datetime')]
-    private ?\DateTimeInterface $dateCreation = null;
+    #[ORM\Column(type: 'datetime_immutable')] // date pas obligatoire // à voir si on la garde ou pas
+    private ?\DateTimeImmutable $dateCreation = null;
 
     //----------------r e l a t i o n s  OneToMany
     #[ORM\OneToMany(mappedBy: 'saison', targetEntity: Adhesion::class, cascade: ['remove'])]
@@ -27,9 +27,8 @@ class Saison
 
 
     
-    public function __construct(string $nom)
+    public function __construct()
     {
-        $this->nom = $nom;
         $this->dateCreation = new \DateTimeImmutable(); // auto à la création
         $this->adhesions = new ArrayCollection();
     }

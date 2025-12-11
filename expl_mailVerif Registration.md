@@ -1,4 +1,4 @@
-dans user.php
+dans user.php PAS UTILISE _ TOUT A ETE SUPPRIME
     #[ORM\Column]
     private bool $isVerified = false;
 // pour indiquer si un compte utilisateur a été validé :

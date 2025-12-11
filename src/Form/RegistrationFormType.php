@@ -47,7 +47,7 @@ class RegistrationFormType extends AbstractType
             ->add('groupe', EntityType::class, [
                 'class' => Groupe::class,
                 'choice_label' => 'nom',
-                'placeholder' => 'Nouveau groupe',
+                'placeholder' => 'mon groupe',
                 'required' => false,
             ])
             ->add('nouveauGroupe', TextType::class, [
@@ -67,7 +67,7 @@ class RegistrationFormType extends AbstractType
                 'attr' => ['autocomplete' => 'new-password'],
             ])
             // contraintes IsTrue -> rend les cases obligatoires à cocher / 'mapped' => false -> pas de données stockées dans entité
-            ->add('agree_fonctionnement_participation', CheckboxType::class, [
+            ->add('agree_fonctionnement', CheckboxType::class, [
                 'mapped' => false,
                 'label' => "Je m'engage à respecter les règles de fonctionnement du GAS et à participer activement * [ documents à lire : statuts - RI - charte ]",
                 'constraints' => [

@@ -47,8 +47,8 @@ class Adhesion
     #[ORM\ManyToMany(targetEntity: Motivation::class)]
     private Collection $motivations;
 
-    #[ORM\ManyToMany(targetEntity: ParticipationDispo::class, inversedBy: 'adhesions')]
-    private Collection $participations;
+    #[ORM\ManyToMany(targetEntity: Dispo::class, inversedBy: 'adhesions')]
+    private Collection $dispos;
 
     #[ORM\ManyToMany(targetEntity: Pole::class)]
     private Collection $poles;
@@ -58,7 +58,7 @@ class Adhesion
     public function __construct()
     {
         $this->motivations = new ArrayCollection();
-        $this->participations = new ArrayCollection();
+        $this->dispos = new ArrayCollection();
         $this->poles = new ArrayCollection();
         $this->dateAdhesion = new \DateTime();
     }
@@ -176,25 +176,25 @@ class Adhesion
     }
 
     /**
-     * @return Collection<int, ParticipationDispo>
+     * @return Collection<int, Dispo>
      */
-    public function getParticipations(): Collection
+    public function getDispos(): Collection
     {
-        return $this->participations;
+        return $this->dispos;
     }
 
-    public function addParticipation(ParticipationDispo $participation): self
+    public function addDispo(Dispo $dispo): self
     {
-        if (!$this->participations->contains($participation)) {
-            $this->participations->add($participation);
+        if (!$this->dispos->contains($dispo)) {
+            $this->dispos->add($dispo);
         }
 
         return $this;
     }
 
-    public function removeParticipation(ParticipationDispo $participation): self
+    public function removeDispo(Dispo $dispo): self
     {
-        $this->participations->removeElement($participation);
+        $this->dispos->removeElement($dispo);
 
         return $this;
     }

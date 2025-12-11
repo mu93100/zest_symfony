@@ -8,7 +8,7 @@ use App\Entity\Groupe;
 use App\Entity\Saison;
 use App\Entity\MontantAdhesion;
 use App\Entity\Motivation;
-use App\Entity\ParticipationDispo;
+use App\Entity\Dispo;
 use App\Entity\Pole;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -26,41 +26,52 @@ class AdhesionFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            // Relations ManyToOne
-            ->add('user', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'email',
-                'label' => 'Adhérent·e',
-                'data' => $this->security->getUser(),  // ← Auto-sélection DU user connecté
-                'disabled' => true,  // ← Non modifiable
+
+            // le groupe est lié au user et les champs non modifiables ne sont pas obligés
+            // d'être dans le formType UNIQUEMENT LES CHAMPS DE FORMULAIRE MODIFIABLE PAR LE USER
+            // ON APPELLE JUSTE DANS LE twig
+            // ->add('user', EntityType::class, [
+            //     'class' => User::class,
+            //     'choice_label' => 'email',
+            //     'label' => 'Adhérent·e',
+            //     'data' => $options['user'],   // ← pré-rempli avec l’utilisateur connecté
+            //     'disabled' => true,  // ← affiché MAIS non modifiable
+            // ])
+            // ->add('groupe', EntityType::class, [
+            //     'class' => Groupe::class,
+            //     'choice_label' => 'nom',
+            //     'label' => 'Groupe',
+            //     'data' => $options['user']->getGroupe(),  // ← Pré-rempli avec le groupe du user
+            //     'required' => true,  // ← Obligatoire
+            // ])
+            
+            // je change de groupe
+            ->add('changeGroupe', CheckboxType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => '<strong>Je change de groupe</strong>',
+                'attr' => ['class' => 'change-groupe-checkbox'],
             ])
-            ->add('groupe', EntityType::class, [
+            // Je crée un nouveau groupe 
+            ->add('nouveauGroupe', EntityType::class, [
                 'class' => Groupe::class,
                 'choice_label' => 'nom',
-                'label' => 'Groupe',
-                'data' => $options['user']->getGroupe(),  // ← Pré-rempli
-                'required' => true,  // ← Obligatoire
+                'label' => 'Je crée un nouveau groupe',
+                'placeholder' => 'nom du nouveau groupe',
+                'required' => false,
+                'attr' => ['class' => 'nouveau-groupe-select', 'style' => 'display:none;'],
             ])
-            ->add('saison', EntityType::class, [
-                'class' => Saison::class,
-                'choice_label' => 'nom',
-                'label' => 'Saison',
-                'placeholder' => 'Choisir une saison',
-            ])
+
+
             ->add('montantAdhesion', EntityType::class, [
                 'class' => MontantAdhesion::class,
                 'choice_label' => 'label',
                 'label' => 'Montant de l’adhésion',
                 'placeholder' => 'Choisir un montant',
-                'required' => false,
+                'required' => true,
             ])
 
             // Champs non mappés
-            ->add('nouveauGroupe', TextType::class, [
-                'mapped' => false,
-                'required' => false,
-                'label' => 'Créer un nouveau groupe',
-            ])
             ->add('isReferent', CheckboxType::class, [
                 'mapped' => false,
                 'required' => false,
@@ -80,16 +91,17 @@ class AdhesionFormType extends AbstractType
                 'expanded' => true,
                 'required' => false,
             ])
-            ->add('participations', EntityType::class, [
-                'class' => ParticipationDispo::class,
-                'choice_label' => 'label',
+            ->add('dispos', EntityType::class, [
+                'class' => Dispo::class,
+                'choice_label' => 'label', 
                 'multiple' => true,
                 'expanded' => true,
                 'required' => false,
             ])
             ->add('poles', EntityType::class, [
                 'class' => Pole::class,
-                'choice_label' => 'nom',
+                'choice_label' => 'nom',// pas de label!
+                'placeholder' => 'Pôle(s) de travail auquel(s) je souhaite participer',
                 'multiple' => true,
                 'expanded' => true,
                 'required' => false,
@@ -106,23 +118,20 @@ class AdhesionFormType extends AbstractType
             ])
 
             // Consentements
-            ->add('agree_fonctionnement_participation', CheckboxType::class, [
+            ->add('agree_fonctionnement', CheckboxType::class, [
                 'mapped' => false,
                 'required' => true,
                 'label' => 'Je m’engage à respecter les règles et participer activement',
             ])
-            ->add('agree_rgpd', CheckboxType::class, [
-                'mapped' => false,
-                'required' => true,
-                'label' => 'J’accepte le traitement de mes données (RGPD)',
-            ])
-            ->add('agree_infos_mail', CheckboxType::class, [
-                'mapped' => false,
+
+            ->add('groupe', EntityType::class, [
+                'class' => Groupe::class,
+                'choice_label' => 'nom',
+                'placeholder' => 'mon groupe',
                 'required' => false,
-                'label' => 'J’accepte de recevoir des informations par email',
             ])
 
-            // Paiement
+            // Paiement  JUSTE POUR admin
             ->add('paiement', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Paiement validé (administration)',
