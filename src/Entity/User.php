@@ -37,7 +37,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /** * @var string The hashed password */
     #[ORM\Column]
     private ?string $password = null;
-    #[Assert\NotBlank(message: '[M E R C I  de renseigner ton mot de passe]')]
+    // #[Assert\NotBlank(message: '[M E R C I  de renseigner ton mot de passe]')]
     #[Assert\Length(min: 6, minMessage: '[M I N I M U M  {{ limit }} caractères]')]
     private ?string $plainPassword = null;
 // plainPassword est un champ temporaire non mappé : sert uniquement à la saisie en clair dans les formulaires

@@ -55,11 +55,11 @@ class RegistrationFormType extends AbstractType
                 'required' => false,
                 'label' => 'Nom du nouveau groupe',
             ])
-            //si isReferent = true -> case + champ "isOpen" dans entity groupe (voir plus bas)
-            ->add('isReferent', CheckboxType::class, [
-                'required' => false,
-                'label' => 'Je suis référent.e de mon groupe',
-            ])
+            // //si isReferent = true -> case + champ "isOpen" dans entity groupe (voir plus bas)
+            // ->add('isReferent', CheckboxType::class, [
+            //     'required' => false,
+            //     'label' => 'Je suis référent.e de mon groupe',
+            // ])
 
             ->add('plainPassword', PasswordType::class, [
                 // TOUJOURS = password est lu et encodé dans le controller et non dans entity
@@ -99,14 +99,14 @@ class RegistrationFormType extends AbstractType
             $form = $event->getForm();
             $user = $event->getData();
 
-            // si isReferent = true -> on ajoute le champ isOpen du groupe
-            if ($user && $user->isReferent()) {
-                $form->add('isOpen', CheckboxType::class, [
-                    'mapped' => false, // car isOpen est dans Groupe, pas User
-                    'label' => 'Le groupe peut accueillir de nouvelleaux adhérent.es',
-                    'required' => false,
-                ]);
-            }
+            // // si isReferent = true -> on ajoute le champ isOpen du groupe
+            // if ($user && $user->isReferent()) {
+            //     $form->add('isOpen', CheckboxType::class, [
+            //         'mapped' => false, // car isOpen est dans Groupe, pas User
+            //         'label' => 'Le groupe peut accueillir de nouvelleaux adhérent.es',
+            //         'required' => false,
+            //     ]);
+            // }
         });
     }
 

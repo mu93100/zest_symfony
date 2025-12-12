@@ -17,11 +17,17 @@ use App\Repository\UserRepository;
 class RegistrationController extends AbstractController
 {
     #[Route('/enregistrement', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
-    {
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        Security $security,
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository
+    ): Response {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
+         
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Vérifie si l'email existe déjà
@@ -29,10 +35,13 @@ class RegistrationController extends AbstractController
                 return $this->redirectToRoute('app_register');
             }
 
+            // Mot de passe
             $plainPassword = $form->get('plainPassword')->getData();
-            // hashage password
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+            $user->setPassword(
+                $userPasswordHasher->hashPassword($user, $plainPassword)
+            );
 
+            // Nouveau groupe éventuel
             $nouveauGroupe = $form->get('nouveauGroupe')->getData();
             if ($nouveauGroupe) {
                 $groupe = new Groupe();
@@ -41,16 +50,13 @@ class RegistrationController extends AbstractController
                 $user->setGroupe($groupe);
             }
 
-            if ($form->get('isReferent')->getData()) {
-                $user->setIsReferent(true);
-
-                // Si le champ isOpen est présent et coché
-                $isOpen = $form->has('isOpen') ? $form->get('isOpen')->getData() : false;
-                if ($user->getGroupe()) {
-                    $user->getGroupe()->setIsOpen($isOpen);
-                }
+            // IsOpen sur le groupe
+            $isOpen = $form->has('isOpen') ? $form->get('isOpen')->getData() : false;
+            if ($user->getGroupe()) {
+                $user->getGroupe()->setIsOpen($isOpen);
             }
 
+            // Persistance user
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -64,4 +70,3 @@ class RegistrationController extends AbstractController
         ]);
     }
 }
-

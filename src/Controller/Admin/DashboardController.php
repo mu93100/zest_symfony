@@ -14,6 +14,7 @@ use App\Entity\Categorie;
 use App\Entity\Producteurice;
 use App\Entity\Produit;
 use App\Entity\Recette;
+use App\Entity\Saison;
 use App\Repository\SaisonRepository;
 use App\Repository\AdhesionRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
@@ -56,6 +57,9 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+
+        yield MenuItem::linkToCrud('Créer une nouvelle saison', '', Saison::class);
+
 
         // Organisation dashboard si beaucoup d’entités -> avec menu et sous menu
         // Utilisateurs & Groupes

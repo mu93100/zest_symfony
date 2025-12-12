@@ -18,13 +18,15 @@
         {{ form_row(registrationForm.compositionFoyer) }}
         {{ form_row(registrationForm.nombreEnfants) }}
         {{ form_row(registrationForm.groupe) }}
-        {{ form_row(registrationForm.isReferent) }}
+        {{ form_row(registrationForm.ville) }}
+
+        {# {{ form_row(registrationForm.isReferent) }} #}
 
         {{ form_row(registrationForm.plainPassword, {
             label: 'Mot de Passe'
         }) }}
 
-        {{ form_row(registrationForm.agree_fonctionnement_participation) }}
+        {# {{ form_row(registrationForm.agree_fonctionnement_participation) }} #}
         {{ form_row(registrationForm.agree_rgpd) }}
         {{ form_row(registrationForm.agree_infos_mail) }}
 
