@@ -18,3 +18,9 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Twig\SaisonExtension:
+        arguments:
+            - '@App\Repository\SaisonRepository'
+            - '@request_stack'
+        tags: ['twig.extension']

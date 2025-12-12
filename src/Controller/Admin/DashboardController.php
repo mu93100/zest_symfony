@@ -14,16 +14,14 @@ use App\Entity\Categorie;
 use App\Entity\Producteurice;
 use App\Entity\Produit;
 use App\Entity\Recette;
-use App\Entity\Saison;
 use App\Repository\SaisonRepository;
 use App\Repository\AdhesionRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Templates;
 
 
 
@@ -32,42 +30,29 @@ class DashboardController extends AbstractDashboardController
 {
     public function __construct(
         private SaisonRepository $saisonRepository,
-        private AdhesionRepository $adhesionRepository,
-        private RequestStack $requestStack, // ← à injecter
-
-    )
-    {
-        $this->saisonRepository = $saisonRepository;
-        $this->adhesionRepository = $adhesionRepository;
-        $this->requestStack = $requestStack;
-    }
+        private AdhesionRepository $adhesionRepository
+    ) {}
 
     public function index(): Response
-    {   // Récupérer la requête courante via RequestStack
-        $request = $this->requestStack->getCurrentRequest();
-
-        // Choix de la saison: paramètre GET 'saison' ou saison en cours par défaut
-        $saisonId = $request->query->get('saison');
-
-        $saisonEnCours = $saisonId
-            ? $this->saisonRepository->find($saisonId)
-            : $this->saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
-
-        // Liste des saisons pour le sélecteur
-        $toutesSaisons = $this->saisonRepository->findAll();
+    {
+        // Saison en cours par défaut (la plus récente)
+        $saisonEnCours = $this->saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
 
         // Compteur d’adhésions pour la saison sélectionnée
         $nbAdhesions = $saisonEnCours
             ? $this->adhesionRepository->count(['saison' => $saisonEnCours])
-            : 0;        
+            : 0;
 
-        // Rendu du dashboard personnalisé
         return $this->render('admin/dashboard.html.twig', [
-            'saisonEnCours' => $saisonEnCours,
-            'saisons' => $toutesSaisons,
             'nbAdhesions' => $nbAdhesions,
         ]);
     }
+//
+    public function configureTemplates(Templates $templates): Templates
+    {
+        return $templates->addTemplate('layout', 'admin/layout.html.twig');
+    }
+    
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
@@ -75,14 +60,13 @@ class DashboardController extends AbstractDashboardController
         // Organisation dashboard si beaucoup d’entités -> avec menu et sous menu
         // Utilisateurs & Groupes
         yield MenuItem::subMenu('A D H E R E N T S')->setSubItems([
-            MenuItem::linkToCrud('Users', '', User::class),
-            
+            MenuItem::linkToCrud('Adhérents', '', User::class),
+            MenuItem::linkToCrud('Groupes', '', Groupe::class),            
         ]);
 
         // Organisation interne
         yield MenuItem::subMenu('O R G A N I S A T I O N', '')->setSubItems([
             MenuItem::linkToCrud('Pôles', '', Pole::class),
-            MenuItem::linkToCrud('Groupes', '', Groupe::class),
             MenuItem::linkToCrud('Adhésions', '', Adhesion::class),
             MenuItem::linkToCrud('Motivations', '', Motivation::class),
             MenuItem::linkToCrud('Disponibilités', '', Dispo::class),
@@ -103,6 +87,7 @@ class DashboardController extends AbstractDashboardController
         ]);
     }
 
+    
 }
 
 

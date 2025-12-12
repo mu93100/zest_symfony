@@ -1,0 +1,22 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_header %}
+    {{ parent() }}
+
+    {% if saisons is not empty %}
+        <form method="get" action="{{ app.request.uri }}" style="margin-top:1rem;">
+            <label for="saison">Saison :</label>
+            <select id="saison" name="saison" onchange="this.form.submit()">
+                {% for saison in saisons %}
+                    <option value="{{ saison.id }}"
+                        {% if saisonEnCours and saison.id == saisonEnCours.id %}selected{% endif %}>
+                        {{ saison.nom }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+    {% else %}
+        <p style="margin-top:1rem;">Aucune saison trouvée.</p>
+    {% endif %}
+{% endblock %}
+
