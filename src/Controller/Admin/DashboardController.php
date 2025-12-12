@@ -17,39 +17,55 @@ use App\Entity\Recette;
 use App\Entity\Saison;
 use App\Repository\SaisonRepository;
 use App\Repository\AdhesionRepository;
-use Doctrine\Migrations\Configuration\Connection\ConnectionRegistryConnection;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+
 
 
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
 {
-    public function index(Request $request, SaisonRepository $saisonRepository): Response
-    {
-        // 1) Choix de la saison: paramètre GET 'saison' ou saison en cours par défaut
-        $saisonId = $request->query->get('saison');
-        $saisonEnCours = $saisonId
-            ? $saisonRepository->find($saisonId)
-            : $saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
+    public function __construct(
+        private SaisonRepository $saisonRepository,
+        private AdhesionRepository $adhesionRepository,
+        private RequestStack $requestStack, // ← à injecter
 
-        // 2) Liste des saisons pour le sélecteur
-        $toutesSaisons = $saisonRepository->findAll();
+    )
+    {
+        $this->saisonRepository = $saisonRepository;
+        $this->adhesionRepository = $adhesionRepository;
+        $this->requestStack = $requestStack;
+    }
+
+    public function index(): Response
+    {   // Récupérer la requête courante via RequestStack
+        $request = $this->requestStack->getCurrentRequest();
+
+        // Choix de la saison: paramètre GET 'saison' ou saison en cours par défaut
+        $saisonId = $request->query->get('saison');
+
+        $saisonEnCours = $saisonId
+            ? $this->saisonRepository->find($saisonId)
+            : $this->saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
+
+        // Liste des saisons pour le sélecteur
+        $toutesSaisons = $this->saisonRepository->findAll();
 
         // Compteur d’adhésions pour la saison sélectionnée
         $nbAdhesions = $saisonEnCours
-            ? $adhesionRepository->count(['saison' => $saisonEnCours])
+            ? $this->adhesionRepository->count(['saison' => $saisonEnCours])
             : 0;        
 
-        // 3) Rendu du dashboard personnalisé
+        // Rendu du dashboard personnalisé
         return $this->render('admin/dashboard.html.twig', [
             'saisonEnCours' => $saisonEnCours,
             'saisons' => $toutesSaisons,
-        'nbAdhesions' => $nbAdhesions,
+            'nbAdhesions' => $nbAdhesions,
         ]);
     }
     public function configureMenuItems(): iterable
