@@ -1,0 +1,5 @@
+si on change les tables et FK 
+
+
+pour regarder les tables depuis terminal :
+mysql -u ton_user -p zest

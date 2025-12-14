@@ -54,6 +54,47 @@ class GroupeCrudController extends AbstractCrudController
         ];
     }
 }
+
+// IA 14/12 pour affichage des membres et du référent :
+// use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+// use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
+
+// public function configureFields(string $pageName): iterable
+// {
+//     return [
+//         TextField::new('nom', 'Nom du groupe'),
+
+//         // Liste des membres
+//         ArrayField::new('membres', 'Adhérents')
+//             ->formatValue(function ($value, $entity) {
+//                 $membres = $entity->getMembres();
+//                 $liste = [];
+//                 foreach ($membres as $membre) {
+//                     $liste[] = sprintf('%s %s (%s)',
+//                         $membre->getPrenom(),
+//                         $membre->getNom(),
+//                         $membre->getEmail()
+//                     );
+//                 }
+//                 return implode('<br>', $liste);
+//             }),
+
+//         // Infos du référent
+//         TextField::new('referentInfo', 'Référent')
+//             ->formatValue(function ($value, $entity) {
+//                 $referent = $entity->getReferent();
+//                 if ($referent) {
+//                     return sprintf('%s %s (%s)',
+//                         $referent->getPrenom(),
+//                         $referent->getNom(),
+//                         $referent->getEmail()
+//                     );
+//                 }
+//                 return 'Aucun référent';
+//             }),
+//     ];
+// }
+
 // OU PROPOSE PAR IA :  a voir après si je rajoute des IF
 // Avec yield : tu écris chaque champ séparément, c’est plus flexible (tu peux mettre des conditions, des if, etc.).
 // Avec return [...] : tu renvoies directement un tableau de champs, c’est plus compact.

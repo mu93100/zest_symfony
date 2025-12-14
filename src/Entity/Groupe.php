@@ -105,12 +105,12 @@ class Groupe
         return $this;
     }
 
-    public function getCateCreation(): ?\DateTimeImmutable
+    public function getDateCreation(): ?\DateTimeImmutable
     {
         return $this->dateCreation;
     }
 
-    public function setCateCreation(\DateTimeImmutable $dateCreation): static
+    public function setDateCreation(\DateTimeImmutable $dateCreation): static
     {
         $this->dateCreation = $dateCreation;
         return $this;

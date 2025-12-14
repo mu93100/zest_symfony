@@ -33,3 +33,27 @@
                 'multiple' => true,
                 'label' => 'Tailles disponibles'
             ])
+
+
+
+**pour mettre * sur tous les champs requis**  
+'required' => true dans RegistrationFormType          
+-> Créer doss et fichier : templates/form/form_theme.html.twig
+{% block form_label %}
+    {% if label is not same as(false) %}
+        {% set labelText = label|default(name)|trans %}
+        {% if required %}
+            {{ labelText }} *
+        {% else %}
+            {{ labelText }}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+-> déclarer le thème dans twig.yaml
+Dans config/packages/twig.yaml, ajoute ton thème à twig:
+twig:
+    form_themes:
+        - 'form/form_theme.html.twig'
+
+        

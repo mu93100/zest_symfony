@@ -1,3 +1,27 @@
 body {
-    background-color: skyblue;
+    background-color: rgb(195, 221, 252);
+
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
 }
+
+/* registration */
+.agree_section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.agree_item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.agree_item input[type="checkbox"] {
+    margin-top: 4px;
+}
+/* registration */
