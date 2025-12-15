@@ -18,6 +18,9 @@ class Groupe
     #[ORM\Column(length: 45, nullable: false)]
     private string $nom;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $adresseDistrib = null;
+
     #[ORM\Column(length: 45)]
     private ?string $ville = null;
 
@@ -54,6 +57,18 @@ class Groupe
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
+
+        return $this;
+    }
+
+        public function getadresseDistrib(): ?string
+    {
+        return $this->adresseDistrib;
+    }
+
+    public function setadresseDistrib(?string $adresseDistrib): static
+    {
+        $this->adresseDistrib = $adresseDistrib;
 
         return $this;
     }

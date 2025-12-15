@@ -75,6 +75,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\GreaterThanOrEqual(1)]
     private ?int $nombreEnfants = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isReferent = false;
+
     //----------------r e l a t i o n s  ManyToOne
     #[ORM\ManyToOne(inversedBy: 'membres')]
     private ?Groupe $groupe = null;
@@ -96,6 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Adhesion::class, cascade: ['persist', 'remove'])]
     private Collection $adhesions;
+
 
 
 
@@ -422,4 +426,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function isReferent(): bool
+    {
+        return $this->isReferent;
+    }
+
+    public function setIsReferent(bool $isReferent): static
+    {
+        $this->isReferent = $isReferent;
+        return $this;
+    }
+
 }

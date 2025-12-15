@@ -10,7 +10,6 @@ use App\Entity\MontantAdhesion;
 use App\Entity\Motivation;
 use App\Entity\Dispo;
 use App\Entity\Pole;
-
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,47 +20,26 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
+
 class AdhesionFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-
-            // le groupe est lié au user et les champs non modifiables ne sont pas obligés
-            // d'être dans le formType UNIQUEMENT LES CHAMPS DE FORMULAIRE MODIFIABLE PAR LE USER
-            // ON APPELLE JUSTE DANS LE twig
-            // ->add('user', EntityType::class, [
-            //     'class' => User::class,
-            //     'choice_label' => 'email',
-            //     'label' => 'Adhérent·e',
-            //     'data' => $options['user'],   // ← pré-rempli avec l’utilisateur connecté
-            //     'disabled' => true,  // ← affiché MAIS non modifiable
-            // ])
-            // ->add('groupe', EntityType::class, [
-            //     'class' => Groupe::class,
-            //     'choice_label' => 'nom',
-            //     'label' => 'Groupe',
-            //     'data' => $options['user']->getGroupe(),  // ← Pré-rempli avec le groupe du user
-            //     'required' => true,  // ← Obligatoire
-            // ])
-            
             // je change de groupe
             ->add('changeGroupe', CheckboxType::class, [
-                'mapped' => false,
+                'mapped' => false, // pas mappé sur adhesion
                 'required' => false,
                 'label' => '<strong>Je change de groupe</strong>',
                 'attr' => ['class' => 'change-groupe-checkbox'],
             ])
-            // Je crée un nouveau groupe 
-            ->add('nouveauGroupe', EntityType::class, [
-                'class' => Groupe::class,
-                'choice_label' => 'nom',
+            // Je crée un nouveau groupe/ TextType pas EntityType car pas de champ pour nouveau groupe
+            ->add('nouveauGroupe', TextType::class, [
+                'mapped' => false, // pas mappé sur adhesion
                 'label' => 'Je crée un nouveau groupe',
-                'placeholder' => 'nom du nouveau groupe',
                 'required' => false,
-                'attr' => ['class' => 'nouveau-groupe-select', 'style' => 'display:none;'],
+                'attr' => ['class' => 'nom du nouveau groupe', 'style' => 'display:none;'],
             ])
-
 
             ->add('montantAdhesion', EntityType::class, [
                 'class' => MontantAdhesion::class,
@@ -73,15 +51,40 @@ class AdhesionFormType extends AbstractType
 
             // Champs non mappés
             ->add('isReferent', CheckboxType::class, [
-                'mapped' => false,
+                'mapped' => false, // pas mappé sur adhesion
                 'required' => false,
                 'label' => 'Je suis référent·e de mon groupe',
             ])
+            
             ->add('isOpen', CheckboxType::class, [
-                'mapped' => false,
+                'mapped' => false,// pas mappé sur adhesion
                 'required' => false,
-                'label' => 'Mon groupe peut accueillir de nouvelles adhésions',
+                'label' => 'Mon groupe peut accueillir de nouvelleaux adhérent.es',
+                'attr' => ['class' => 'is-open-checkbox', 'style' => 'display:none;'],
+
             ])
+
+            ->add('adresseDistribution', TextType::class, [
+                'label' => 'Adresse de distribution du groupe',
+                'required' => false,
+                'mapped' => false, // pas mappé sur adhesion
+                'attr' => [
+                    'placeholder' => 'Lieu de distribution des commandes',
+                    'class' => 'referent-field',
+                    'style' => 'display:none;'
+                ]
+            ])
+
+            ->add('ville', TextType::class, [
+                'label' => 'Ville',
+                'required' => false,
+                'mapped' => false, // pas mappé sur adhesion
+                'attr' => [
+                    'class' => 'referent-field',
+                    'style' => 'display:none;'
+                ]
+            ])
+
 
             // ManyToMany
             ->add('motivations', EntityType::class, [
@@ -93,14 +96,14 @@ class AdhesionFormType extends AbstractType
             ])
             ->add('dispos', EntityType::class, [
                 'class' => Dispo::class,
-                'choice_label' => 'label', 
+                'choice_label' => 'label',
                 'multiple' => true,
                 'expanded' => true,
                 'required' => false,
             ])
             ->add('poles', EntityType::class, [
                 'class' => Pole::class,
-                'choice_label' => 'nom',// pas de label!
+                'choice_label' => 'nom', // pas de label!
                 'placeholder' => 'Pôle(s) de travail auquel(s) je souhaite participer',
                 'multiple' => true,
                 'expanded' => true,
@@ -117,7 +120,7 @@ class AdhesionFormType extends AbstractType
                 'label' => 'Compétences à partager',
             ])
 
-            // Consentements
+            // Consentements requis mais pas mappé/enregistré
             ->add('agree_fonctionnement', CheckboxType::class, [
                 'mapped' => false,
                 'required' => true,
@@ -141,21 +144,22 @@ class AdhesionFormType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $adhesion = $event->getData();
             $form = $event->getForm();
-
-            if ($adhesion && $adhesion->getUser() && $adhesion->getUser()->isReferent()) {
-                $form->add('isOpen', CheckboxType::class, [
-                    'mapped' => false,
-                    'label' => 'Le groupe peut accueillir de nouvelles adhésions',
-                    'required' => false,
-                ]);
-            }
+            
+// SUREMENT A ENLEVER
+            // if ($adhesion && $adhesion->getUser() && $adhesion->getUser()->isReferent()) {
+            //     $form->add('isOpen', CheckboxType::class, [
+            //         'mapped' => false,
+            //         'label' => 'Le groupe peut accueillir de nouvelles adhésions',
+            //         'required' => false,
+            //     ]);
+            // }
         });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Adhesion::class,// ← LIEN ENTITÉ/FORMULAIRE pour mapper les data vers adhesion
+            'data_class' => Adhesion::class, // ← LIEN ENTITÉ/FORMULAIRE pour mapper les data vers adhesion
         ]);
         $resolver->setRequired('user');  // ← Pour pré-remplir
     }

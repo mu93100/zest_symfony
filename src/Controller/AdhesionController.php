@@ -25,8 +25,8 @@ final class AdhesionController extends AbstractController
 {
     #[Route('/adhesion', name: 'app_adhesion')]
     public function index(Request $request, EntityManagerInterface $entityManager, SaisonRepository $saisonRepository): Response
-// Injection: Request contient la requête HTTP (GET/POST), 
-// EntityManagerInterface sert à persister/flush les entités.
+    // Injection: Request contient la requête HTTP (GET/POST), 
+    // EntityManagerInterface sert à persister/flush les entités.
     { // ⚡ Création d'une nouvelle adhesion/ objet qui sera hydraté par le formulaire.
         $adhesion = new Adhesion();
 
@@ -36,37 +36,61 @@ final class AdhesionController extends AbstractController
             $adhesion->setSaison($saisonEnCours);
         }
 
-        // ⚡ Ici tu passes le user connecté au FormType
+        // ⚡ Ici tu passes le user connecté au FormType + Construire le formulaire basé sur AdhesionFormType
         $adhesionForm = $this->createForm(AdhesionFormType::class, $adhesion, [
             'user' => $this->getUser(),
         ]);
-            
-        // ⚡ Construire le formulaire basé sur AdhesionFormType
-        $adhesionForm = $this->createForm(AdhesionFormType::class, $adhesion);
         $adhesionForm->handleRequest($request);
 
         // ⚡ Sauvegarde si soumis et valide
         if ($adhesionForm->isSubmitted() && $adhesionForm->isValid()) {
             $adhesion = $adhesionForm->getData();
-            
-            // Si "Je change de groupe" coché
-            if ($adhesionForm->get('changeGroupe')->getData()) {
-                $adhesion->setGroupe($adhesionForm->get('nouveauGroupe')->getData());
-            }
-            // 1️⃣ Gestion du champ "nouveauGroupe"
+            $user = $this->getUser();
+
+            // 1️⃣ Création d’un nouveau groupe si un nom est saisi
             $nouveauNom = $adhesionForm->get('nouveauGroupe')->getData();
             if ($nouveauNom) {
                 $nouveauGroupe = new Groupe();
                 $nouveauGroupe->setNom($nouveauNom);
+                // optionnel : remplir adresse / ville à partir des champs non mappés
+                $nouveauGroupe->setadresseDistrib($adhesionForm->get('adresseDistribution')->getData());
+                $nouveauGroupe->setVille($adhesionForm->get('ville')->getData());
+
                 $entityManager->persist($nouveauGroupe);
                 $adhesion->setGroupe($nouveauGroupe);
+
+                if ($user) {
+                    $user->setGroupe($nouveauGroupe);
+                    $user->setIsReferent(true);
+                }
+
+                // 2️⃣ Sinon, si "Je change de groupe" est coché, on prend le groupe choisi
+            } elseif ($adhesionForm->get('changeGroupe')->getData()) {
+                $groupeChoisi = $adhesionForm->get('groupe')->getData();
+                if ($groupeChoisi) {
+                    $adhesion->setGroupe($groupeChoisi);
+                    if ($user) {
+                        $user->setGroupe($groupeChoisi);
+                    }
+                }
+
+                // 3️⃣ Sinon, on reste sur le groupe actuel du user
+            } else {
+                if ($user && $user->getGroupe()) {
+                    $adhesion->setGroupe($user->getGroupe());
+                }
             }
 
-            // 2️⃣ Gestion du champ "isOpen" si l’utilisateur est référent
-            $isOpen = $adhesionForm->has('isOpen') ? $adhesionForm->get('isOpen')->getData() : null;
-            if ($isOpen !== null && $adhesion->isReferent() && $adhesion->getGroupe()) {
-                $adhesion->getGroupe()->setIsOpen($isOpen);
+            // Lier l’adhésion au user connecté
+            if ($user) {
+                $adhesion->setUser($user);
             }
+            // SUREMENT A ENLEVER
+            // // 2️⃣ Gestion du champ "isOpen" si l’utilisateur est référent
+            // $isOpen = $adhesionForm->has('isOpen') ? $adhesionForm->get('isOpen')->getData() : null;
+            // if ($isOpen !== null && $adhesion->isReferent() && $adhesion->getGroupe()) {
+            //     $adhesion->getGroupe()->setIsOpen($isOpen);
+            // }
 
             // ⚡ Sauvegarde en base
             $entityManager->persist($adhesion);
@@ -81,6 +105,7 @@ final class AdhesionController extends AbstractController
         return $this->render('adhesion/index.html.twig', [
             'adhesionForm' => $adhesionForm->createView(),
             'saison' => $saisonEnCours,
+            'user' => $this->getUser(),
         ]);
     }
 }

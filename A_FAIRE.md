@@ -1,4 +1,4 @@
-PROBLEME VE?NDREDI 16:50
+PROBLEME VE?NDREDI 16:50  P A S S W O R D
 Ton problème vient du mélange entre ces annotations sur l’entité et la config du formulaire plainPassword avec mapped => false.
 
 Ce que font exactement ces propriétés
@@ -88,7 +88,7 @@ Mais il faut être sûr que tu ne valides pas l’entité dans d’autres contex
 
 Pour ton cas (formulaire d’enregistrement dédié), l’option 1 (contraintes dans le form, mapped => false, pas de Assert sur l’entité) est la plus simple et évite la plupart des erreurs de validation et de password NULL.
 
-
+----------------------------------------
 
 
 

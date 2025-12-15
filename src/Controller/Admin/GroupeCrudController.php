@@ -7,6 +7,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
 class GroupeCrudController extends AbstractCrudController
 {
@@ -14,41 +17,58 @@ class GroupeCrudController extends AbstractCrudController
     {
         return Groupe::class;
     }
-
+// rajout IA / pas nécessaire / a voir
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setEntityLabelInSingular('Groupe')
+            ->setEntityLabelInPlural('Groupes')
+            ->setDefaultSort(['nom' => 'ASC']);
+    }
+// FIN rajout IA  
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id')->onlyOnDetail(), // proposé par IA mais pas natif symfony
-            TextField::new('nom'),
-            TextField::new('ville'),
-            BooleanField::new('isReferent'),
-            BooleanField::new('isOpen'),
-            
-            // Champ calculé : liste des membres
-            TextField::new('membres')
+            IdField::new('id')->hideOnForm(),
+            TextField::new('nom', 'Nom du groupe'),
+            TextField::new('adresseDistrib', 'Adresse de distribution'),
+            TextField::new('ville', 'Ville'),
+            BooleanField::new('isOpen', 'groupe OPEN'),
+//         yield BooleanField::new('isOpen');
+
+            // Liste des membres 
+            ArrayField::new('membres', 'Adhérents')
                 ->formatValue(function ($value, $entity) {
-                    return implode(', ', $entity->getMembres()->map(fn($user) => $user->getNom())->toArray());
+                    return implode('<br>', $entity->getMembres()->map(
+                        fn($user) => sprintf('%s %s (%s)', 
+                            $user->getPrenom(), 
+                            $user->getNom(), 
+                            $user->getEmail(),
+                            $user->getTelephone()
+                        )
+                    )->toArray());
                 })
                 ->onlyOnDetail(),
 
-            // Champs calculés pour afficher les infos référent (via User)
-            // appellent getReferent() et affichent les infos du User référent 
-            // (nom, email, téléphone).TextField::new('referentNom')
-            TextField::new('referentNom')
-                ->formatValue(function ($value, $entity) {
-                    return $entity->getReferent()?->getNom() ?? '—';
-                })
-                ->onlyOnDetail(),
+            //  count des membres d'un groupe
+            AssociationField::new('membres', 'Nb membres')
+                ->onlyOnIndex(),
 
-            TextField::new('referentEmail')
+            // Infos référent 
+            TextField::new('referentInfo', 'Référent')
                 ->formatValue(function ($value, $entity) {
-                    return $entity->getReferent()?->getEmail() ?? '—';
-                })
-                ->onlyOnDetail(),
-
-            TextField::new('referentTelephone')
-                ->formatValue(function ($value, $entity) {
-                    return $entity->getReferent()?->getTelephone() ?? '—';
+                    // Trouver le user isReferent=true dans ce groupe
+                    $referent = $entity->getMembres()->filter(
+                        fn($user) => $user->isReferent()
+                    )->first();
+                    
+                    return $referent 
+                        ? sprintf('%s %s (%s)', 
+                            $referent->getPrenom(), 
+                            $referent->getNom(), 
+                            $referent->getEmail()
+                        )
+                        : '⚠️ Aucun référent défini';
                 })
                 ->onlyOnDetail(),
         ];
