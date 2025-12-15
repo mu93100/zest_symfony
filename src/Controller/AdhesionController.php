@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Adhesion;
 use App\Entity\Groupe;
+use App\Entity\User;
 use App\Form\AdhesionFormType;
 use App\Repository\SaisonRepository;
 use Doctrine\ORM\EntityManagerInterface;

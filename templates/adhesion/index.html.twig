@@ -1,59 +1,100 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}adhesion{% endblock %}
+{% block title %}adhesion
+{% endblock %}
 
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+	<style>
+		.example-wrapper {
+			margin: 1em auto;
+			max-width: 800px;
+			width: 95%;
+			font: 18px / 1.5 sans-serif;
+		}
+		.example-wrapper code {
+			background: #F5F5F5;
+			padding: 2px 6px;
+		}
+	</style>
 
-<div class="example-wrapper">
-    <h1>adhésion saison {{ saison.nom }}</h1>
-    <p>[ {{ app.user.prenom }} ({{ app.user.email }}) du groupe {{ app.user.groupe.nom }} ]</p>
+	<div class="example-wrapper">
+		<h1>adhésion saison {{ saison.nom }}</h1>
 
-    {{ form_errors(adhesionForm) }}
+{# {% if app.user %}
+    [ {{ app.user.prenom }} ({{ app.user.email }}) ]
+{% else %}
+    <p>Erreur : aucun utilisateur connecté.</p>
+{% endif %} #}
 
-    {{ form_start(adhesionForm) }}
-        {{ form_row(adhesionForm.groupe) }}
-        {{ form_row(adhesionForm.changeGroupe) }}
-        {{ form_row(adhesionForm.nouveauGroupe) }}
-        {{ form_row(adhesionForm.isReferent) }}
-        {{ form_row(adhesionForm.isOpen) }}
-        {{ form_row(adhesionForm.motivation) }}
-        {{ form_row(adhesionForm.attentesText) }}
-        {{ form_row(adhesionForm.dispo) }}
-        {{ form_row(adhesionForm.competencesText) }}
-        {{ form_row(adhesionForm.pole) }}
 
-        {{ form_row(adhesionForm.infos) }}
 
-        {{ form_row(adhesionForm.agree_fonctionnement) }}
-        {{ form_row(adhesionForm.agree_rgpd) }}
-        {{ form_row(adhesionForm.montantAdhesion) }}        
+        {% if app.user %}
+    <p>
+        [ {{ app.user.prenom }} ({{ app.user.email }})
+        {% if app.user.groupe %}
+            du groupe {{ app.user.groupe.nom }} ] </p>
+        {% else %}
+    <p>E R R O R</p>    
+        {% endif %}
+        
+    
+{% endif %}
 
-        <button type="submit" class="btn">J’adhère pour la saison</button>
-    {{ form_end(adhesionForm) }}
-</div>
-{% endblock %} 
+		{# <p>[ {{ app.user.prenom }} ({{ app.user.email }}) du groupe {{ app.user.groupe.nom }} ]</p> #}
+
+		{{ form_errors(adhesionForm) }}
+
+		{{ form_start(adhesionForm) }}
+		{{ form_row(adhesionForm.groupe) }}
+		{{ form_row(adhesionForm.changeGroupe) }}
+		{{ form_row(adhesionForm.nouveauGroupe) }}
+		{{ form_row(adhesionForm.isReferent) }}
+		{{ form_row(adhesionForm.isOpen) }}
+
+		{{ form_row(adhesionForm.adresseDistribution) }}
+		{{ form_row(adhesionForm.ville) }}
+
+		{{ form_row(adhesionForm.motivations) }}
+		{{ form_row(adhesionForm.attentesTexte) }}
+		{{ form_row(adhesionForm.dispos) }}
+		{{ form_row(adhesionForm.competencesTexte) }}
+		{{ form_row(adhesionForm.poles) }}
+
+		{{ form_row(adhesionForm.agree_fonctionnement) }}
+
+		{{ form_row(adhesionForm.montantAdhesion) }}
+
+		{# Réservé admin si tu veux : #}
+		{{ form_row(adhesionForm.paiement) }}
+
+		<button type="submit" class="btn">J’adhère pour la saison</button>
+		{{ form_end(adhesionForm) }}
+
+	</div>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const changeCheckbox = document.querySelector('.change-groupe-checkbox');
-    const nouveauSelect = document.querySelector('.nouveau-groupe-select');
-    
+    const nouveauInput = document.querySelector('.nouveau-groupe-input');
+
+    if (!changeCheckbox || !nouveauInput) {
+        return;
+    }
+
     changeCheckbox.addEventListener('change', function() {
         if (this.checked) {
-            nouveauSelect.style.display = 'block';
-            nouveauSelect.required = true;
+            nouveauInput.style.display = 'block';
+            nouveauInput.required = true;
         } else {
-            nouveauSelect.style.display = 'none';
-            nouveauSelect.required = false;
+            nouveauInput.style.display = 'none';
+            nouveauInput.required = false;
         }
     });
 });
 </script>
+{% endblock %}
 {# 
     {{ form_errors(adhesionForm) }}
 
