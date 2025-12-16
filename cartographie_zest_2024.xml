@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:c="urn:schemas-microsoft-com:office:component:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:x2="http://schemas.microsoft.com/office/excel/2003/xml" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office"><Colors><Color><Index>3</Index><RGB>#000000</RGB></Color><Color><Index>4</Index><RGB>#0000ee</RGB></Color><Color><Index>5</Index><RGB>#006600</RGB></Color><Color><Index>6</Index><RGB>#333333</RGB></Color><Color><Index>7</Index><RGB>#808080</RGB></Color><Color><Index>8</Index><RGB>#996600</RGB></Color><Color><Index>9</Index><RGB>#c0c0c0</RGB></Color><Color><Index>10</Index><RGB>#cc0000</RGB></Color><Color><Index>11</Index><RGB>#ccffcc</RGB></Color><Color><Index>12</Index><RGB>#dddddd</RGB></Color><Color><Index>13</Index><RGB>#ff0000</RGB></Color><Color><Index>14</Index><RGB>#ffcccc</RGB></Color><Color><Index>15</Index><RGB>#ffffcc</RGB></Color><Color><Index>16</Index><RGB>#ffffff</RGB></Color></Colors></OfficeDocumentSettings><ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel"><WindowHeight>9000</WindowHeight><WindowWidth>13860</WindowWidth><WindowTopX>240</WindowTopX><WindowTopY>75</WindowTopY><ProtectStructure>False</ProtectStructure><ProtectWindows>False</ProtectWindows></ExcelWorkbook><Styles><Style ss:ID="Default" ss:Name="Default"/><Style ss:ID="Note" ss:Name="Note"><Font ss:FontName="Liberation Sans" ss:Size="10"/></Style><Style ss:ID="Default" ss:Name="Default"/><Style ss:ID="Heading" ss:Name="Heading"><Alignment/><Font ss:Bold="1" ss:Size="24"/></Style><Style ss:ID="Heading_20_1" ss:Name="Heading 1"><Alignment/><Font ss:Bold="1" ss:Size="18"/></Style><Style ss:ID="Heading_20_2" ss:Name="Heading 2"><Alignment/><Font ss:Bold="1" ss:Size="12"/></Style><Style ss:ID="Text" ss:Name="Text"><Alignment/></Style><Style ss:ID="Note" ss:Name="Note"><Alignment/><Borders><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#808080"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#808080"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#808080"/><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#808080"/></Borders><Interior ss:Color="#ffffcc" ss:Pattern="Solid"/></Style><Style ss:ID="Footnote" ss:Name="Footnote"><Alignment/></Style><Style ss:ID="Hyperlink" ss:Name="Hyperlink"><Alignment/></Style><Style ss:ID="Status" ss:Name="Status"><Alignment/></Style><Style ss:ID="Good" ss:Name="Good"><Alignment/><Interior ss:Color="#ccffcc" ss:Pattern="Solid"/></Style><Style ss:ID="Neutral" ss:Name="Neutral"><Alignment/><Interior ss:Color="#ffffcc" ss:Pattern="Solid"/></Style><Style ss:ID="Bad" ss:Name="Bad"><Alignment/><Interior ss:Color="#ffcccc" ss:Pattern="Solid"/></Style><Style ss:ID="Warning" ss:Name="Warning"><Alignment/></Style><Style ss:ID="Error" ss:Name="Error"><Alignment/><Interior ss:Color="#cc0000" ss:Pattern="Solid"/></Style><Style ss:ID="Accent" ss:Name="Accent"><Alignment/></Style><Style ss:ID="Accent_20_1" ss:Name="Accent 1"><Alignment/><Font ss:Bold="1" ss:Color="#ffffff"/><Interior ss:Color="#000000" ss:Pattern="Solid"/></Style><Style ss:ID="Accent_20_2" ss:Name="Accent 2"><Alignment/><Font ss:Bold="1" ss:Color="#ffffff"/><Interior ss:Color="#808080" ss:Pattern="Solid"/></Style><Style ss:ID="Accent_20_3" ss:Name="Accent 3"><Alignment/><Interior ss:Color="#dddddd" ss:Pattern="Solid"/></Style><Style ss:ID="Result" ss:Name="Result"><Alignment/><Font ss:Bold="1" ss:Italic="1" ss:Underline="Single"/></Style><Style ss:ID="co1"/><Style ss:ID="co2"/><Style ss:ID="co3"/><Style ss:ID="co4"/><Style ss:ID="co5"/><Style ss:ID="co6"/><Style ss:ID="ta1"/></Styles><ss:Worksheet ss:Name="cartographie_zest_2024"><Table ss:StyleID="ta1"><Column ss:Width="209.5086"/><Column ss:Width="402.2362"/><Column ss:Width="352.0913"/><Column ss:Width="55.0488"/><Column ss:Width="51.9591"/><Row ss:Height="12.8126"><Cell><Data ss:Type="String">name</Data></Cell><Cell><Data ss:Type="String">description</Data></Cell><Cell><Data ss:Type="String">desc</Data></Cell><Cell><Data ss:Type="String">Latitude</Data></Cell><Cell><Data ss:Type="String">Longitude</Data></Cell></Row><Row ss:Height="35.0362"><Cell><Data ss:Type="String">GROUPE  BEFANA</Data></Cell><Cell><Data ss:Type="String">Groupe La Befana Bagnolet plateau
+Référent Constance Limbosch 06 21 14 08 20 climbosch@hotmail.com
+9 adhérents COMPLET?</Data></Cell><Cell><Data ss:Type="String">Groupe La Befana Bagnolet plateau
+Référent Constance Limbosch 06 21 14 08 20 climbosch@hotmail.com
+9 adhérents COMPLET?</Data></Cell><Cell><Data ss:Type="String">48.877012</Data></Cell><Cell><Data ss:Type="String">2.427936</Data></Cell></Row><Row ss:Height="57.4583"><Cell><Data ss:Type="String">GROUPE 37 et +</Data></Cell><Cell><Data ss:Type="String">Groupe 37 et +
+37 rue de Vincennes à Montreuil
+référente Hélène Lassaux (06.48 55 61 27 lassaux1@gmail.com)
+ 5 adhérents
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">Groupe 37 et +
+37 rue de Vincennes à Montreuil
+référente Hélène Lassaux (06.48 55 61 27 lassaux1@gmail.com)
+ 5 adhérents
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">48.855098</Data></Cell><Cell><Data ss:Type="String">2.436288</Data></Cell></Row><Row ss:Height="46.2614"><Cell><Data ss:Type="String">GROUPE ALEP</Data></Cell><Cell><Data ss:Type="String">Groupe ALEP 7 rue Alexis Lepers Montreuil
+Dominique (06 63 98 22 70 domi.pavy@gmail.com), Remy (06 69 30 02 74 remyalbaric@free.fr)
+7 adhérents 
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">Groupe ALEP 7 rue Alexis Lepers Montreuil
+Dominique (06 63 98 22 70 domi.pavy@gmail.com), Remy (06 69 30 02 74 remyalbaric@free.fr)
+7 adhérents 
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">48.864244</Data></Cell><Cell><Data ss:Type="String">2.441154</Data></Cell></Row><Row ss:Height="68.6551"><Cell><Data ss:Type="String">GROUPE API </Data></Cell><Cell><Data ss:Type="String">Groupe API 15 rue P-J de Béranger Montreuil
+Référentes : Catherine (06 73 62 47 09 cathchenu@mac.com) et anne (06 99 59 90 30 anne.guinot.anne@gmail.com)
+15 adhérents
+COMPLET?
+
+</Data></Cell><Cell><Data ss:Type="String">Groupe API 15 rue P-J de Béranger Montreuil
+Référentes : Catherine (06 73 62 47 09 cathchenu@mac.com) et anne (06 99 59 90 30 anne.guinot.anne@gmail.com)
+15 adhérents
+COMPLET?
+
+</Data></Cell><Cell><Data ss:Type="String">48.867545</Data></Cell><Cell><Data ss:Type="String">2.468576</Data></Cell></Row><Row ss:Height="46.2614"><Cell><Data ss:Type="String">GROUPE BAGNOLESE ( EX BEAUX BIOS)</Data></Cell><Cell><Data ss:Type="String">Groupe Bagnolese  Bagnolet?
+Référente Tiphaine Leclere( 06 74 89 12 06 thipaineleclere@gmail.com)
+ 9 adhérents
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">Groupe Bagnolese  Bagnolet?
+Référente Tiphaine Leclere( 06 74 89 12 06 thipaineleclere@gmail.com)
+ 9 adhérents
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">48.855906</Data></Cell><Cell><Data ss:Type="String">2.415951</Data></Cell></Row><Row ss:Height="68.6551"><Cell><Data ss:Type="String">GROUPE BAGNOLETO FELICE</Data></Cell><Cell><Data ss:Type="String">Groupe Bagnoleto Felice 52 rue de la Fraternité Bagnolet
+Référents: Yves (06 75 75 61 64 yves.strauss@yahoo.fr), 
+                 Véro, (06 27 10 25 62 SMS), 
+                 Ccile (06 15 21 82 58 ccilgrange@gmail.com). 
+22 adhérents 
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">Groupe Bagnoleto Felice 52 rue de la Fraternité Bagnolet
+Référents: Yves (06 75 75 61 64 yves.strauss@yahoo.fr), 
+                 Véro, (06 27 10 25 62 SMS), 
+                 Ccile (06 15 21 82 58 ccilgrange@gmail.com). 
+22 adhérents 
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">48.860238</Data></Cell><Cell><Data ss:Type="String">2.423108</Data></Cell></Row><Row ss:Height="46.2614"><Cell><Data ss:Type="String">GROUPE BAM</Data></Cell><Cell><Data ss:Type="String">Groupe BAM rue des messiers à Montreuil
+Référente : Arianne 06 07 07 60 18, Anne 06 60 22 19 09 et amélie  06 73 34 60 59 referents.bam@gmail.com
+10 adhérents
+COMPLET</Data></Cell><Cell><Data ss:Type="String">Groupe BAM rue des messiers à Montreuil
+Référente : Arianne 06 07 07 60 18, Anne 06 60 22 19 09 et amélie  06 73 34 60 59 referents.bam@gmail.com
+10 adhérents
+COMPLET</Data></Cell><Cell><Data ss:Type="String">48.860377</Data></Cell><Cell><Data ss:Type="String">2.431412</Data></Cell></Row><Row ss:Index="9" ss:Height="57.4583"><Cell><Data ss:Type="String">GROUPE BARA</Data></Cell><Cell><Data ss:Type="String">Groupe Bara  bas Montreuil -Vincennes
+Référente Eudora (06 50 99 65 86 berniolles.eudora@gmail.com)....
+3 adhérents 
+COMPLET?
+</Data></Cell><Cell><Data ss:Type="String">Groupe Bara  bas Montreuil -Vincennes
+Référente Eudora (06 50 99 65 86 berniolles.eudora@gmail.com)....
+3 adhérents 
+COMPLET?
+</Data></Cell><Cell><Data ss:Type="String">48.854864</Data></Cell><Cell><Data ss:Type="String">2.423816</Data></Cell></Row><Row ss:Height="57.4583"><Cell><Data ss:Type="String">GROUPE BARBOILLE</Data></Cell><Cell><Data ss:Type="String">Groupe Barboille rue de Bondy et autre Villemonble
+Thierry (06 44 26 58 74 thierbar@aol.com),
+Eric (06 51 09 53 53 eric.ertzbischoff@gmail.com)..
+9  personnes
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">Groupe Barboille rue de Bondy et autre Villemonble
+Thierry (06 44 26 58 74 thierbar@aol.com),
+Eric (06 51 09 53 53 eric.ertzbischoff@gmail.com)..
+9  personnes
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">48.876909</Data></Cell><Cell><Data ss:Type="String">2.511063</Data></Cell></Row><Row ss:Height="46.2614"><Cell><Data ss:Type="String">GROUPE BELLA CIAO</Data></Cell><Cell><Data ss:Type="String">Groupe Bella Ciao Danton Montreuil
+Référente Samantha Villani (06 20 47 17 05 svillani11@gmail.com)
+3 adhérents
+Places dispo?</Data></Cell><Cell><Data ss:Type="String">Groupe Bella Ciao Danton Montreuil
+Référente Samantha Villani (06 20 47 17 05 svillani11@gmail.com)
+3 adhérents
+Places dispo?</Data></Cell><Cell><Data ss:Type="String">48.865329</Data></Cell><Cell><Data ss:Type="String">2.450209</Data></Cell></Row><Row ss:Height="46.2614"><Cell><Data ss:Type="String">GROUPE BERIO</Data></Cell><Cell><Data ss:Type="String">Groupe Bério 104 rue victor Hugo Bagnolet 
+Laure Frèche( 06 15 07 83 93 frecheslaure@gmail.com )
+5 adhérents 
+COMPLET</Data></Cell><Cell><Data ss:Type="String">Groupe Bério 104 rue victor Hugo Bagnolet 
+Laure Frèche( 06 15 07 83 93 frecheslaure@gmail.com )
+5 adhérents 
+COMPLET</Data></Cell><Cell><Data ss:Type="String">48.858123</Data></Cell><Cell><Data ss:Type="String">2.422078</Data></Cell></Row><Row ss:Height="46.2614"><Cell><Data ss:Type="String">GROUPE COOL POULES</Data></Cell><Cell><Data ss:Type="String">Groupe Cool Poules  52 rue Hoche Montreuil
+Eve (06 51 77 94 64 eve.robic@gmail.com) , Agnès (06 78 01 41 10 agnes.etel@outlook.fr), 
+18 personnes
+COMPLET</Data></Cell><Cell><Data ss:Type="String">Groupe Cool Poules  52 rue Hoche Montreuil
+Eve (06 51 77 94 64 eve.robic@gmail.com) , Agnès (06 78 01 41 10 agnes.etel@outlook.fr), 
+18 personnes
+COMPLET</Data></Cell><Cell><Data ss:Type="String">48.86399</Data></Cell><Cell><Data ss:Type="String">2.43433</Data></Cell></Row><Row ss:Height="46.2614"><Cell><Data ss:Type="String">GROUPE DEBOAISNE</Data></Cell><Cell><Data ss:Type="String">Groupe Deboaisne  9 rue des Fêtes Paris 75019
+Aude (06 81 69 32 26  aude.deboaisne@gmail.com).. 
+4 adhérents  
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">Groupe Deboaisne  9 rue des Fêtes Paris 75019
+Aude (06 81 69 32 26  aude.deboaisne@gmail.com).. 
+4 adhérents  
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">48.876087</Data></Cell><Cell><Data ss:Type="String">2.392058</Data></Cell></Row><Row ss:Height="57.4583"><Cell><Data ss:Type="String">GROUPE EX JARDIN</Data></Cell><Cell><Data ss:Type="String">Groupe Ex Jardin Montreuil Robespierre?
+Référents: Fanny (06 78 00 29 30 f_douard@hotmail.com) 
+5 adhérents 
+COMPLET?
+</Data></Cell><Cell><Data ss:Type="String">Groupe Ex Jardin Montreuil Robespierre?
+Référents: Fanny (06 78 00 29 30 f_douard@hotmail.com) 
+5 adhérents 
+COMPLET?
+</Data></Cell><Cell><Data ss:Type="String">48.855627</Data></Cell><Cell><Data ss:Type="String">2.42712</Data></Cell></Row><Row ss:Height="35.0362"><Cell><Data ss:Type="String">GROUPE JOYEUSES GRAINES</Data></Cell><Cell><Data ss:Type="String">Groupe Joyeuses Graines Bagnolet Robespierre ou plateau
+Perrine (06 12 89 80 33  p.coulogner@wanadoo.fr.) 4 adhérents.
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">Groupe Joyeuses Graines Bagnolet Robespierre ou plateau
+Perrine (06 12 89 80 33  p.coulogner@wanadoo.fr.) 4 adhérents.
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">48.860739</Data></Cell><Cell><Data ss:Type="String">2.420404</Data></Cell></Row><Row ss:Index="17" ss:Height="57.4583"><Cell><Data ss:Type="String">GROUPE KILOGRAMA</Data></Cell><Cell><Data ss:Type="String">Groupe Kilograma  112 avenue Raspail Bagnolet
+Référentes: Christelle (06 14 39 55 10 christelle.lechat31@gmail.com)
+Karine (06 74 47 39 37 karinelevy@free.fr)
+18 adhérents 
+ COMPLET?</Data></Cell><Cell><Data ss:Type="String">Groupe Kilograma  112 avenue Raspail Bagnolet
+Référentes: Christelle (06 14 39 55 10 christelle.lechat31@gmail.com)
+Karine (06 74 47 39 37 karinelevy@free.fr)
+18 adhérents 
+ COMPLET?</Data></Cell><Cell><Data ss:Type="String">48.873916</Data></Cell><Cell><Data ss:Type="String">2.433171</Data></Cell></Row><Row ss:Height="46.2614"><Cell><Data ss:Type="String">GROUPE LA NOUE</Data></Cell><Cell><Data ss:Type="String">Groupe La Noue Montreuil
+Gianluca ( 07 67 59 34 61 gianluca.magaldi@gmail.com)
+9 adhérents 
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">Groupe La Noue Montreuil
+Gianluca ( 07 67 59 34 61 gianluca.magaldi@gmail.com)
+9 adhérents 
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">48.863566</Data></Cell><Cell><Data ss:Type="String">2.42712</Data></Cell></Row><Row ss:Height="46.2614"><Cell><Data ss:Type="String">GROUPE LES 4 FANTASTIQUES</Data></Cell><Cell><Data ss:Type="String">Groupe les 4 fantastiques rue Faidherbe à Montreuil
+Référents Claire (06 76 41 98 38 couaire@gmail.com) Christophe (06 83 57 96 21  christophe.evans@bpi.fr)
+5 adhérents
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">Groupe les 4 fantastiques rue Faidherbe à Montreuil
+Référents Claire (06 76 41 98 38 couaire@gmail.com) Christophe (06 83 57 96 21  christophe.evans@bpi.fr)
+5 adhérents
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">48.866069</Data></Cell><Cell><Data ss:Type="String">2.440166</Data></Cell></Row><Row ss:Height="57.4583"><Cell><Data ss:Type="String">GROUPE LES CITRONNEES </Data></Cell><Cell><Data ss:Type="String">Vincennes 
+référente: Stéphanie  tel: 06 74 36 96 04
+sterossa@gmail.com
+ 3 adhérents
+places libres</Data></Cell><Cell><Data ss:Type="String">Vincennes 
+référente: Stéphanie  tel: 06 74 36 96 04
+sterossa@gmail.com
+ 3 adhérents
+places libres</Data></Cell><Cell><Data ss:Type="String">48.850873</Data></Cell><Cell><Data ss:Type="String">2.444458</Data></Cell></Row><Row ss:Height="57.4583"><Cell><Data ss:Type="String">GROUPE MANGEURS SOLIDAIRES</Data></Cell><Cell><Data ss:Type="String">Groupe des Mangeurs Solidaires les Lilas
+Référents : Christine  (06 72 13 15 82 delaunay.chris@orange.fr) et Tristan (0673227651 tristan.tomala@gmail.com)
+6 adhérents
+COMPLET ?
+</Data></Cell><Cell><Data ss:Type="String">Groupe des Mangeurs Solidaires les Lilas
+Référents : Christine  (06 72 13 15 82 delaunay.chris@orange.fr) et Tristan (0673227651 tristan.tomala@gmail.com)
+6 adhérents
+COMPLET ?
+</Data></Cell><Cell><Data ss:Type="String">48.882554</Data></Cell><Cell><Data ss:Type="String">2.419181</Data></Cell></Row><Row ss:Height="46.2614"><Cell><Data ss:Type="String">GROUPE MAUPITI</Data></Cell><Cell><Data ss:Type="String">Groupe Maupiti place Carnot Montreuil
+Référent : Gabriel (06 95 507761 gaissou@gmail.com)
+3 adhérents 
+PLACES POSSIBLES</Data></Cell><Cell><Data ss:Type="String">Groupe Maupiti place Carnot Montreuil
+Référent : Gabriel (06 95 507761 gaissou@gmail.com)
+3 adhérents 
+PLACES POSSIBLES</Data></Cell><Cell><Data ss:Type="String">48.855966</Data></Cell><Cell><Data ss:Type="String">2.441754</Data></Cell></Row><Row ss:Height="46.2614"><Cell><Data ss:Type="String">GROUPE NAMA</Data></Cell><Cell><Data ss:Type="String">Groupe Nama  112-116 rue E.Maury Fontenay 
+Madeleine (06 72 71 34 68 madeleine.hadrich@gmail.com) 
+4 adhérents 
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">Groupe Nama  112-116 rue E.Maury Fontenay 
+Madeleine (06 72 71 34 68 madeleine.hadrich@gmail.com) 
+4 adhérents 
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">48.855002</Data></Cell><Cell><Data ss:Type="String">2.461066</Data></Cell></Row><Row ss:Height="35.0362"><Cell><Data ss:Type="String">GROUPE PANIERS DES BORDES</Data></Cell><Cell><Data ss:Type="String">Groupe Paniers des Bordes Saint Maur des Fossés
+Caroline (06 62 07 52 16 carobensa@hotmail.com), Adélia (adelias25@gmail.com)..9 adhérents 
+PLACES POSSIBLES ?</Data></Cell><Cell><Data ss:Type="String">Groupe Paniers des Bordes Saint Maur des Fossés
+Caroline (06 62 07 52 16 carobensa@hotmail.com), Adélia (adelias25@gmail.com)..9 adhérents 
+PLACES POSSIBLES ?</Data></Cell><Cell><Data ss:Type="String">48.803098</Data></Cell><Cell><Data ss:Type="String">2.48497</Data></Cell></Row><Row ss:Index="25" ss:Height="57.4583"><Cell><Data ss:Type="String">GROUPE PECTINE</Data></Cell><Cell><Data ss:Type="String">Groupe Pectine 97 rue Gabriel Péri Fontenay
+Cécile ( 06 80 95 45 89 cecile.vionnet@gmail.com), 
+Delphine (06 85 95 24 29 delphine.dagbo@gmail.com)
+7 adhérents 
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">Groupe Pectine 97 rue Gabriel Péri Fontenay
+Cécile ( 06 80 95 45 89 cecile.vionnet@gmail.com), 
+Delphine (06 85 95 24 29 delphine.dagbo@gmail.com)
+7 adhérents 
+COMPLET?</Data></Cell><Cell><Data ss:Type="String">48.853944</Data></Cell><Cell><Data ss:Type="String">2.450767</Data></Cell></Row><Row ss:Height="57.4583"><Cell><Data ss:Type="String">GROUPE PERE LACHAISE</Data></Cell><Cell><Data ss:Type="String">Groupe Père Lachaise 10 rue Omer Talon 75011 
+Référentes : Marianne (06 69 13 20 08 1mariannepetit@gmail.com), 
+                   Pascale (0670564959 Pascale.baray@wanadoo.fr) 
+9 adhérents 
+COMPLET.</Data></Cell><Cell><Data ss:Type="String">Groupe Père Lachaise 10 rue Omer Talon 75011 
+Référentes : Marianne (06 69 13 20 08 1mariannepetit@gmail.com), 
+                   Pascale (0670564959 Pascale.baray@wanadoo.fr) 
+9 adhérents 
+COMPLET.</Data></Cell><Cell><Data ss:Type="String">48.86137</Data></Cell><Cell><Data ss:Type="String">2.383754</Data></Cell></Row><Row ss:Height="46.2614"><Cell><Data ss:Type="String">GROUPE SAUVAGE</Data></Cell><Cell><Data ss:Type="String">Groupe Sauvage Lycée Horticole Montreuil
+Référents: Marc  (06 63 87 52 86 marc.chonier@gmail.com) Théo (06 64 88 53 74)
+ 7 adhérents 
+PLACES POSSIBLES ?</Data></Cell><Cell><Data ss:Type="String">Groupe Sauvage Lycée Horticole Montreuil
+Référents: Marc  (06 63 87 52 86 marc.chonier@gmail.com) Théo (06 64 88 53 74)
+ 7 adhérents 
+PLACES POSSIBLES ?</Data></Cell><Cell><Data ss:Type="String">48.860318</Data></Cell><Cell><Data ss:Type="String">2.456645</Data></Cell></Row><Row ss:Height="57.4583"><Cell><Data ss:Type="String">GROUPE SORGO</Data></Cell><Cell><Data ss:Type="String">Groupe Sorgo c/o les petites cantines Bagnolet
+Véronique Guittet (06 51 01 15 01 sorgo.corto@gmail.com)
+Marie Carmen Herguedas (06 82 86 36 15 sorgo.corto@gmail.com)
+7 adhérents 
+ COMPLET?</Data></Cell><Cell><Data ss:Type="String">Groupe Sorgo c/o les petites cantines Bagnolet
+Véronique Guittet (06 51 01 15 01 sorgo.corto@gmail.com)
+Marie Carmen Herguedas (06 82 86 36 15 sorgo.corto@gmail.com)
+7 adhérents 
+ COMPLET?</Data></Cell><Cell><Data ss:Type="String">48.868608</Data></Cell><Cell><Data ss:Type="String">2.419138</Data></Cell></Row><Row ss:Height="35.0362"><Cell><Data ss:Type="String">GROUPE SYRACUSE</Data></Cell><Cell><Data ss:Type="String">Groupe Syracuse 28 rue Francisco Ferrer Bagnolet 
+Valerie ( 06 82 86 36 15 vtotria@gmail.com), Anne (0686813906 a.raynal3@laposte.net)... 5 adhérents 
+COMPLET</Data></Cell><Cell><Data ss:Type="String">Groupe Syracuse 28 rue Francisco Ferrer Bagnolet 
+Valerie ( 06 82 86 36 15 vtotria@gmail.com), Anne (0686813906 a.raynal3@laposte.net)... 5 adhérents 
+COMPLET</Data></Cell><Cell><Data ss:Type="String">48.871539</Data></Cell><Cell><Data ss:Type="String">2.42049</Data></Cell></Row><Row ss:Height="46.2614"><Cell><Data ss:Type="String">GROUPE TAROCCO</Data></Cell><Cell><Data ss:Type="String">Groupe Tarocco 12 rue Bachaumont Paris 75002
+Frédérique (06 07 60 45 11 frederique.mathieu002@gmail.com), François (06 80 08 38 82)
+4 personnes
+COMPLET</Data></Cell><Cell><Data ss:Type="String">Groupe Tarocco 12 rue Bachaumont Paris 75002
+Frédérique (06 07 60 45 11 frederique.mathieu002@gmail.com), François (06 80 08 38 82)
+4 personnes
+COMPLET</Data></Cell><Cell><Data ss:Type="String">48.866025</Data></Cell><Cell><Data ss:Type="String">2.345796</Data></Cell></Row><Row ss:Height="35.0362"><Cell><Data ss:Type="String">GROUPE Z'ANONYMES</Data></Cell><Cell><Data ss:Type="String">Groupe Z'anonymes  7 rue du Bac Bagnolet Plateau
+Nadia ( 06 42 00 91 92  zirinadia@gmail.com), 
+5 adhérents. PLACES POSSIBLES</Data></Cell><Cell><Data ss:Type="String">Groupe Z'anonymes  7 rue du Bac Bagnolet Plateau
+Nadia ( 06 42 00 91 92  zirinadia@gmail.com), 
+5 adhérents. PLACES POSSIBLES</Data></Cell><Cell><Data ss:Type="String">48.877387</Data></Cell><Cell><Data ss:Type="String">2.433386</Data></Cell></Row><Row ss:Height="12.8126"><Cell><Data ss:Type="String">LIEU DE LIVRAISON DE ZEST</Data></Cell><Cell><Data ss:Type="String">lieu de livraison "On sème tous" de corto-Zest rue Hoche Montreuil </Data></Cell><Cell><Data ss:Type="String">lieu de livraison "On sème tous" de corto-Zest rue Hoche Montreuil </Data></Cell><Cell><Data ss:Type="String">48.863873</Data></Cell><Cell><Data ss:Type="String">2.429352</Data></Cell></Row></Table><x:WorksheetOptions/></ss:Worksheet></Workbook>

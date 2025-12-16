@@ -16,7 +16,7 @@ class Dispo
     private ?int $id = null;
 
     #[ORM\Column(length: 200 )]
-    private ?string $libelleDispo = null;
+    private ?string $libelle = null;
 
     /**
      * @var Collection<int, Adhesion>
@@ -37,14 +37,14 @@ class Dispo
         return $this->id;
     }
 
-    public function getLibelleDispo(): ?string
+    public function getLibelle(): ?string
     {
-        return $this->libelleDispo;
+        return $this->libelle;
     }
 
-    public function setLibelleDispo(string $libelleDispo): static
+    public function setLibelle(string $libelle): static
     {
-        $this->libelleDispo = $libelleDispo;
+        $this->libelle = $libelle;
 
         return $this;
     }

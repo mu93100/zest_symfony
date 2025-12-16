@@ -18,93 +18,106 @@
 		}
 	</style>
 
+
 	<div class="example-wrapper">
-		<h1>adhésion saison {{ saison.nom }}</h1>
+		<h1>adhésion saison
+			{{ saison.nom }}</h1>
 
-{# {% if app.user %}
-    [ {{ app.user.prenom }} ({{ app.user.email }}) ]
-{% else %}
-    <p>Erreur : aucun utilisateur connecté.</p>
-{% endif %} #}
+		{% if app.user %}
+			<p>[ {{ app.user.prenom }} ({{ app.user.email }}) du groupe {{ app.user.groupe.nom }} ]</p>
+		{% else %}
+			<p>E R R O R</p>
+		{% endif %}
 
-
-
-        {% if app.user %}
-    <p>
-        [ {{ app.user.prenom }} ({{ app.user.email }})
-        {% if app.user.groupe %}
-            du groupe {{ app.user.groupe.nom }} ] </p>
-        {% else %}
-    <p>E R R O R</p>    
-        {% endif %}
-        
-    
-{% endif %}
-
-		{# <p>[ {{ app.user.prenom }} ({{ app.user.email }}) du groupe {{ app.user.groupe.nom }} ]</p> #}
 
 		{{ form_errors(adhesionForm) }}
 
-		{{ form_start(adhesionForm) }}
-		{{ form_row(adhesionForm.groupe) }}
-		{{ form_row(adhesionForm.changeGroupe) }}
-		{{ form_row(adhesionForm.nouveauGroupe) }}
-		{{ form_row(adhesionForm.isReferent) }}
-		{{ form_row(adhesionForm.isOpen) }}
 
-		{{ form_row(adhesionForm.adresseDistribution) }}
-		{{ form_row(adhesionForm.ville) }}
+			{{ form_start(adhesionForm) }}
+        <div>
+            <h2>modifier les infos groupe</h2>
+			{{ form_row(adhesionForm.groupe) }}
+			{{ form_row(adhesionForm.changeGroupe) }}
+			{{ form_row(adhesionForm.nouveauGroupe) }}
+            <h2>à remplir par le référent du groupe</h2>
+			<div class="form-check">
+                {{ form_widget(adhesionForm.isReferent) }}
+                {{ form_label(adhesionForm.isReferent) }}
+            </div>
+            <div class="form-check">
+                {{ form_widget(adhesionForm.isOpen) }}
+                {{ form_label(adhesionForm.isOpen) }}
+            </div>
+			{{ form_row(adhesionForm.adresseDistribution) }}
+			{{ form_row(adhesionForm.ville) }}
+        </div>
+        <div>
+            <h2>motivations et attentes</h2>
+			{{ form_row(adhesionForm.motivations) }}
+			{{ form_row(adhesionForm.attentesTexte) }}
+            <h2>participation et disponibilités</h2>
+			{{ form_row(adhesionForm.dispos) }}
+			{{ form_row(adhesionForm.competencesTexte) }}
+			{{ form_row(adhesionForm.poles) }}
+        </div>
+        <div>
+            <h2>informations importantes</h2>
+            <p><span>Adhésion annuelle :</span> 10€ par foyer - adhésion solidaire : 5€ - adhésion de soutien : à partir de 15€<br>
+            <span>Engagement :</span> Participation au fonctionnement de l'asso et aux réunions (AG, réunions des référents, ...)<br>
+            <span>Fonctionnement :</span> 7 à 8 commandes annuelles - livraisons le mercredi matin<br>
+            <span>Lieu de livraison :</span> On Sème Tous - 102 Rue Hoche, 93100 Montreuil</p>
+        </div>
+        <div class="agree_section">
+            <label class="agree_item">
+        <label class="agree_item">
+			{{ form_widget(adhesionForm.agree_fonctionnement) }}
+			{{ form_label(adhesionForm.agree_fonctionnement) }}
+		</label>            
+			    {{ form_row(adhesionForm.montantAdhesion) }}
+            </label>
+        </div>
+        <div>
+			{# Réservé admin si tu veux : #}
+			{{ form_row(adhesionForm.paiement) }}
 
-		{{ form_row(adhesionForm.motivations) }}
-		{{ form_row(adhesionForm.attentesTexte) }}
-		{{ form_row(adhesionForm.dispos) }}
-		{{ form_row(adhesionForm.competencesTexte) }}
-		{{ form_row(adhesionForm.poles) }}
-
-		{{ form_row(adhesionForm.agree_fonctionnement) }}
-
-		{{ form_row(adhesionForm.montantAdhesion) }}
-
-		{# Réservé admin si tu veux : #}
-		{{ form_row(adhesionForm.paiement) }}
-
-		<button type="submit" class="btn">J’adhère pour la saison</button>
-		{{ form_end(adhesionForm) }}
-
+			<button type="submit" class="btn">j’adhère pour la saison</button>
+			{{ form_end(adhesionForm) }}
+		</div>
 	</div>
 
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const changeCheckbox = document.querySelector('.change-groupe-checkbox');
-    const nouveauInput = document.querySelector('.nouveau-groupe-input');
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+const changeCheckbox = document.querySelector('.change-groupe-checkbox');
+const nouveauInput = document.querySelector('.nouveau-groupe-input');
 
-    if (!changeCheckbox || !nouveauInput) {
-        return;
-    }
+if (! changeCheckbox || ! nouveauInput) {
+return;
+}
 
-    changeCheckbox.addEventListener('change', function() {
-        if (this.checked) {
-            nouveauInput.style.display = 'block';
-            nouveauInput.required = true;
-        } else {
-            nouveauInput.style.display = 'none';
-            nouveauInput.required = false;
-        }
-    });
+changeCheckbox.addEventListener('change', function () {
+if (this.checked) {
+nouveauInput.style.display = 'block';
+nouveauInput.required = true;
+} else {
+nouveauInput.style.display = 'none';
+nouveauInput.required = false;
+}
 });
-</script>
+});
+	</script>
+
+	{# 
+	    {{ form_errors(adhesionForm) }}
+	
+	    {{ form_start(adhesionForm) }}
+	        {{ form_row(adhesionForm.email) }}
+	        {{ form_row(adhesionForm.plainPassword, {
+	            label: 'Mot de Passe'
+	        }) }}
+	        {{ form_row(adhesionForm.agreeTerms) }}
+	
+	        <button type="submit" class="btn">se connecter</button>
+	    {{ form_end(adhesionForm) }}
+	    #}
 {% endblock %}
-{# 
-    {{ form_errors(adhesionForm) }}
-
-    {{ form_start(adhesionForm) }}
-        {{ form_row(adhesionForm.email) }}
-        {{ form_row(adhesionForm.plainPassword, {
-            label: 'Mot de Passe'
-        }) }}
-        {{ form_row(adhesionForm.agreeTerms) }}
-
-        <button type="submit" class="btn">se connecter</button>
-    {{ form_end(adhesionForm) }}
-    #}

@@ -26,11 +26,18 @@ class AdhesionFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('groupe', EntityType::class, [
+                'class' => Groupe::class,
+                'choice_label' => 'nom',
+                'placeholder' => 'nouveau grOOOOoupe',
+                'required' => false,
+                'attr' => ['style' => 'display:none;'],
+            ])        
             // je change de groupe
             ->add('changeGroupe', CheckboxType::class, [
                 'mapped' => false, // pas mappé sur adhesion
                 'required' => false,
-                'label' => '<strong>Je change de groupe</strong>',
+                'label' => 'Je changehhh de groupe',
                 'attr' => ['class' => 'change-groupe-checkbox'],
             ])
             // Je crée un nouveau groupe/ TextType pas EntityType car pas de champ pour nouveau groupe
@@ -38,30 +45,32 @@ class AdhesionFormType extends AbstractType
                 'mapped' => false, // pas mappé sur adhesion
                 'label' => 'Je crée un nouveau groupe',
                 'required' => false,
-                'attr' => ['class' => 'nom du nouveau groupe', 'style' => 'display:none;'],
+                'attr' => ['class' => 'nom du nouveau groupe'],
+                // 'attr' => ['class' => 'nom du nouveau groupe', 'style' => 'display:none;'],
             ])
-
             ->add('montantAdhesion', EntityType::class, [
                 'class' => MontantAdhesion::class,
-                'choice_label' => 'label',
+                'choice_label' => 'libelle',
                 'label' => 'Montant de l’adhésion',
                 'placeholder' => 'Choisir un montant',
                 'required' => true,
             ])
 
-            // Champs non mappés
+
+
+            
             ->add('isReferent', CheckboxType::class, [
+                'label' => 'Je suis référent·e de mon groupe',
                 'mapped' => false, // pas mappé sur adhesion
                 'required' => false,
-                'label' => 'Je suis référent·e de mon groupe',
             ])
             
             ->add('isOpen', CheckboxType::class, [
                 'mapped' => false,// pas mappé sur adhesion
                 'required' => false,
                 'label' => 'Mon groupe peut accueillir de nouvelleaux adhérent.es',
-                'attr' => ['class' => 'is-open-checkbox', 'style' => 'display:none;'],
-
+                'attr' => ['class' => 'is-open-checkbox'],
+                // 'attr' => ['class' => 'is-open-checkbox', 'style' => 'display:none;'],
             ])
 
             ->add('adresseDistribution', TextType::class, [
@@ -79,28 +88,37 @@ class AdhesionFormType extends AbstractType
                 'label' => 'Ville',
                 'required' => false,
                 'mapped' => false, // pas mappé sur adhesion
-                'attr' => [
-                    'class' => 'referent-field',
-                    'style' => 'display:none;'
-                ]
+                'attr' => ['class' => 'referent-field']
             ])
-
 
             // ManyToMany
             ->add('motivations', EntityType::class, [
                 'class' => Motivation::class,
-                'choice_label' => 'label',
-                'multiple' => true,
-                'expanded' => true,
+                'choice_label' => 'libelle',   // le texte affiché à côté de chaque case
+                'multiple' => true,          // plusieurs choix possibles
+                'expanded' => true,          // affiché en checkboxes (et pas en <select>)
                 'required' => false,
             ])
+
+            // Texte libre
+            ->add('attentesTexte', TextareaType::class, [
+                'required' => false,
+                'label' => 'Tes attentes spécifiques',
+            ])
+
             ->add('dispos', EntityType::class, [
                 'class' => Dispo::class,
-                'choice_label' => 'label',
+                'choice_label' => 'libelle',
                 'multiple' => true,
                 'expanded' => true,
                 'required' => false,
             ])
+
+            ->add('competencesTexte', TextareaType::class, [
+                'required' => false,
+                'label' => 'Compétences à partager',
+            ])
+
             ->add('poles', EntityType::class, [
                 'class' => Pole::class,
                 'choice_label' => 'nom', // pas de label!
@@ -110,34 +128,24 @@ class AdhesionFormType extends AbstractType
                 'required' => false,
             ])
 
-            // Textes libres
-            ->add('attentesTexte', TextareaType::class, [
-                'required' => false,
-                'label' => 'Tes attentes spécifiques',
-            ])
-            ->add('competencesTexte', TextareaType::class, [
-                'required' => false,
-                'label' => 'Compétences à partager',
-            ])
-
-            // Consentements requis mais pas mappé/enregistré
+            // Consentement requis mais pas mappé/enregistré
             ->add('agree_fonctionnement', CheckboxType::class, [
                 'mapped' => false,
                 'required' => true,
                 'label' => 'Je m’engage à respecter les règles et participer activement',
             ])
 
-            ->add('groupe', EntityType::class, [
-                'class' => Groupe::class,
-                'choice_label' => 'nom',
-                'placeholder' => 'mon groupe',
-                'required' => false,
+            ->add('montantAdhesion', EntityType::class, [
+                'class' => MontantAdhesion::class,
+                'choice_label' => 'libelle',
+                'label' => 'Montant de l’adhésion',
+                'placeholder' => 'Choisir un montant',
+                'required' => true,
             ])
-
             // Paiement  JUSTE POUR admin
             ->add('paiement', CheckboxType::class, [
                 'required' => false,
-                'label' => 'Paiement validé (administration)',
+                'label' => 'Paiement validé (JUSTE POUR admin)',
             ]);
 
         // EventListener placé correctement

@@ -1,81 +1,81 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Register
+{% endblock %}
 
 {% block body %}
-    <h1>s'enregistrer</h1>
+	<h1>s'enregistrer</h1>
 
-    {{ form_errors(registrationForm) }}
+	{{ form_errors(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.prenom) }}
-        {{ form_row(registrationForm.nom) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.telephone) }}
-        {{ form_row(registrationForm.adresse) }}
-        {{ form_row(registrationForm.codePostal) }}
-        {{ form_row(registrationForm.ville) }}
-        {{ form_row(registrationForm.dateDeNaissance) }}
-        {{ form_row(registrationForm.compositionFoyer) }}
-        {{ form_row(registrationForm.nombreEnfants) }}
-        {{ form_row(registrationForm.groupe) }}
-        {{form_row(registrationForm.nouveauGroupe)}}
-        {{ form_row(registrationForm.groupe, { 'attr': {'id': 'groupe-liste'} }) }}
-        {{ form_row(registrationForm.nouveauGroupe, { 'attr': {'id': 'nouveau-groupe-field'} }) }}
-        
+	{{ form_start(registrationForm) }}
+	{{ form_row(registrationForm.prenom) }}
+	{{ form_row(registrationForm.nom) }}
+	{{ form_row(registrationForm.email) }}
+	{{ form_row(registrationForm.telephone) }}
+	{{ form_row(registrationForm.adresse) }}
+	{{ form_row(registrationForm.codePostal) }}
+	{{ form_row(registrationForm.ville) }}
+	{{ form_row(registrationForm.dateDeNaissance) }}
+	{{ form_row(registrationForm.compositionFoyer) }}
+	{{ form_row(registrationForm.nombreEnfants) }}
+	{{ form_row(registrationForm.groupe) }}
+	{{form_row(registrationForm.nouveauGroupe)}}
+	{{ form_row(registrationForm.groupe, { 'attr': {'id': 'groupe-liste'} }) }}
+	{{ form_row(registrationForm.nouveauGroupe, { 'attr': {'id': 'nouveau-groupe-field'} }) }}
 
-        {# {{ form_row(registrationForm.isReferent) }} #}
-        {# {{ form_row(registrationForm.isOpen) }} #}
 
-        {{ form_row(registrationForm.plainPassword, {
+	{# {{ form_row(registrationForm.isReferent) }} #}
+	{# {{ form_row(registrationForm.isOpen) }} #}
+
+	{{ form_row(registrationForm.plainPassword, {
             label: 'Mot de Passe'
         }) }}
-{# AVANT CASES À COCHER À GCHE<div class='agree_section'> #}
-            {# {{ form_row(registrationForm.agree_fonctionnement) }} #}
-            {# {{ form_row(registrationForm.agree_rgpd) }} #}
-            {# {{ form_row(registrationForm.agree_infos_mail) }} #}
-        {# </div> #}
-        
-        <div class="agree_section">
-          <label class="agree_item">
-            {{ form_widget(registrationForm.agree_rgpd) }}
-            {{ form_label(registrationForm.agree_rgpd) }}
-          </label>
+	{# AVANT CASES À COCHER À GCHE<div class='agree_section'> #}
+	{# {{ form_row(registrationForm.agree_fonctionnement) }} #}
+	{# {{ form_row(registrationForm.agree_rgpd) }} #}
+	{# {{ form_row(registrationForm.agree_infos_mail) }} #}
+		{# </div> #} 
+    <div class="agree_section">
+        <label class="agree_item">
+			{{ form_widget(registrationForm.agree_rgpd) }}
+			{{ form_label(registrationForm.agree_rgpd) }}
+		</label>
 
-          <label class="agree_item">
-            {{ form_widget(registrationForm.agree_infos_mail) }}
-            {{ form_label(registrationForm.agree_infos_mail) }}
-          </label>
+		<label class="agree_item">
+			{{ form_widget(registrationForm.agree_infos_mail) }}
+			{{ form_label(registrationForm.agree_infos_mail) }}
+		</label>
 
-          <label class="agree_item">
-            {{ form_widget(registrationForm.agree_fonctionnement) }}
-            {{ form_label(registrationForm.agree_fonctionnement) }}
-          </label>
-        </div>
+		<label class="agree_item">
+			{{ form_widget(registrationForm.agree_fonctionnement) }}
+			{{ form_label(registrationForm.agree_fonctionnement) }}
+		</label>
+	</div>
 
-        <button type="submit" class="btn">s'enregistrer</button>
-    {{ form_end(registrationForm) }}
+	<button type="submit" class="btn">s'enregistrer</button>
+	{{ form_end(registrationForm) }}
 {% endblock %}
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const groupeListe = document.getElementById('groupe-liste');
-        const nouveauGroupeField = document.getElementById('nouveau-groupe-field').closest('.form-group');
+	document.addEventListener('DOMContentLoaded', function () {
+const groupeListe = document.getElementById('groupe-liste');
+const nouveauGroupeField = document.getElementById('nouveau-groupe-field').closest('.form-group');
 
-        // Masquer par défaut
-        nouveauGroupeField.style.display = 'none';
+// Masquer par défaut
+nouveauGroupeField.style.display = 'none';
 
-        groupeListe.addEventListener('change', function() {
-            if (groupeListe.value === '') { // valeur vide = placeholder "Nouveau groupe"
-                nouveauGroupeField.style.display = 'block';
-            } else {
-                nouveauGroupeField.style.display = 'none';
-            }
-        });
-    });
+groupeListe.addEventListener('change', function () {
+if (groupeListe.value === '') { // valeur vide = placeholder "Nouveau groupe"
+nouveauGroupeField.style.display = 'block';
+} else {
+nouveauGroupeField.style.display = 'none';
+}
+});
+});
 </script>
 
-                {# // +++++RAJOUT JS DS TWIG APRES
+{# // +++++RAJOUT JS DS TWIG APRES
                 // document.addEventListener('DOMContentLoaded', () => {
                 //     const referentCheckbox = document.querySelector('#registration_form_isReferent');
                 //     const isOpenField = document.querySelector('#registration_form_isOpen').closest('.form-group');
@@ -90,4 +90,3 @@
                 //         }
                 //     });
                 // }); #}
-                

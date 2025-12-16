@@ -48,6 +48,10 @@ final class AdhesionController extends AbstractController
             $adhesion = $adhesionForm->getData();
             $user = $this->getUser();
 
+            // // dd : pour debug/ voir les donnees après submit   
+            // dd($adhesion);
+            
+
             // 1️⃣ Création d’un nouveau groupe si un nom est saisi
             $nouveauNom = $adhesionForm->get('nouveauGroupe')->getData();
             if ($nouveauNom) {
@@ -100,6 +104,8 @@ final class AdhesionController extends AbstractController
             // ⚡ Redirection ou message de confirmation
             $this->addFlash('success', 'A D H E S I O N    E N R E G I S T R E E   [ merci de la régler par virement sous 8 jours à Corto-Zest IBAN FR 0000 0000 0000 0000 000 ]');
             return $this->redirectToRoute('app_adhesion');
+
+            
         }
 
         // ⚡ Affichage du formulaire
@@ -109,4 +115,5 @@ final class AdhesionController extends AbstractController
             'user' => $this->getUser(),
         ]);
     }
+
 }

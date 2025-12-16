@@ -81,6 +81,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     //----------------r e l a t i o n s  ManyToOne
     #[ORM\ManyToOne(inversedBy: 'membres')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Groupe $groupe = null;
     
 //----------------r e l a t i o n s  ManyToMany

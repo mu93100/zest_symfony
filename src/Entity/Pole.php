@@ -22,7 +22,7 @@ class Pole
     #[ORM\Column(type: Types::TEXT)]
     private ?string $descriptif = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)] // avec , nullable: true -> on force la base a avoir la colonne descriptif_pdf possiblement NULL, sinon NOT NULL
     private ?string $descriptif_pdf = null;
 
     #[ORM\Column]
@@ -33,6 +33,8 @@ class Pole
      */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'pole')]
     private Collection $users;
+
+
 
     public function __construct()
     {

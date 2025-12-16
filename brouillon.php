@@ -1,13 +1,10 @@
 
 <?php
 
-
-
-
-
-
-
-
+INSERT INTO groupe (nom, is_referent, is_open, date_creation, adresse_distrib, ville) VALUES
+('BEFANA', 0, 0, '2010-12-16 13:05:00', 'plateau', 'Bagnolet'),
+('37 et +', 0, 1, '2020-02-16 13:05:00', '37 rue de Vincennes', 'Montreuil'),
+('ALEP', 0, 1, '2011-01-20 09:30:00', '7 rue Alexis Lepère', 'Montreuil');
 
 
 
