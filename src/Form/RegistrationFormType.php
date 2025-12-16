@@ -36,14 +36,14 @@ class RegistrationFormType extends AbstractType
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $groupes = $this->em->getRepository(Groupe::class)->findAll();
+    {   //CLAUDE MISE EN COMMENTAIRE MARDI 16:50
+        // $groupes = $this->em->getRepository(Groupe::class)->findAll();
 
-        // On construit le tableau des choix : "Nouveau groupe" en premier
-        $listeGroupes = ['Nouveau groupe' => 'nouveau'];
-        foreach ($groupes as $g) {
-            $listeGroupes[$g->getNom()] = $g->getId();
-        }
+        // // On construit le tableau des choix : "Nouveau groupe" en premier
+        // $listeGroupes = ['Nouveau groupe' => 'nouveau'];
+        // foreach ($groupes as $g) {
+        //     $listeGroupes[$g->getNom()] = $g->getId();
+        // }
         
         $builder
             ->add('prenom', null, [
@@ -92,24 +92,28 @@ class RegistrationFormType extends AbstractType
                 'attr' => ['min' => 0, 'step' => 1],
                 ])
 
-            //groupe : liste déroulante (avec EntityType) + champ "nouveau groupe"
+            // Liste déroulante des groupes existants
             ->add('groupe', EntityType::class, [
-                'label' => 'Choisir un groupe ou "nouveau groupe"',
+                'label' => 'Nom de mon groupe',
                 'class' => Groupe::class,
                 'choice_label' => 'nom',
-                'required' => true,
-                'placeholder' => 'Nouveau groupe', // pour option nouveau groupe
+                'required' => false, // ← Important !
+                'placeholder' => 'Choisir un groupe existant',
+                'attr' => ['id' => 'groupe-liste'],
             ])
+            // Champ texte pour nouveau groupe            
             ->add('nouveauGroupe', TextType::class, [
                 'mapped' => false, // champ libre, pas lié directement à User
                 'required' => false,
                 'label' => 'Je crée un nouveau groupe',
+                'attr' => [
+                    'id' => 'nouveau-groupe-field',
+                    'placeholder' => 'Nom du nouveau groupe'
+                ],
             ])
             ->add('isReferent', CheckboxType::class, [
-                // 'mapped' => true,
-                'label' => "Je m'engage à respecter les règles de fonctionnement du GAS et à participer activement [ documents à lire : statuts - RI - charte ]",
+                'label' => "Je suis référent·e de mon groupe",
                 'required' => false,
-                'attr' => ['onclick' => 'toggleIsOpenField(isOpen)'],
             ])
             ->add('plainPassword', PasswordType::class, [
                 // TOUJOURS = password est lu et encodé dans le controller et non dans entity
@@ -146,10 +150,16 @@ class RegistrationFormType extends AbstractType
                 ],
             ]);
 
-            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $form = $event->getForm();
-            $user = $event->getData();
+            //CLAUDE MISE EN COMMENTAIRE MARDI 16:50
+            // $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            // $form = $event->getForm();
+            // $user = $event->getData(); fin clazude
 
+
+
+
+
+            
             // // si isReferent = true -> on ajoute le champ isOpen du groupe
             // if ($user && $user->isReferent()) {
             //     $form->add('isOpen', CheckboxType::class, [
@@ -167,7 +177,7 @@ class RegistrationFormType extends AbstractType
             //         'required' => false,
             //     ]);
             // }
-        });
+        // });
     }
 
 
@@ -175,6 +185,7 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            //CLAUDE MISE EN COMMENTAIRE MARDI 16:50 DES constraints A VERIFIER
             'constraints' => [
                 new Assert\Callback([User::class, 'validateGroupChoice']),
             ],

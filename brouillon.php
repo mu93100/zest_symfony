@@ -1,13 +1,86 @@
 
-<?php
+<!-- <?php -->
+{% extends 'base.html.twig' %}
 
-INSERT INTO groupe (nom, is_referent, is_open, date_creation, adresse_distrib, ville) VALUES
-('BEFANA', 0, 0, '2010-12-16 13:05:00', 'plateau', 'Bagnolet'),
-('37 et +', 0, 1, '2020-02-16 13:05:00', '37 rue de Vincennes', 'Montreuil'),
-('ALEP', 0, 1, '2011-01-20 09:30:00', '7 rue Alexis Lepère', 'Montreuil');
+{% block title %}Register{% endblock %}
 
+{% block body %}
+	<h1>s'enregistrer</h1>
 
+	{{ form_errors(registrationForm) }}
 
+	{{ form_start(registrationForm) }}
+	{{ form_row(registrationForm.prenom) }}
+	{{ form_row(registrationForm.nom) }}
+	{{ form_row(registrationForm.email) }}
+	{{ form_row(registrationForm.telephone) }}
+	{{ form_row(registrationForm.adresse) }}
+	{{ form_row(registrationForm.codePostal) }}
+	{{ form_row(registrationForm.ville) }}
+	{{ form_row(registrationForm.dateDeNaissance) }}
+	{{ form_row(registrationForm.compositionFoyer) }}
+	{{ form_row(registrationForm.nombreEnfants) }}
+	
+	{# Groupe - avec ID pour le JavaScript #}
+	{{ form_row(registrationForm.groupe, { 'attr': {'id': 'groupe-liste'} }) }}
+	
+	{# Nouveau groupe - caché par défaut #}
+	{{ form_row(registrationForm.nouveauGroupe, { 'attr': {'id': 'nouveau-groupe-field'} }) }}
+
+	{{ form_row(registrationForm.plainPassword, {
+		label: 'Mot de Passe'
+	}) }}
+
+	<div class="agree_section">
+		<label class="agree_item">
+			{{ form_widget(registrationForm.agree_rgpd) }}
+			{{ form_label(registrationForm.agree_rgpd) }}
+		</label>
+
+		<label class="agree_item">
+			{{ form_widget(registrationForm.agree_infos_mail) }}
+			{{ form_label(registrationForm.agree_infos_mail) }}
+		</label>
+
+		<label class="agree_item">
+			{{ form_widget(registrationForm.agree_fonctionnement) }}
+			{{ form_label(registrationForm.agree_fonctionnement) }}
+		</label>
+	</div>
+
+	<button type="submit" class="btn">s'enregistrer</button>
+	{{ form_end(registrationForm) }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const groupeListe = document.getElementById('groupe-liste');
+			const nouveauGroupeField = document.getElementById('nouveau-groupe-field');
+
+			if (groupeListe && nouveauGroupeField) {
+				// Masquer par défaut le champ nouveau groupe
+				const formGroup = nouveauGroupeField.closest('.form-group') || nouveauGroupeField.parentElement;
+				formGroup.style.display = 'none';
+
+				groupeListe.addEventListener('change', function () {
+					// Si "Nouveau groupe" est sélectionné (valeur vide du placeholder)
+					if (groupeListe.value === '') {
+						formGroup.style.display = 'block';
+					} else {
+						formGroup.style.display = 'none';
+					}
+				});
+			}
+		});
+	</script>
+{% endblock %}
+
+MESSAGE APRES SUBMIT Erreur interne du serveur HTTP 500
+["App\\Entity\\User","validateGroupChoice"] ciblé par la contrainte de rappel n'est pas une fonction appelable valide.
+
+SI JE CHOISIS NOUVEAU GROUPE ET MET UN NOM DE NOUVEAU GROUPE / CA NE MARCHE PAS JE NE PEUX PAS M'ENREGISTRER
 
 
 

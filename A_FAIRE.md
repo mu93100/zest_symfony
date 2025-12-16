@@ -1,3 +1,192 @@
+CLAUDE 16:50 mofif registrationFormType puis 
+2. Modifiez RegistrationController.php
+
+<?php
+
+namespace App\Controller;
+
+use App\Entity\User;
+use App\Entity\Groupe;
+use App\Form\RegistrationFormType;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\UserRepository;
+
+class RegistrationController extends AbstractController
+{
+    #[Route('/enregistrement', name: 'app_register')]
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        Security $security,
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository
+    ): Response {
+        $user = new User();
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Vérifie si l'email existe déjà
+            if ($userRepository->existsByEmail($user->getEmail())) {
+                $this->addFlash('error', 'Cet email est déjà utilisé');
+                return $this->redirectToRoute('app_register');
+            }
+
+            // 1️⃣ GESTION DU GROUPE
+            $nouveauNomGroupe = $form->get('nouveauGroupe')->getData();
+            $groupeSelectionne = $form->get('groupe')->getData();
+
+            if ($nouveauNomGroupe) {
+                // Créer un nouveau groupe
+                $groupe = new Groupe();
+                $groupe->setNom($nouveauNomGroupe);
+                $groupe->setVille($user->getVille()); // Ville du référent
+                $entityManager->persist($groupe);
+                $user->setGroupe($groupe);
+            } elseif ($groupeSelectionne) {
+                // Utiliser le groupe sélectionné
+                $user->setGroupe($groupeSelectionne);
+            } else {
+                // Aucun groupe spécifié
+                $this->addFlash('error', 'Veuillez sélectionner un groupe ou en créer un nouveau');
+                return $this->redirectToRoute('app_register');
+            }
+
+            // 2️⃣ Mot de passe
+            $plainPassword = $form->get('plainPassword')->getData();
+            $user->setPassword(
+                $userPasswordHasher->hashPassword($user, $plainPassword)
+            );
+
+            // 3️⃣ Persistance
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre compte a été créé avec succès !');
+
+            return $security->login($user, 'form_login', 'main');
+        }
+
+        return $this->render('registration/register.html.twig', [
+            'registrationForm' => $form,
+        ]);
+    }
+}
+
+3. Template Twig (register.html.twig)
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+	<h1>s'enregistrer</h1>
+
+	{{ form_errors(registrationForm) }}
+
+	{{ form_start(registrationForm) }}
+	{{ form_row(registrationForm.prenom) }}
+	{{ form_row(registrationForm.nom) }}
+	{{ form_row(registrationForm.email) }}
+	{{ form_row(registrationForm.telephone) }}
+	{{ form_row(registrationForm.adresse) }}
+	{{ form_row(registrationForm.codePostal) }}
+	{{ form_row(registrationForm.ville) }}
+	{{ form_row(registrationForm.dateDeNaissance) }}
+	{{ form_row(registrationForm.compositionFoyer) }}
+	{{ form_row(registrationForm.nombreEnfants) }}
+	
+	<h3>Mon groupe</h3>
+	{{ form_row(registrationForm.groupe) }}
+	{{ form_row(registrationForm.nouveauGroupe) }}
+	{{ form_row(registrationForm.isReferent) }}
+
+	{{ form_row(registrationForm.plainPassword, { label: 'Mot de Passe' }) }}
+
+	<div class="agree_section">
+		<label class="agree_item">
+			{{ form_widget(registrationForm.agree_rgpd) }}
+			{{ form_label(registrationForm.agree_rgpd) }}
+		</label>
+
+		<label class="agree_item">
+			{{ form_widget(registrationForm.agree_infos_mail) }}
+			{{ form_label(registrationForm.agree_infos_mail) }}
+		</label>
+
+		<label class="agree_item">
+			{{ form_widget(registrationForm.agree_fonctionnement) }}
+			{{ form_label(registrationForm.agree_fonctionnement) }}
+		</label>
+	</div>
+
+	<button type="submit" class="btn">s'enregistrer</button>
+	{{ form_end(registrationForm) }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const groupeListe = document.getElementById('groupe-liste');
+			const nouveauGroupeField = document.getElementById('nouveau-groupe-field');
+
+			if (groupeListe && nouveauGroupeField) {
+				// Quand on sélectionne un groupe existant, vider le champ nouveau groupe
+				groupeListe.addEventListener('change', function () {
+					if (groupeListe.value) {
+						nouveauGroupeField.value = '';
+					}
+				});
+
+				// Quand on tape dans nouveau groupe, désélectionner la liste
+				nouveauGroupeField.addEventListener('input', function () {
+					if (nouveauGroupeField.value.trim()) {
+						groupeListe.value = '';
+					}
+				});
+			}
+		});
+	</script>
+{% endblock %}
+
+Résumé de la logique :
+✅ Champ groupe : required => false pour permettre de ne pas sélectionner
+✅ Champ nouveauGroupe : required => false également
+✅ Dans le contrôleur : Vérification que l'un OU l'autre est rempli
+✅ JavaScript : Quand on remplit l'un, l'autre se vide automatiquement
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 PROBLEME VE?NDREDI 16:50  P A S S W O R D
 Ton problème vient du mélange entre ces annotations sur l’entité et la config du formulaire plainPassword avec mapped => false.
 
