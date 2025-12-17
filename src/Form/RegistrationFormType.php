@@ -17,12 +17,8 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\Callback;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Doctrine\ORM\EntityManagerInterface;
-
+use App\Validator\Constraints\GroupeObligatoire;
 
 
 
@@ -34,7 +30,7 @@ class RegistrationFormType extends AbstractType
     {
         $this->em = $em;
     }
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {   //CLAUDE MISE EN COMMENTAIRE MARDI 16:50
         // $groupes = $this->em->getRepository(Groupe::class)->findAll();
@@ -44,7 +40,7 @@ class RegistrationFormType extends AbstractType
         // foreach ($groupes as $g) {
         //     $listeGroupes[$g->getNom()] = $g->getId();
         // }
-        
+
         $builder
             ->add('prenom', null, [
                 'label' => 'Prénom',
@@ -81,16 +77,16 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('compositionFoyer', IntegerType::class, [
                 'label' => 'Composition du foyer',
-                'property_path' => 'compositionFoyer', 
+                'property_path' => 'compositionFoyer',
                 'required' => false,
                 'attr' => ['min' => 1, 'step' => 1],
-                ])
+            ])
             ->add('nombreEnfants', IntegerType::class, [
                 'label' => 'Nombre d\'enfants -12 ans',
-                'property_path' => 'nombreEnfants', 
+                'property_path' => 'nombreEnfants',
                 'required' => false,
                 'attr' => ['min' => 0, 'step' => 1],
-                ])
+            ])
 
             // Liste déroulante des groupes existants
             ->add('groupe', EntityType::class, [
@@ -99,7 +95,7 @@ class RegistrationFormType extends AbstractType
                 'choice_label' => 'nom',
                 'required' => false, // ← Important !
                 'placeholder' => 'Choisir un groupe existant',
-                'attr' => ['id' => 'groupe-liste'],
+                // 'attr' => ['id' => 'groupe-liste'], MERCREDI / VOIR A QUOI SERT LE id groupe-liste
             ])
             // Champ texte pour nouveau groupe            
             ->add('nouveauGroupe', TextType::class, [
@@ -107,7 +103,7 @@ class RegistrationFormType extends AbstractType
                 'required' => false,
                 'label' => 'Je crée un nouveau groupe',
                 'attr' => [
-                    'id' => 'nouveau-groupe-field',
+                    // 'id' => 'nouveau-groupe-field',  MERCREDI / VOIR A QUOI SERT LE id
                     'placeholder' => 'Nom du nouveau groupe'
                 ],
             ])
@@ -127,10 +123,10 @@ class RegistrationFormType extends AbstractType
                 'label' => "Je m'engage à respecter les règles de fonctionnement du GAS et à participer activement [ documents à lire : statuts - RI - charte ]",
                 'constraints' => [
                     new IsTrue([
-                        'message' => '[M E R C I  de valider les mentions légales]',  
+                        'message' => '[M E R C I  de valider les mentions légales]',
                     ]),
                 ],
-            ])    
+            ])
             ->add('agree_rgpd', CheckboxType::class, [
                 'mapped' => false,
                 'label' => "J'accepte que mes données personnelles soient utilisées à des fins statistiques et logistiques dans le cadre du fonctionnement du GAS [ document à lire : Mentions légales - RGPD ]",
@@ -150,34 +146,12 @@ class RegistrationFormType extends AbstractType
                 ],
             ]);
 
-            //CLAUDE MISE EN COMMENTAIRE MARDI 16:50
-            // $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            // $form = $event->getForm();
-            // $user = $event->getData(); fin clazude
-
-
-
-
-
-            
-            // // si isReferent = true -> on ajoute le champ isOpen du groupe
-            // if ($user && $user->isReferent()) {
-            //     $form->add('isOpen', CheckboxType::class, [
-            //         'mapped' => false, // car isOpen est dans Groupe, pas User
-            //         'label' => 'Le groupe peut accueillir de nouvelleaux adhérent.es',
-            //         'required' => false,
-            //     ]);
-            // }
-
-            // // si isReferent = true -> on ajoute le champ isOpen du groupe
-            // if ($user && $user->isReferent()) {
-            //     $form->add('isOpen', CheckboxType::class, [
-            //         'mapped' => false, // car isOpen est dans Groupe, pas User
-            //         'label' => 'Le groupe peut accueillir de nouvelleaux adhérent.es',
-            //         'required' => false,
-            //     ]);
-            // }
-        // });
+        //CLAUDE MISE EN COMMENTAIRE MARDI 16:50
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+            $user = $event->getData();
+            // fin claude
+        });
     }
 
 
@@ -185,10 +159,9 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            //CLAUDE MISE EN COMMENTAIRE MARDI 16:50 DES constraints A VERIFIER
-            'constraints' => [
-                new Assert\Callback([User::class, 'validateGroupChoice']),
-            ],
+            'constraints' => [           // lié aux 2 fichiers src/Validator/Constraints/GroupeObligatoire.php ET GroupeObligatoireValidator.php
+                new GroupeObligatoire(), // contrainte personnalisée symfony pour groupe OBLIGATOIRE car à utiliser dans plusieurs formulaires 
+            ],                           // avec le use App\Validator\Constraints\GroupeObligatoire;
         ]);
     }
 }

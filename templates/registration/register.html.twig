@@ -22,19 +22,12 @@
 	{{ form_row(registrationForm.groupe, { 'attr': {'id': 'groupe-liste'} }) }}
     {# Nouveau groupe - caché par défaut #}
 	{{ form_row(registrationForm.nouveauGroupe, { 'attr': {'id': 'nouveau-groupe-field'} }) }}
-
-
-	{# {{ form_row(registrationForm.isReferent) }} #}
-	{# {{ form_row(registrationForm.isOpen) }} #}
-
+    {{ form_row(registrationForm.isReferent) }}
+    
 	{{ form_row(registrationForm.plainPassword, {
             label: 'Mot de Passe'
         }) }}
-	{# AVANT CASES À COCHER À GCHE<div class='agree_section'> #}
-	{# {{ form_row(registrationForm.agree_fonctionnement) }} #}
-	{# {{ form_row(registrationForm.agree_rgpd) }} #}
-	{# {{ form_row(registrationForm.agree_infos_mail) }} #}
-		{# </div> #} 
+
     <div class="agree_section">
         <label class="agree_item">
 			{{ form_widget(registrationForm.agree_rgpd) }}
@@ -52,44 +45,34 @@
 		</label>
 	</div>
 
-	<button type="submit" class="btn">s'enregistrer</button>
+	<button type="submit" class="btn">je crée mon compte</button>
 	{{ form_end(registrationForm) }}
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
+	{{ parent() }}
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
-            const groupeListe = document.getElementById('groupe-liste');
-            const nouveauGroupeField = document.getElementById('nouveau-groupe-field').closest('.form-group');
-            
-            // Masquer par défaut
-            nouveauGroupeField.style.display = 'none';
-            
-            groupeListe.addEventListener('change', function () {
-            if (groupeListe.value === '') { // valeur vide = placeholder "Nouveau groupe"
-                nouveauGroupeField.style.display = 'block';
-            } else {
-            nouveauGroupeField.style.display = 'none';
-            }
-                });
-        }
-        });
+			const groupeListe = document.getElementById('groupe-liste');
+			const nouveauGroupeField = document.getElementById('nouveau-groupe-field');
+
+			if (groupeListe && nouveauGroupeField) {
+				// Quand on sélectionne un groupe existant, vider le champ nouveau groupe
+				groupeListe.addEventListener('change', function () {
+					if (groupeListe.value) {
+						nouveauGroupeField.value = '';
+					}
+				});
+
+				// Quand on tape dans nouveau groupe, désélectionner la liste
+				nouveauGroupeField.addEventListener('input', function () {
+					if (nouveauGroupeField.value.trim()) {
+						groupeListe.value = '';
+					}
+				});
+			}
+		});
 	</script>
 {% endblock %}
 
-{# // +++++RAJOUT JS DS TWIG APRES
-                // document.addEventListener('DOMContentLoaded', () => {
-                //     const referentCheckbox = document.querySelector('#registration_form_isReferent');
-                //     const isOpenField = document.querySelector('#registration_form_isOpen').closest('.form-group');
 
-                //     isOpenField.style.display = 'none';
-
-                //     referentCheckbox.addEventListener('change', () => {
-                //         if (referentCheckbox.checked) {
-                //             isOpenField.style.display = 'block';
-                //         } else {
-                //             isOpenField.style.display = 'none';
-                //         }
-                //     });
-                // }); #}

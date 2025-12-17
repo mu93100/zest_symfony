@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[UniqueEntity(fields: ['email'], message: '[! email déjà utilisé !]')]
+#[UniqueEntity(fields: ['email'], message: '[ E R R O R   email déjà utilisé ]')]
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -39,7 +39,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
     // #[Assert\NotBlank(message: '[M E R C I  de renseigner ton mot de passe]')]
-    #[Assert\Length(min: 6, minMessage: '[M I N I M U M  {{ limit }} caractères]')]
+    #[Assert\Length(min: 6, minMessage: '[ M I N I M U M  {{ limit }} caractères ]')]
     private ?string $plainPassword = null;
 // plainPassword est un champ temporaire non mappé : sert uniquement à la saisie en clair dans les formulaires
 
@@ -51,15 +51,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 10)]
     #[Assert\NotBlank]
-    #[Assert\Regex(pattern: '/^\d{10}$/', message: '[Téléphone : exactement 10 chiffres]')]
+    #[Assert\Regex(pattern: '/^\d{10}$/', message: '[ E R R O R  téléphone : exactement 10 chiffres ]')]
     private ?string $telephone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $adresse = null;
 
     #[ORM\Column(length: 5)]
-    #[Assert\NotBlank]
-    #[Assert\Regex(pattern: '/^\d{5}$/', message: '[Code postal : exactement 5 chiffres]')]
+    #[Assert\Regex(pattern: '/^\d{5}$/', message: '[ E R R O R  code postal : exactement 5 chiffres ]')]
     private ?string $codePostal = null;
 
     #[ORM\Column(length: 100)]

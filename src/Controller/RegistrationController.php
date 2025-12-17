@@ -28,11 +28,33 @@ class RegistrationController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid()) {
             // Vérifie si l'email existe déjà
             if ($userRepository->existsByEmail($user->getEmail())) {
+                $this->addFlash('error', 'E R R O R  cet email est déjà utilisé');
                 return $this->redirectToRoute('app_register');
+            }
+
+            // GESTION DU GROUPE
+            $nouveauNomGroupe = $form->get('nouveauGroupe')->getData();
+            $groupeSelectionne = $form->get('groupe')->getData();
+
+            if ($nouveauNomGroupe) {
+                // Créer un nouveau groupe
+                $groupe = new Groupe();
+                $groupe->setNom($nouveauNomGroupe);
+                $groupe->setVille($user->getVille()); // Ville du référent
+                $entityManager->persist($groupe);
+                $user->setGroupe($groupe);
+            } elseif ($groupeSelectionne) {
+                // Utiliser le groupe sélectionné
+                $user->setGroupe($groupeSelectionne);
+            } 
+
+            // IsOpen sur le groupe
+            $isOpen = $form->has('isOpen') ? $form->get('isOpen')->getData() : false;
+            if ($user->getGroupe()) {
+                $user->getGroupe()->setIsOpen($isOpen);
             }
 
             // Mot de passe
@@ -41,26 +63,11 @@ class RegistrationController extends AbstractController
                 $userPasswordHasher->hashPassword($user, $plainPassword)
             );
 
-            // Nouveau groupe éventuel
-            $nouveauGroupe = $form->get('nouveauGroupe')->getData();
-            if ($nouveauGroupe) {
-                $groupe = new Groupe();
-                $groupe->setNom($nouveauGroupe);
-                $entityManager->persist($groupe);
-                $user->setGroupe($groupe);
-            }
-
-            // IsOpen sur le groupe
-            $isOpen = $form->has('isOpen') ? $form->get('isOpen')->getData() : false;
-            if ($user->getGroupe()) {
-                $user->getGroupe()->setIsOpen($isOpen);
-            }
-
             // Persistance user
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Votre compte a été créé avec succès !');
+            $this->addFlash('success', '[ ton compte a été créé avec succès ] !');
 
             return $security->login($user, 'form_login', 'main');
         }

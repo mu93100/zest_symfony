@@ -1,56 +1,69 @@
+<?php 
+#[Route('/adhesion', name: 'app_adhesion')]
+public function index(Request $request, EntityManagerInterface $entityManager, SaisonRepository $saisonRepository): Response
+{
+    $adhesion = new Adhesion();
 
-<!-- <?php -->
-{% extends 'base.html.twig' %}
+    // Saison en cours
+    $saisonEnCours = $saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
+    if ($saisonEnCours) {
+        $adhesion->setSaison($saisonEnCours);
+    }
 
-{% block title %}Register{% endblock %}
+    // Formulaire
+    $user = $this->getUser();
+    if (!$user) {
+        throw $this->createAccessDeniedException('Tu dois être connecté pour adhérer.');
+    }
 
-{% block body %}
-	<h1>s'enregistrer</h1>
+    $adhesionForm = $this->createForm(AdhesionFormType::class, $adhesion, [
+        'user' => $user,
+    ]);
+    $adhesionForm->handleRequest($request);
 
-	{{ form_errors(registrationForm) }}
+    if ($adhesionForm->isSubmitted() && $adhesionForm->isValid()) {
+        // Création d’un nouveau groupe
+        $nouveauNom = $adhesionForm->get('nouveauGroupe')->getData();
+        if ($nouveauNom) {
+            $nouveauGroupe = new Groupe();
+            $nouveauGroupe->setNom($nouveauNom);
+            $nouveauGroupe->setAdresseDistrib($adhesionForm->get('adresseDistribution')->getData());
+            $nouveauGroupe->setVille($adhesionForm->get('ville')->getData());
+            $nouveauGroupe->setIsOpen($adhesionForm->get('isOpen')->getData());
 
-	{{ form_start(registrationForm) }}
-	{{ form_row(registrationForm.prenom) }}
-	{{ form_row(registrationForm.nom) }}
-	{{ form_row(registrationForm.email) }}
-	{{ form_row(registrationForm.telephone) }}
-	{{ form_row(registrationForm.adresse) }}
-	{{ form_row(registrationForm.codePostal) }}
-	{{ form_row(registrationForm.ville) }}
-	{{ form_row(registrationForm.dateDeNaissance) }}
-	{{ form_row(registrationForm.compositionFoyer) }}
-	{{ form_row(registrationForm.nombreEnfants) }}
-	
-	{# Groupe - avec ID pour le JavaScript #}
-	{{ form_row(registrationForm.groupe, { 'attr': {'id': 'groupe-liste'} }) }}
-	
-	{# Nouveau groupe - caché par défaut #}
-	{{ form_row(registrationForm.nouveauGroupe, { 'attr': {'id': 'nouveau-groupe-field'} }) }}
+            $entityManager->persist($nouveauGroupe);
+            $adhesion->setGroupe($nouveauGroupe);
+            $user->setGroupe($nouveauGroupe);
+            $user->setIsReferent(true);
 
-	{{ form_row(registrationForm.plainPassword, {
-		label: 'Mot de Passe'
-	}) }}
+        // Changement de groupe
+        } elseif ($adhesionForm->get('changeGroupe')->getData()) {
+            $groupeChoisi = $adhesionForm->get('changeGroupe')->getData();
+            $adhesion->setGroupe($groupeChoisi);
+            $user->setGroupe($groupeChoisi);
 
-	<div class="agree_section">
-		<label class="agree_item">
-			{{ form_widget(registrationForm.agree_rgpd) }}
-			{{ form_label(registrationForm.agree_rgpd) }}
-		</label>
+        // Sinon, garder le groupe actuel
+        } else {
+            $adhesion->setGroupe($user->getGroupe());
+        }
 
-		<label class="agree_item">
-			{{ form_widget(registrationForm.agree_infos_mail) }}
-			{{ form_label(registrationForm.agree_infos_mail) }}
-		</label>
+        // Lier l’adhésion au user
+        $adhesion->setUser($user);
 
-		<label class="agree_item">
-			{{ form_widget(registrationForm.agree_fonctionnement) }}
-			{{ form_label(registrationForm.agree_fonctionnement) }}
-		</label>
-	</div>
+        $entityManager->persist($adhesion);
+        $entityManager->flush();
 
-	<button type="submit" class="btn">s'enregistrer</button>
-	{{ form_end(registrationForm) }}
-{% endblock %}
+        $this->addFlash('success', 'Adhésion enregistrée ! Merci de régler par virement sous 8 jours.');
+        return $this->redirectToRoute('app_adhesion');
+    }
+
+    return $this->render('adhesion/index.html.twig', [
+        'adhesionForm' => $adhesionForm->createView(),
+        'saison' => $saisonEnCours,
+        'user' => $user,
+    ]);
+}
+
 
 {% block javascripts %}
 	{{ parent() }}
