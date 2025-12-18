@@ -26,124 +26,122 @@ class AdhesionFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        // Choisir un autre groupe existant
-        $builder->add('changeGroupe', EntityType::class, [
-            'mapped' => false,
-            'label' => 'Je change de groupe',
-            'class' => Groupe::class,
-            'choice_label' => 'nom',
-            'required' => false,
-            'placeholder' => 'Pour un autre groupe existant',
-        ]);
-
-        // Créer un nouveau groupe
-        $builder->add('nouveauGroupe', TextType::class, [
-            'mapped' => false,
-            'label' => 'Je crée un nouveau groupe',
-            'required' => false,
-            'attr' => ['placeholder' => 'Nom du nouveau groupe'],
-        ]);
-
-        // Montant adhésion
-        $builder->add('montantAdhesion', EntityType::class, [
-            'class' => MontantAdhesion::class,
-            'choice_label' => 'libelle',
-            'label' => 'Montant de l’adhésion',
-            'placeholder' => 'Choisir un montant',
-            'required' => true,
-        ]);
-
-        // Référent
-        $builder->add('isReferent', CheckboxType::class, [
-            'label' => 'Je suis référent·e de mon groupe',
-            'mapped' => false,
-            'required' => false,
-        ]);
-
-        // Groupe ouvert
-        $builder->add('isOpen', CheckboxType::class, [
-            'mapped' => false,
-            'required' => false,
-            'label' => 'Mon groupe peut accueillir de nouveaux adhérent·es',
-        ]);
-
-        // Adresse distribution
-        $builder->add('adresseDistribution', TextType::class, [
-            'label' => 'Adresse de distribution du groupe',
-            'required' => false,
-            'mapped' => false,
-            'attr' => ['placeholder' => 'Lieu de distribution des commandes'],
-        ]);
-
-        // Ville
-        $builder->add('ville', TextType::class, [
-            'label' => 'Ville',
-            'required' => false,
-            'mapped' => false,
-        ]);
-
-        // Motivations
-        $builder->add('motivations', EntityType::class, [
-            'class' => Motivation::class,
-            'choice_label' => 'libelle',
-            'multiple' => true,
-            'expanded' => true,
-            'required' => false,
-            'label' => 'Quelles sont tes principales motivations pour rejoindre le GAS ?',
-        ]);
-
-        // Attentes
-        $builder->add('attentesTexte', TextareaType::class, [
-            'required' => false,
-            'label' => 'Décris tes attentes spécifiques',
-            'attr' => ['placeholder' => 'Exprimes tes attentes, besoins particuliers, suggestions...'],
-        ]);
-
-        // Disponibilités
-        $builder->add('dispos', EntityType::class, [
-            'class' => Dispo::class,
-            'choice_label' => 'libelle',
-            'multiple' => true,
-            'expanded' => true,
-            'required' => false,
-            'label' => 'Disponibilités pour participer à la vie du GAS',
-        ]);
-
-        // Compétences
-        $builder->add('competencesTexte', TextareaType::class, [
-            'required' => false,
-            'label' => 'Quelles compétences particulières peux-tu partager ?',
-            'attr' => ['placeholder' => 'Comptabilité, informatique, transport, relations producteurs, etc.'],
-        ]);
-
-        // Pôles
-        $builder->add('poles', EntityType::class, [
-            'class' => Pole::class,
-            'choice_label' => 'nom',
-            'multiple' => true,
-            'expanded' => true,
-            'required' => false,
-        ]);
-
-        // Consentements
-        $builder->add('agree_fonctionnement', CheckboxType::class, [
-            'mapped' => false,
-            'required' => true,
-            'label' => 'Je m’engage à respecter les règles et participer activement',
-        ]);
-
-        $builder->add('agree_adhesion', CheckboxType::class, [
-            'mapped' => false,
-            'required' => true,
-            'label' => 'Je règle mon adhésion annuelle par virement dans les 15 jours',
-        ]);
-
-        // Paiement admin
-        $builder->add('paiement', CheckboxType::class, [
-            'required' => false,
-            'label' => 'Paiement validé (JUSTE POUR admin)',
-        ]);
+        $builder
+            // Choisir un autre groupe existant
+            ->add('changeGroupe', EntityType::class, [
+                'mapped' => false,
+                'label' => 'Je change de groupe',
+                'class' => Groupe::class,
+                'choice_label' => 'nom',
+                'required' => false,
+                'placeholder' => 'Pour un autre groupe existant',
+            ])
+            // Créer un nouveau groupe
+            ->add('nouveauGroupe', TextType::class, [
+                'mapped' => false,
+                'label' => 'Je crée un nouveau groupe',
+                'required' => false,
+                'attr' => ['placeholder' => 'Nom du nouveau groupe'],
+            ])
+            ->add('adresseDistribNouveau', TextType::class, [
+                'mapped' => false,
+                'label' => 'Adresse de distribution du nouveau groupe',
+                'required' => false,
+            ])
+            ->add('villeNouveau', TextType::class, [
+                'mapped' => false,
+                'label' => 'Ville du nouveau groupe',
+                'required' => false,
+            ])
+            // Montant adhésion
+            ->add('montantAdhesion', EntityType::class, [
+                'class' => MontantAdhesion::class,
+                'choice_label' => 'libelle',
+                'label' => 'Montant de l’adhésion',
+                'placeholder' => 'Choisir un montant',
+                'required' => true,
+            ])
+            // Référent
+            ->add('isReferent', CheckboxType::class, [
+                'label' => 'Je suis référent·e de mon groupe',
+                'mapped' => false,
+                'required' => false,
+            ])
+            // Groupe ouvert
+            ->add('isOpen', CheckboxType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Mon groupe peut accueillir de nouveaux adhérent·es',
+            ])
+            // Adresse distribution
+            ->add('adresseDistrib', TextType::class, [
+                'label' => "Modification de l'adresse de distribution du groupe",
+                'required' => false,
+                'mapped' => false,
+                'attr' => ['placeholder' => 'Lieu de distribution des commandes'],
+            ])
+            // Ville
+            ->add('ville', TextType::class, [
+                'label' => 'Ville',
+                'required' => false,
+                'mapped' => false,
+            ])
+            // Motivations
+            ->add('motivations', EntityType::class, [
+                'class' => Motivation::class,
+                'choice_label' => 'libelle',
+                'multiple' => true,
+                'expanded' => true,
+                'required' => false,
+                'label' => 'Quelles sont tes principales motivations pour rejoindre le GAS ?',
+            ])
+            // Attentes
+            ->add('attentesTexte', TextareaType::class, [
+                'required' => false,
+                'label' => 'Décris tes attentes spécifiques',
+                'attr' => ['placeholder' => 'Exprimes tes attentes, besoins particuliers, suggestions...'],
+            ])
+            // Disponibilités
+            ->add('dispos', EntityType::class, [
+                'class' => Dispo::class,
+                'choice_label' => 'libelle',
+                'multiple' => true,
+                'expanded' => true,
+                'required' => false,
+                'label' => 'Disponibilités pour participer à la vie du GAS',
+            ])
+            // Compétences
+            ->add('competencesTexte', TextareaType::class, [
+                'required' => false,
+                'label' => 'Quelles compétences particulières peux-tu partager ?',
+                'attr' => ['placeholder' => 'Comptabilité, informatique, transport, relations producteurs, etc.'],
+            ])
+            // Pôles
+            ->add('poles', EntityType::class, [
+                'class' => Pole::class,
+                'choice_label' => 'nom',
+                'multiple' => true,
+                'expanded' => true,
+                'required' => false,
+            ])
+            // Consentements
+            ->add('agree_fonctionnement', CheckboxType::class, [
+                'mapped' => false,
+                'required' => true,
+                'label' => 'Je m’engage à respecter les règles et participer activement',
+            ])
+            ->add('agree_adhesion', CheckboxType::class, [
+                'mapped' => false,
+                'required' => true,
+                'label' => 'Je règle mon adhésion annuelle par virement dans les 15 jours - IBAN FR 0000 0000 0000 0000 000',
+            ])
+            // Paiement admin
+            ->add('paiement', CheckboxType::class, [
+                'required' => false,
+                'label' => 'Paiement validé (JUSTE POUR admin)',
+            ]);
     }
+
 
     public function configureOptions(OptionsResolver $resolver): void
     {

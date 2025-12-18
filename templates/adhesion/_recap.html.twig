@@ -1,0 +1,12 @@
+<div class="adhesion-recap">
+    <h3>[ A D H É S I O N   E N R E G I S T R É E ]</h3>
+    <p>Merci de la régler par virement sous 15 jours.</p>
+    <ul>
+        <li><strong>Nom :</strong> {{ user.prenom }}</li>
+        <li><strong>Email :</strong> {{ user.email }}</li>
+        <li><strong>Groupe :</strong> {{ groupe.nom }}</li>
+        <li><strong>Adresse :</strong> {{ groupe.adresseDistrib ?? '—' }}</li>
+        <li><strong>Ville :</strong> {{ groupe.ville ?? '—' }}</li>
+        <li><strong>Adhesion :</strong> {{ montantAdhesion.libelle ?? '—' }}</li>
+    </ul>
+</div>

@@ -6,8 +6,15 @@ use App\Repository\AdhesionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: AdhesionRepository::class)]
+#[UniqueEntity(
+    fields: ['user', 'saison'],
+    message: 'Vous avez déjà une adhésion pour cette saison.'
+)]
 class Adhesion 
 {
     #[ORM\Id]
@@ -36,7 +43,7 @@ class Adhesion
     #[ORM\ManyToOne(targetEntity: Groupe::class, inversedBy: 'adhesions')]
     private ?Groupe $groupe = null;
 
-    #[ORM\ManyToOne(targetEntity: MontantAdhesion::class, )]
+    #[ORM\ManyToOne(targetEntity: MontantAdhesion::class )]
     private ?MontantAdhesion $montantAdhesion = null;
 
     #[ORM\ManyToOne(targetEntity: Saison::class, inversedBy: 'adhesions')]
@@ -44,7 +51,9 @@ class Adhesion
     private ?Saison $saison = null;
 
     //----------------r e l a t i o n s  ManyToMany
-    #[ORM\ManyToMany(targetEntity: Motivation::class)]
+    // #[ORM\ManyToMany(targetEntity: Motivation::class)]
+    // private Collection $motivations;
+    #[ORM\ManyToMany(targetEntity: Motivation::class, inversedBy: 'adhesionMotiv')]
     private Collection $motivations;
 
     #[ORM\ManyToMany(targetEntity: Dispo::class, inversedBy: 'adhesions')]

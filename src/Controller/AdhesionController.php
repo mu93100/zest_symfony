@@ -29,7 +29,7 @@ final class AdhesionController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if (!$user) {
-            throw $this->createAccessDeniedException('Tu dois être connecté pour adhérer.');
+            throw $this->createAccessDeniedException('[ Tu dois être connecté pour adhérer ]');
         }
 
         $adhesionForm = $this->createForm(AdhesionFormType::class, $adhesion, [
@@ -38,47 +38,74 @@ final class AdhesionController extends AbstractController
         $adhesionForm->handleRequest($request);
 
         if ($adhesionForm->isSubmitted() && $adhesionForm->isValid()) {
-             // Création d’un nouveau groupe
+            // --- Création d’un nouveau groupe ---
             $nouveauNom = $adhesionForm->get('nouveauGroupe')->getData();
             if ($nouveauNom) {
                 $nouveauGroupe = new Groupe();
                 $nouveauGroupe->setNom($nouveauNom);
-                $nouveauGroupe->setAdresseDistrib($adhesionForm->get('adresseDistribution')->getData());
-                $nouveauGroupe->setVille($adhesionForm->get('ville')->getData());
-                $nouveauGroupe->setIsOpen($adhesionForm->get('isOpen')->getData());
-            
+                $nouveauGroupe->setAdresseDistrib($adhesionForm->get('adresseDistribNouveau')->getData());
+                $nouveauGroupe->setVille($adhesionForm->get('villeNouveau')->getData());
+                $nouveauGroupe->setIsOpen((bool) $adhesionForm->get('isOpen')->getData());
+
+                
                 $entityManager->persist($nouveauGroupe);
-            
+
                 $adhesion->setGroupe($nouveauGroupe);
                 $user->setGroupe($nouveauGroupe);
-            
-                if ($adhesionForm->get('isReferent')->getData()) {
-                    $user->setIsReferent(true);
-                }
-            
-            // Changement de groupe
+
+                // --- Changement de groupe existant ---
             } elseif ($adhesionForm->get('changeGroupe')->getData()) {
                 $groupeChoisi = $adhesionForm->get('changeGroupe')->getData();
                 $adhesion->setGroupe($groupeChoisi);
                 $user->setGroupe($groupeChoisi);
-            
-            // Sinon, garder le groupe actuel
+
+                // --- Sinon garder le groupe actuel ---
             } else {
                 $adhesion->setGroupe($user->getGroupe());
             }
-            
 
-            // Lier l’adhésion au user
+            // --- Flag référent ---
+            $user->setIsReferent((bool) $adhesionForm->get('isReferent')->getData());
+            // dd : pour debug/ voir les donnees après submit   
+//            dd($adhesion);
+            // --- Lier l’adhésion au user ---
             $adhesion->setUser($user);
 
-            // Sauvegarde en base
+            // --- Sauvegarde en base ---
             $entityManager->persist($adhesion);
-            $entityManager->persist($user); // important pour enregistrer le changement de groupe et le flag référent
+            $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Adhésion enregistrée ! Merci de régler par virement sous 8 jours.');
-            return $this->redirectToRoute('app_adhesion');
+            // $this->addFlash('success', '[ A D H E S I O N   E N R E G I S T R E E   Merci de la régler par virement sous 15 jours');
+$this->addFlash('success', $this->renderView('adhesion/_recap.html.twig', [
+    'user' => $user,
+    'groupe' => $adhesion->getGroupe(),
+]));
+
+// return $this->redirectToRoute('app_adhesion');
+
+
+            return $this->render('adhesion/index.html.twig', [
+    'adhesionForm' => $adhesionForm->createView(),
+    'saison' => $saisonEnCours,
+    'user' => $user,
+    'recap' => sprintf(
+        '<strong>Adhésion enregistrée !</strong><br>
+        Merci de la régler par virement sous 15 jours.<br><br>
+        <strong>Nom :</strong> %s<br>
+        <strong>Email :</strong> %s<br>
+        <strong>Groupe :</strong> %s<br>
+        <strong>Adresse :</strong> %s<br>
+        <strong>Ville :</strong> %s',
+        $user->getPrenom(),
+        $user->getEmail(),
+        $adhesion->getGroupe()?->getNom() ?? '—',
+        $adhesion->getGroupe()?->getAdresseDistrib() ?? '—',
+        $adhesion->getGroupe()?->getVille() ?? '—'
+    ),
+]);
         }
+
 
         return $this->render('adhesion/index.html.twig', [
             'adhesionForm' => $adhesionForm->createView(),

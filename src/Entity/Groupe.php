@@ -25,24 +25,30 @@ class Groupe
     #[ORM\Column(length: 45)]
     private ?string $ville = null;
 
-    #[ORM\Column]
-    private ?bool $isReferent = false;
+    #[ORM\Column(type: 'boolean')]
+    private bool $isReferent = false;
 
     #[ORM\Column(type: 'boolean')]
-    private ?bool $isOpen = false;
+    private bool $isOpen = false;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $dateCreation = null;
 
-//----------------r e l a t i o n s OneToMany
+    //----------------r e l a t i o n s OneToMany
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'groupe')]
     private Collection $membres;
-//----------------
+
+    #[ORM\OneToMany(mappedBy: 'groupe', targetEntity: Adhesion::class)]
+    private Collection $adhesions;
+
+
+
 
     public function __construct()
     {
         $this->membres = new ArrayCollection();
         $this->dateCreation = new \DateTimeImmutable();
+        $this->adhesions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -62,12 +68,12 @@ class Groupe
         return $this;
     }
 
-        public function getadresseDistrib(): ?string
+    public function getAdresseDistrib(): ?string
     {
         return $this->adresseDistrib;
     }
 
-    public function setadresseDistrib(?string $adresseDistrib): static
+    public function setAdresseDistrib(?string $adresseDistrib): static
     {
         $this->adresseDistrib = $adresseDistrib;
 
@@ -109,7 +115,7 @@ class Groupe
         return null;
     }
 
-    public function isOpen(): ?bool 
+    public function isOpen(): ?bool
     {
         return $this->isOpen;
     }
@@ -131,8 +137,8 @@ class Groupe
         $this->dateCreation = $dateCreation;
         return $this;
     }
-//----------------r e l a t i o n s  OneToMany  
-// --------------- pour que le groupe (nom) soit affiché dans colonne groupe de user 
+    //----------------r e l a t i o n s  OneToMany  
+    // --------------- pour que le groupe (nom) soit affiché dans colonne groupe de user 
     public function __toString(): string
     {
         return $this->nom ?? 'Groupe';
@@ -161,5 +167,32 @@ class Groupe
             }
         }
         return $this;
-    } 
+    }
+
+    /** @return Collection<int, Adhesion> */
+    public function getAdhesions(): Collection
+    {
+        return $this->adhesions;
+    }
+
+    public function addAdhesion(Adhesion $adhesion): static
+    {
+        if (!$this->adhesions->contains($adhesion)) {
+            $this->adhesions->add($adhesion);
+            $adhesion->setGroupe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdhesion(Adhesion $adhesion): static
+    {
+        if ($this->adhesions->removeElement($adhesion)) {
+            if ($adhesion->getGroupe() === $this) {
+                $adhesion->setGroupe(null);
+            }
+        }
+
+        return $this;
+    }
 }

@@ -22,9 +22,8 @@ class Motivation
     /**
      * @var Collection<int, Adhesion>
      */
-    #[ORM\ManyToMany(targetEntity: Adhesion::class, mappedBy: 'motivation')]
+    #[ORM\ManyToMany(targetEntity: Adhesion::class, mappedBy: 'motivations')]
     private Collection $adhesionMotiv;
-
 
 
     public function __construct()
@@ -48,7 +47,7 @@ class Motivation
 
         return $this;
     }
-    
+
 
     /**
      * @return Collection<int, Adhesion>

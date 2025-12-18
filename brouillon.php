@@ -1,68 +1,91 @@
-<?php 
-#[Route('/adhesion', name: 'app_adhesion')]
-public function index(Request $request, EntityManagerInterface $entityManager, SaisonRepository $saisonRepository): Response
+<?php
+
+namespace App\Controller;
+
+use App\Entity\Adhesion;
+use App\Entity\Groupe;
+use App\Entity\User;
+use App\Form\AdhesionFormType;
+use App\Repository\SaisonRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
+final class AdhesionController extends AbstractController
 {
-    $adhesion = new Adhesion();
+    #[Route('/adhesion', name: 'app_adhesion')]
+    public function index(Request $request, EntityManagerInterface $entityManager, SaisonRepository $saisonRepository): Response
+    {
+        $adhesion = new Adhesion();
 
-    // Saison en cours
-    $saisonEnCours = $saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
-    if ($saisonEnCours) {
-        $adhesion->setSaison($saisonEnCours);
-    }
-
-    // Formulaire
-    $user = $this->getUser();
-    if (!$user) {
-        throw $this->createAccessDeniedException('Tu dois être connecté pour adhérer.');
-    }
-
-    $adhesionForm = $this->createForm(AdhesionFormType::class, $adhesion, [
-        'user' => $user,
-    ]);
-    $adhesionForm->handleRequest($request);
-
-    if ($adhesionForm->isSubmitted() && $adhesionForm->isValid()) {
-        // Création d’un nouveau groupe
-        $nouveauNom = $adhesionForm->get('nouveauGroupe')->getData();
-        if ($nouveauNom) {
-            $nouveauGroupe = new Groupe();
-            $nouveauGroupe->setNom($nouveauNom);
-            $nouveauGroupe->setAdresseDistrib($adhesionForm->get('adresseDistribution')->getData());
-            $nouveauGroupe->setVille($adhesionForm->get('ville')->getData());
-            $nouveauGroupe->setIsOpen($adhesionForm->get('isOpen')->getData());
-
-            $entityManager->persist($nouveauGroupe);
-            $adhesion->setGroupe($nouveauGroupe);
-            $user->setGroupe($nouveauGroupe);
-            $user->setIsReferent(true);
-
-        // Changement de groupe
-        } elseif ($adhesionForm->get('changeGroupe')->getData()) {
-            $groupeChoisi = $adhesionForm->get('changeGroupe')->getData();
-            $adhesion->setGroupe($groupeChoisi);
-            $user->setGroupe($groupeChoisi);
-
-        // Sinon, garder le groupe actuel
-        } else {
-            $adhesion->setGroupe($user->getGroupe());
+        // Saison en cours
+        $saisonEnCours = $saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
+        if ($saisonEnCours) {
+            $adhesion->setSaison($saisonEnCours);
         }
 
-        // Lier l’adhésion au user
-        $adhesion->setUser($user);
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('Tu dois être connecté pour adhérer.');
+        }
 
-        $entityManager->persist($adhesion);
-        $entityManager->flush();
+        $adhesionForm = $this->createForm(AdhesionFormType::class, $adhesion, [
+            'user' => $user,
+        ]);
+        $adhesionForm->handleRequest($request);
 
-        $this->addFlash('success', 'Adhésion enregistrée ! Merci de régler par virement sous 8 jours.');
-        return $this->redirectToRoute('app_adhesion');
+        if ($adhesionForm->isSubmitted() && $adhesionForm->isValid()) {
+            // --- Création d’un nouveau groupe ---
+            $nouveauNom = $adhesionForm->get('nouveauGroupe')->getData();
+            if ($nouveauNom) {
+                $nouveauGroupe = new Groupe();
+                $nouveauGroupe->setNom($nouveauNom);
+                $nouveauGroupe->setAdresseDistrib($adhesionForm->get('adresseDistribution')->getData());
+                $nouveauGroupe->setVille($adhesionForm->get('ville')->getData());
+                $nouveauGroupe->setIsOpen((bool) $adhesionForm->get('isOpen')->getData());
+
+                $entityManager->persist($nouveauGroupe);
+
+                $adhesion->setGroupe($nouveauGroupe);
+                $user->setGroupe($nouveauGroupe);
+
+            // --- Changement de groupe existant ---
+            } elseif ($adhesionForm->get('changeGroupe')->getData()) {
+                $groupeChoisi = $adhesionForm->get('changeGroupe')->getData();
+                $adhesion->setGroupe($groupeChoisi);
+                $user->setGroupe($groupeChoisi);
+
+            // --- Sinon garder le groupe actuel ---
+            } else {
+                $adhesion->setGroupe($user->getGroupe());
+            }
+
+            // --- Flag référent ---
+            $user->setIsReferent((bool) $adhesionForm->get('isReferent')->getData());
+
+            // --- Lier l’adhésion au user ---
+            $adhesion->setUser($user);
+
+            // --- Sauvegarde en base ---
+            $entityManager->persist($adhesion);
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Adhésion enregistrée ! Merci de régler par virement sous 8 jours.');
+            return $this->redirectToRoute('app_adhesion');
+        }
+
+        return $this->render('adhesion/index.html.twig', [
+            'adhesionForm' => $adhesionForm->createView(),
+            'saison' => $saisonEnCours,
+            'user' => $user,
+        ]);
     }
-
-    return $this->render('adhesion/index.html.twig', [
-        'adhesionForm' => $adhesionForm->createView(),
-        'saison' => $saisonEnCours,
-        'user' => $user,
-    ]);
 }
+
 
 
 {% block javascripts %}
