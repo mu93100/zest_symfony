@@ -9,7 +9,7 @@
 		<h1>adhésion saison
 			{{ saison.nom }}</h1>
 
-		{# Affichage des messages flash OPTION 2 FLASH AVEC _recap # }
+		{# Affichage des messages flash OPTION 2 FLASH AVEC _recap # } #}
 		{% for message in app.flashes('success') %}
 			<div class="alert alert-success">
 				{{ message|raw }}
@@ -17,14 +17,9 @@
 		{% endfor %}
 
 		{# Formulaire d'adhésion #}
-		{% if app.user %}
-			<p>[
-				{{ app.user.prenom }}
-				({{ app.user.email }}) du groupe
-				{{ app.user.groupe.nom }}
-				]</p>
+		{% if app.user %} <p>[ {{ app.user.prenom }} ({{ app.user.email }}) du groupe {{ app.user.groupe.nom }} ]</p>
 		{% else %}
-			<p>E R R O R</p>
+			<p>E R R O R   vous devez vous connecter avant l'adhesion de la saison</p>
 		{% endif %}
 
 		{{ form_errors(adhesionForm) }}
@@ -32,9 +27,9 @@
 		{{ form_start(adhesionForm) }}
 		<div>
 			<h2>modifier les infos groupe</h2>
-			<a href="https://umap.openstreetmap.fr/fr/map/cartographie-zest-2024_1119693" target="_blank">
+			{# <a href="https://umap.openstreetmap.fr/fr/map/cartographie-zest-2024_1119693" target="_blank">
 				<img src="{{ asset('img/map.webp') }}" alt="Plan d'accès">
-			</a>
+			</a> #}
 			{{ form_row(adhesionForm.changeGroupe) }}
 			{{ form_row(adhesionForm.nouveauGroupe) }}
 			{{ form_row(adhesionForm.adresseDistribNouveau) }}

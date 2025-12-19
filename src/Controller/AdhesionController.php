@@ -38,15 +38,21 @@ final class AdhesionController extends AbstractController
             'user' => $user,
         ]);
         $adhesionForm->handleRequest($request);
+        
+        // dd($adhesionForm); // dump complet de l'objet Form
+        // dd($adhesionForm->getData());              // données mappées sur l'entité
+        // dd($adhesionForm->all());                  // tous les champs
+        // dd($adhesionForm->createView()->vars);     // ce qui part vers Twig
 
         if ($adhesionForm->isSubmitted() && $adhesionForm->isValid()) {
             // --- Création d’un nouveau groupe ---
             $nouveauNom = $adhesionForm->get('nouveauGroupe')->getData();
+            // --- Création d’un nouveau groupe ---
             if ($nouveauNom) {
                 $nouveauGroupe = new Groupe();
                 $nouveauGroupe->setNom($nouveauNom);
-                $nouveauGroupe->setAdresseDistrib($adhesionForm->get('adresseDistribNouveau')->getData());
-                $nouveauGroupe->setVille($adhesionForm->get('villeNouveau')->getData());
+                $nouveauGroupe->setAdresseDistrib($adhesionForm->get('adresseDistrib')->getData());
+                $nouveauGroupe->setVille($adhesionForm->get('ville')->getData());
                 $nouveauGroupe->setIsOpen((bool) $adhesionForm->get('isOpen')->getData());
 
                 $entityManager->persist($nouveauGroupe);
@@ -54,20 +60,49 @@ final class AdhesionController extends AbstractController
                 $adhesion->setGroupe($nouveauGroupe);
                 $user->setGroupe($nouveauGroupe);
 
-            // --- Changement de groupe existant ---
+                // --- Changement de groupe existant ---
             } elseif ($adhesionForm->get('changeGroupe')->getData()) {
+                /** @var Groupe $groupeChoisi */
                 $groupeChoisi = $adhesionForm->get('changeGroupe')->getData();
+
+                $nouvelleAdresse = $adhesionForm->get('adresseDistrib')->getData();
+                $nouvelleVille   = $adhesionForm->get('ville')->getData();
+
+                if ($nouvelleAdresse !== null && $nouvelleAdresse !== '') {
+                    $groupeChoisi->setAdresseDistrib($nouvelleAdresse);
+                }
+                if ($nouvelleVille !== null && $nouvelleVille !== '') {
+                    $groupeChoisi->setVille($nouvelleVille);
+                }
+
+                $groupeChoisi->setIsOpen((bool) $adhesionForm->get('isOpen')->getData());
+
                 $adhesion->setGroupe($groupeChoisi);
                 $user->setGroupe($groupeChoisi);
 
-            // --- Sinon garder le groupe actuel ---
+                // --- Sinon garder le groupe actuel ---
             } else {
+                /** @var Groupe|null $groupeActuel */
                 $groupeActuel = $user->getGroupe();
                 if (!$groupeActuel) {
                     throw new \LogicException('Le user doit avoir un groupe pour adhérer.');
                 }
+
+                $nouvelleAdresse = $adhesionForm->get('adresseDistrib')->getData();
+                $nouvelleVille   = $adhesionForm->get('ville')->getData();
+
+                if ($nouvelleAdresse !== null && $nouvelleAdresse !== '') {
+                    $groupeActuel->setAdresseDistrib($nouvelleAdresse);
+                }
+                if ($nouvelleVille !== null && $nouvelleVille !== '') {
+                    $groupeActuel->setVille($nouvelleVille);
+                }
+
+                $groupeActuel->setIsOpen((bool) $adhesionForm->get('isOpen')->getData());
+
                 $adhesion->setGroupe($groupeActuel);
             }
+
 
             // --- Flag référent ---
             $user->setIsReferent((bool) $adhesionForm->get('isReferent')->getData());
@@ -82,6 +117,7 @@ final class AdhesionController extends AbstractController
                     throw new \LogicException('Aucun groupe sur l’adhésion ni sur le user.');
                 }
             }
+
 
             // --- Sauvegarde en base ---
             $entityManager->persist($adhesion);
