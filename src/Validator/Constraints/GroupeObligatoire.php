@@ -13,4 +13,9 @@ use Symfony\Component\Validator\Constraint;
 class GroupeObligatoire extends Constraint
 {
     public $message = "[ E R R O R  tu dois être rattaché à un groupe existant ou en créer un nouveau, si tu n'es dans aucun groupe : contacte le pôle adhésion : adhesion@corto-zest.org ]";
+
+    public function validatedBy(): string
+    {
+        return static::class.'Validator';
+    }
 }

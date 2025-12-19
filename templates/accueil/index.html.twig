@@ -17,4 +17,10 @@
         <li>Your template at <code>C:/Users/EDW2425/Desktop/zest_symfony/templates/accueil/index.html.twig</code></li>
     </ul>
 </div>
+{# Affichage des messages flash (ton recap sera injecté ici) #}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success adhesion-recap">
+            {{ message|raw }}
+        </div>
+    {% endfor %}
 {% endblock %}

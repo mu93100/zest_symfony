@@ -11,10 +11,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: AdhesionRepository::class)]
-#[UniqueEntity(
-    fields: ['user', 'saison'],
-    message: 'Vous avez déjà une adhésion pour cette saison.'
-)]
+// #[UniqueEntity(          // A REMETTTRE POUR ADHESION UNIQUE
+//     fields: ['user', 'saison'],
+//     message: 'Vous avez déjà une adhésion pour cette saison.'
+// )]
 class Adhesion 
 {
     #[ORM\Id]

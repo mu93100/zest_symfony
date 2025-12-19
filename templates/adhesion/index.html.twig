@@ -5,70 +5,24 @@
 
 
 {% block body %}
-	<style>
-		.example-wrapper {
-			margin: 1em auto;
-			max-width: 800px;
-			width: 95%;
-			font: 18px / 1.5 sans-serif;
-		}
-		.example-wrapper code {
-			background: #F5F5F5;
-			padding: 2px 6px;
-		}
-	</style>
-
-
 	<div class="example-wrapper">
-		<h1>adhésion saison {{ saison.nom }}</h1>
+		<h1>adhésion saison
+			{{ saison.nom }}</h1>
 
-{% if recap is defined %}
-<div class="popup-confirmation">
-    <div class="popup-box">
-        <h2>✅ Adhésion enregistrée</h2>
-        <p>{{ recap|raw }}</p>
-        {# <a href="{{ path('app') }}" class="btn btn-success">Retour à l’accueil</a> #}
-    </div>
-</div>
-<style>
-.popup-confirmation {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-.popup-box {
-    background: #fff;
-    padding: 2em;
-    border-radius: 8px;
-    max-width: 500px;
-    text-align: center;
-    box-shadow: 0 0 20px rgba(0,0,0,0.3);
-}
-.popup-box h2 {
-    margin-bottom: 1em;
-}
-.popup-box .btn-success {
-    margin-top: 1em;
-    display: inline-block;
-    padding: 0.5em 1em;
-    background-color: #28a745;
-    color: white;
-    border-radius: 4px;
-    text-decoration: none;
-}
-</style>
-{% endif %}
+		{# Affichage des messages flash OPTION 2 FLASH AVEC _recap # }
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">
+				{{ message|raw }}
+			</div>
+		{% endfor %}
 
-
-
-
+		{# Formulaire d'adhésion #}
 		{% if app.user %}
-			<p>[ {{ app.user.prenom }} ({{ app.user.email }}) du groupe {{ app.user.groupe.nom }} ]</p>
+			<p>[
+				{{ app.user.prenom }}
+				({{ app.user.email }}) du groupe
+				{{ app.user.groupe.nom }}
+				]</p>
 		{% else %}
 			<p>E R R O R</p>
 		{% endif %}
@@ -165,13 +119,3 @@ nouveauInput.required = false;
 });
 	</script>
 {% endblock %}
-	{# 
-				{{ form_errors(adhesionForm) }}
-				
-				{{ form_start(adhesionForm) }}
-				{{ form_row(adhesionForm.email) }}
-				{{ form_row(adhesionForm.plainPassword, { label: 'Mot de Passe'}) }}
-				{{ form_row(adhesionForm.agreeTerms) }}
-		
-				<button type="submit" class="btn">se connecter</button>
-				{{ form_end(adhesionForm) }} #}

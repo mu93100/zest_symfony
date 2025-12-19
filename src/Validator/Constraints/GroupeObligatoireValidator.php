@@ -2,6 +2,7 @@
 
 namespace App\Validator\Constraints;
 
+use App\Entity\Adhesion;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Form\FormInterface;
@@ -31,8 +32,11 @@ class GroupeObligatoireValidator extends ConstraintValidator
             $newGroupName = $form->get('nouveauGroupe')->getData();
         }
 
-        // Validation : au moins un des deux doit être rempli
-        if (!$selectedExisting && !$newGroupName) {
+        // 👉 Nouveau test : si l’adhésion a déjà un groupe (pré-rempli avec celui du user)
+        $groupeDejaPresent = $value instanceof Adhesion ? $value->getGroupe() : null;
+
+        // Validation : au moins un des trois doit être rempli
+        if (!$selectedExisting && !$newGroupName && !$groupeDejaPresent) {
             // Choisir le champ sur lequel afficher l’erreur
             $errorPath = null;
             if ($form->has('changeGroupe')) {
