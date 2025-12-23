@@ -41,6 +41,12 @@ class Groupe
     #[ORM\OneToMany(mappedBy: 'groupe', targetEntity: Adhesion::class)]
     private Collection $adhesions;
 
+    /**
+     * @var Collection<int, Referent>
+     */
+    #[ORM\OneToMany(targetEntity: Referent::class, mappedBy: 'groupe')]
+    private Collection $referents;
+
 
 
 
@@ -49,6 +55,7 @@ class Groupe
         $this->membres = new ArrayCollection();
         $this->dateCreation = new \DateTimeImmutable();
         $this->adhesions = new ArrayCollection();
+        $this->referents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -190,6 +197,36 @@ class Groupe
         if ($this->adhesions->removeElement($adhesion)) {
             if ($adhesion->getGroupe() === $this) {
                 $adhesion->setGroupe(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Referent>
+     */
+    public function getReferents(): Collection
+    {
+        return $this->referents;
+    }
+
+    public function addReferent(Referent $referent): static
+    {
+        if (!$this->referents->contains($referent)) {
+            $this->referents->add($referent);
+            $referent->setGroupe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReferent(Referent $referent): static
+    {
+        if ($this->referents->removeElement($referent)) {
+            // set the owning side to null (unless already changed)
+            if ($referent->getGroupe() === $this) {
+                $referent->setGroupe(null);
             }
         }
 
