@@ -91,7 +91,24 @@ class DashboardController extends AbstractDashboardController
         ]);
     }
 
-    
+    // à rajouter : compteur d’adhésions par montant
+    // use App\Entity\MontantAdhesion;
+    // use Doctrine\ORM\EntityManagerInterface;
+
+    // public function index(EntityManagerInterface $em): Response
+    // {
+    //     $data = $em->createQueryBuilder()
+    //         ->select('m.libelle, COUNT(a.id) AS nbAdhesions')
+    //         ->from(MontantAdhesion::class, 'm')
+    //         ->leftJoin('m.adhesions', 'a')
+    //         ->groupBy('m.id')
+    //         ->getQuery()
+    //         ->getResult();
+
+    //     return $this->render('admin/dashboard.html.twig', [
+    //         'stats' => $data,
+    //     ]);
+    // }
 }
 
 

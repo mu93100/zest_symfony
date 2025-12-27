@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Adhesion;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use App\Repository\MontantAdhesionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -19,7 +22,15 @@ class MontantAdhesion
     #[ORM\Column(length: 100)]
     private ?string $libelle = null;
 
+    #[ORM\OneToMany(targetEntity: Adhesion::class, mappedBy: 'montantAdhesion')]
+    private Collection $adhesions;
 
+
+
+    public function __construct()
+    {
+        $this->adhesions = new ArrayCollection();
+    }
     
     public function getId(): ?int
     {
@@ -49,4 +60,33 @@ class MontantAdhesion
 
         return $this;
     }
+    /**
+     * @return Collection<int, Adhesion>
+     */
+    public function getAdhesions(): Collection
+    {
+        return $this->adhesions;        
+    }   
+
+    public function addAdhesion(Adhesion $adhesion): self
+    {
+        if (!$this->adhesions->contains($adhesion)) {
+            $this->adhesions->add($adhesion);
+            $adhesion->setMontantAdhesion($this);
+        }
+
+        return $this;
+    }   
+
+    public function removeAdhesion(Adhesion $adhesion): self
+    {
+        if ($this->adhesions->removeElement($adhesion)) {
+            // set the owning side to null (unless already changed)
+            if ($adhesion->getMontantAdhesion() === $this) {
+                $adhesion->setMontantAdhesion(null);
+            }
+        }
+
+        return $this;
+    }       
 }

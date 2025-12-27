@@ -2,6 +2,10 @@
 
 namespace App\Entity;
 
+use App\Entity\Categorie;
+use App\Entity\Photos;
+use App\Entity\Pole;
+use App\Entity\User;    
 use App\Repository\RessourceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

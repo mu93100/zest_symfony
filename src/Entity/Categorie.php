@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Ressource;
 use App\Repository\CategorieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,6 +22,7 @@ class Categorie
     #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Ressource::class)]
     private Collection $ressources;
 
+    
     public function __construct()
     {
         $this->ressources = new ArrayCollection();

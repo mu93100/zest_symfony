@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Adhesion;
 use App\Repository\MotivationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -26,6 +27,7 @@ class Motivation
     private Collection $adhesionMotiv;
 
 
+    
     public function __construct()
     {
         $this->adhesionMotiv = new ArrayCollection();

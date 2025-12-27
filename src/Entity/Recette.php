@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
+use App\Entity\Produit;
 use App\Repository\RecetteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -34,8 +36,6 @@ class Recette
     #[ORM\Column(length: 255)]
     private ?string $photo = null;
 
-    // #[ORM\ManyToOne(inversedBy: 'recette')]
-    // private ?User $user = null;
 //----------------r e l a t i o n s  ManyToMany
     /**
      * @var Collection<int, Produit>

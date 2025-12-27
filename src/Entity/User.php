@@ -3,6 +3,11 @@
 namespace App\Entity;
 
 use App\Entity\Groupe;
+use App\Entity\Referent;
+use App\Entity\Pole;
+use App\Entity\Ressource;
+use App\Entity\Recette;
+use App\Entity\Adhesion;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -101,6 +106,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Adhesion::class, cascade: ['persist', 'remove'])]
     private Collection $adhesions;
 
+    /**
+     * @var Collection<int, Referent>
+     */
+    #[ORM\OneToMany(targetEntity: Referent::class, mappedBy: 'user')]
+    private Collection $referents;
+
 
 
 
@@ -111,6 +122,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->pole = new ArrayCollection();
         $this->ressource = new ArrayCollection();
         $this->adhesions = new ArrayCollection();
+        $this->referents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -436,6 +448,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsReferent(bool $isReferent): static
     {
         $this->isReferent = $isReferent;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Referent>
+     */
+    public function getReferents(): Collection
+    {
+        return $this->referents;
+    }
+
+    public function addReferent(Referent $referent): static
+    {
+        if (!$this->referents->contains($referent)) {
+            $this->referents->add($referent);
+            $referent->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReferent(Referent $referent): static
+    {
+        if ($this->referents->removeElement($referent)) {
+            // set the owning side to null (unless already changed)
+            if ($referent->getUser() === $this) {
+                $referent->setUser(null);
+            }
+        }
+
         return $this;
     }
 

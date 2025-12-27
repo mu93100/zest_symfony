@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Ressource;
 use App\Repository\PhotosRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

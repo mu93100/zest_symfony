@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Entity\User;
+use App\Entity\Referent;
+use App\Entity\Adhesion;
 use App\Repository\GroupeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

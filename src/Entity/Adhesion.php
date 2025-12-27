@@ -2,6 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
+use App\Entity\Groupe;
+use App\Entity\MontantAdhesion;
+use App\Entity\Saison;
+use App\Entity\Motivation;
+use App\Entity\Dispo;
+use App\Entity\Pole;    
 use App\Repository\AdhesionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -43,7 +50,7 @@ class Adhesion
     #[ORM\ManyToOne(targetEntity: Groupe::class, inversedBy: 'adhesions')]
     private ?Groupe $groupe = null;
 
-    #[ORM\ManyToOne(targetEntity: MontantAdhesion::class )]
+    #[ORM\ManyToOne(targetEntity: MontantAdhesion::class, inversedBy: 'adhesions')]
     private ?MontantAdhesion $montantAdhesion = null;
 
     #[ORM\ManyToOne(targetEntity: Saison::class, inversedBy: 'adhesions')]
