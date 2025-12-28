@@ -70,4 +70,4 @@ POUR TESTER ENVOI DE MAIL
  AVEC DANS .env :
  MAILER_DSN="smtp://8fdadb6b9f8175:45c71c0e36e002@sandbox.smtp.mailtrap.io:2525"
 
-compte mailtrap avec email
+compte mailtrap avec gitHub
