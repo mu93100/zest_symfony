@@ -44,8 +44,7 @@ class ResetPasswordController extends AbstractController
             /** @var string $email */
             $email = $form->get('email')->getData();
 
-            return $this->processSendingPasswordResetEmail($email, $mailer, $translator
-            );
+            return $this->processSendingPasswordResetEmail($email, $mailer, $translator);
         }
 
         return $this->render('reset_password/request.html.twig', [
@@ -74,7 +73,7 @@ class ResetPasswordController extends AbstractController
      * Validates and process the reset URL that the user clicked in their email.
      */
     #[Route('/reset/{token}', name: 'app_reset_password')]
-    public function reset(Request $request, UserPasswordHasherInterface $passwordHasher, TranslatorInterface $translator, ?string $token = null): Response
+    public function reset(Request $request, UserPasswordHasherInterface $passwordHasher, ?string $token = null): Response
     {
         if ($token) {
             // We store the token in session and remove it from the URL, to avoid the URL being
@@ -87,18 +86,14 @@ class ResetPasswordController extends AbstractController
         $token = $this->getTokenFromSession();
 
         if (null === $token) {
-            throw $this->createNotFoundException('No reset password token found in the URL or in the session.');
+            throw $this->createNotFoundException('[ E R R O R  S Y S T E M E  clicke de nouveau sur "mot de passe oublié" pour obtenir le lien de réinitialisation ]');
         }
 
         try {
             /** @var User $user */
             $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
         } catch (ResetPasswordExceptionInterface $e) {
-            $this->addFlash('reset_password_error', sprintf(
-                '%s - %s',
-                $translator->trans(ResetPasswordExceptionInterface::MESSAGE_PROBLEM_VALIDATE, [], 'ResetPasswordBundle'),
-                $translator->trans($e->getReason(), [], 'ResetPasswordBundle')
-            ));
+            $this->addFlash('error', '[ Lien de réinitialisation invalide ou expiré. Merci de réessayer ]');
 
             return $this->redirectToRoute('app_forgot_password_request');
         }
@@ -118,6 +113,8 @@ class ResetPasswordController extends AbstractController
             $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
             $this->entityManager->flush();
 
+            //reset password OK
+            $this->addFlash('success', '[ ton mot de passe a été réinitialisé avec succès ]');
             // The session is cleaned up after the password has been changed.
             $this->cleanSessionAfterReset();
 
@@ -157,7 +154,7 @@ class ResetPasswordController extends AbstractController
         }
 
         $email = (new TemplatedEmail())
-            ->from(new Address('murielehlinger@gmail.com', 'Corto Zest Bot'))
+            ->from(new Address('murielehlinger@gmail.com', 'Corto-zest Bot'))
             ->to((string) $user->getEmail())
             ->subject('Your password reset request')
             ->htmlTemplate('reset_password/email.html.twig')

@@ -22,8 +22,7 @@ final class AdhesionController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException('[ Tu dois être connecté pour adhérer ]');
-        }
-
+        } 
         // Créer une nouvelle adhésion
         $adhesion = new Adhesion();
 
@@ -85,7 +84,7 @@ final class AdhesionController extends AbstractController
                 /** @var Groupe|null $groupeActuel */
                 $groupeActuel = $user->getGroupe();
                 if (!$groupeActuel) {
-                    throw new \LogicException('Le user doit avoir un groupe pour adhérer.');
+                    throw new \LogicException('[ Le user doit avoir un groupe pour adhérer ]');
                 }
 
                 $nouvelleAdresse = $adhesionForm->get('adresseDistrib')->getData();
@@ -114,7 +113,7 @@ final class AdhesionController extends AbstractController
             if (!$adhesion->getGroupe()) {
                 $adhesion->setGroupe($user->getGroupe());
                 if (!$adhesion->getGroupe()) {
-                    throw new \LogicException('Aucun groupe sur l’adhésion ni sur le user.');
+                    throw new \LogicException('[ Aucun groupe sur l’adhésion ni sur le user ]');
                 }
             }
 
