@@ -1,6 +1,10 @@
-body {
-    background-color: rgb(195, 221, 252);
+@import 'form.css';  
 
+body {
+    /* background-color: rgb(195, 221, 252); */
+    background-image: url('/images/nuage.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
     font-family: "Inter", sans-serif;
     font-optical-sizing: auto;
     font-weight: 300;
@@ -44,3 +48,4 @@ body {
     font-size: 1.2rem;
     cursor: pointer;
 }
+    

@@ -33,3 +33,66 @@ templates/security/login.html.twig :
     <button class="btn btn-lg btn-primary" type="submit">se connecter</button>
 </form>
 {% endblock %}
+
+
+<div class="modal-overlay">
+    <div class="modal-box">
+
+        {% if error %}
+        <div class="modal-error">{{ errorMessage }}</div>
+        {% endif %}
+
+        <h2>{{ title }}</h2>
+
+        <div class="modal-content">
+            {# Ici tu mets ton formulaire ou ton contenu #}
+            {{ block('modal_body') }}
+        </div>
+
+    </div>
+</div>
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+<div class="modal-overlay">
+    <div class="modal-box">
+
+        {% if error %}
+        <div class="modal-error">[ email ou mot de passe incorrect ]</div>
+        {% endif %}
+
+        <h2>connexion</h2>
+
+        {% block modal_body %}
+        <form action="{{ path('app_login') }}" method="post">
+
+            <div class="form-field">
+                <label for="inputEmail">Email</label>
+                <input type="email" id="inputEmail" name="_username" value="{{ last_username }}" required>
+            </div>
+
+            <div class="form-field">
+                <label for="inputPassword">Mot de passe</label>
+                <div class="password-wrapper">
+                    <input type="password" id="inputPassword" name="_password" required>
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('inputPassword', this)">👁</button>
+                </div>
+            </div>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <button type="submit" class="form-submit">se connecter</button>
+
+            <div class="form-links">
+                <a href="{{ path('app_forgot_password_request') }}">mot de passe oublié</a>
+            </div>
+
+        </form>
+        {% endblock %}
+
+    </div>
+</div>
+{% endblock %}

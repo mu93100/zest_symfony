@@ -1,0 +1,157 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    /* border: 1px dotted blue; */
+}
+
+/* --- OVERLAY --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.55); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+    z-index: 1000;
+}
+
+/* --- MODALE --- */
+.modal-box {
+    width: 90%;
+    max-width: 28rem;
+    background: linear-gradient( #1DFF83 5%, #FFFFFF 50%, #FFFFFF 100% );
+    padding: 2.7rem 4.5rem 3rem 4.5rem;
+    border-radius: 2.5rem;
+    border: 0.15rem solid black;
+    box-shadow: 0 0.8rem 0 black;
+    animation: modalFade 0.25s ease-out;
+    text-align: left;
+}
+
+/* Animation d’apparition */
+@keyframes modalFade {
+    from { opacity: 0; transform: translateY(-18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --- TITRE --- */
+.modal-box h2 {
+    /* text-transform: lowercase; */
+    font-size: 3.7rem;
+    font-weight: 750;
+    letter-spacing: 0.08rem;
+    margin-bottom: 5.5rem;
+    color: #FFFFFF;
+}
+
+/* --- CHAMPS --- */
+.form-field {
+    margin-bottom: 0.5rem;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.8rem;
+}
+
+.form-field input, .form-submit {
+    width: 100%;
+    padding: 0.45em 1rem;
+    border-radius: 0.6rem;
+    border: 1px solid #000000;
+    background: #FFFFFF;
+    font-size: 0.8rem;
+    /* color: #0000; */
+}
+
+/* --- MOT DE PASSE + BOUTON OEIL --- */
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 2.5rem; /* espace pour l’œil */
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0.6rem;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.password-toggle img.eye-icon {
+    width: 2.3rem;
+    height: auto;
+}
+
+/* 
+.password-wrapper {
+    position: relative;
+    height: fit-content;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 0.6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    /* font-size: 0.1rem; */
+    /* opacity: 0.7; */
+/* } */
+
+/* .password-toggle:hover {
+    opacity: 1;
+} */
+
+/* --- BOUTON SUBMIT --- */
+.form-submit { 
+    width: 60%;
+    text-align: end;
+    margin-top: 1.5rem; 
+    margin-left: auto; /* pousse le bouton à droite */ 
+    display: block; /* pour que margin-left: auto fonctionne */    
+    cursor: pointer;
+    transition: background 0.2s ease;
+    font-weight: 600; 
+}
+
+.form-submit:hover {
+    background: #000000;
+    color: white;
+}
+
+/* --- mdp oublie --- */
+.form-links {
+    margin-top: 0.8rem;
+    text-align: right;
+}
+
+.form-links a {
+    text-decoration: underline;
+    font-size: 0.8rem;
+}
+
+/* --- MESSAGE D’ERREUR --- */
+.form-error {
+    background: #ffe5e5;
+    color: #a30000;
+    padding: 0.7rem;
+    border-radius: 6px;
+    margin-bottom: 1.2rem;
+    text-align: center;
+    font-weight: 600;
+    border: 1px solid #ffb3b3;
+}

@@ -12,6 +12,22 @@
 
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
+
+            <script>
+                function togglePasswordVisibility(inputId, button) {
+                    const input = document.getElementById(inputId);
+                    const img = button.querySelector('img');
+
+                    if (input.type === "password") {
+                        input.type = "text";
+                        img.src = "/images/oeilFerme.webp";
+                    } else {
+                        input.type = "password";
+                        img.src = "/images/oeilOuvert.webp";
+                    }
+                }
+            </script>
+
         {% endblock %}
     </head>
     <body>
@@ -32,3 +48,5 @@
         {% endblock %}
     </body>
 </html>
+
+

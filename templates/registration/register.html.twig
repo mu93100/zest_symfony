@@ -24,9 +24,12 @@
 	{{ form_row(registrationForm.nouveauGroupe, { 'attr': {'id': 'nouveau-groupe-field'} }) }}
     {{ form_row(registrationForm.isReferent) }}
     
-	{{ form_row(registrationForm.plainPassword, {
-            label: 'Mot de Passe'
-        }) }}
+    {% include 'components/password_field.html.twig' with {
+        id: 'newPassword',
+        name: 'newPassword',
+        label: 'Mot de passe'
+    } %}
+	{{ form_errors(registrationForm.plainPassword) }}
 
     <div class="agree_section">
         <label class="agree_item">

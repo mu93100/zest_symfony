@@ -1,0 +1,19 @@
+{# templates/modal_base.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="modal-overlay">
+    <div class="modal-box">
+
+        {% block modal_error %}{% endblock %}
+
+        <h2>{% block modal_title %}{% endblock %}</h2>
+
+        <div class="modal-content">
+            {% block modal_body %}{% endblock %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}
