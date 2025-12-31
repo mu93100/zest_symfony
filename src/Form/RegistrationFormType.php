@@ -52,7 +52,14 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('email', null, [
                 'label' => 'Email',
-                'required' => true
+                'constraints' => [
+                    new \Symfony\Component\Validator\Constraints\Email([
+                        'message' => 'Veuillez entrer une adresse email valide.'
+                    ]),
+                    new \Symfony\Component\Validator\Constraints\NotBlank([
+                        'message' => 'L’email est obligatoire.'
+                    ]),
+                ],
             ])
             ->add('telephone', null, [
                 'label' => 'Numéro de téléphone',

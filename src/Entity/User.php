@@ -78,7 +78,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'integer', options: ['unsigned' => true], nullable: true)]
     #[Assert\GreaterThanOrEqual(1)]
-    private ?int $nombreEnfants = null;
+    private ?int $nombreEnfants = 0;
 
     #[ORM\Column(type: 'boolean')]
     private bool $isReferent = false;

@@ -37,8 +37,8 @@
  		field_name: (registrationForm.plainPassword.vars.full_name)	
 	} %} 
 
-	{##### cacher le champs plainpassword natif symfony POUR ÉVITER QU’IL APPARAISSE À LA FIN #} 
-	{{ form_row(registrationForm.plainPassword, { 'attr': {'style': 'display:none'} }) }}
+	{##### cacher le champs plainpassword natif symfony POUR ÉVITER QU’IL APPARAISSE À LA FIN #}
+	{#{{ form_row(registrationForm.plainPassword, { 'attr': {'style': 'display:none'} }) }}#} 
 	{##### AFFICHAGE DES ERREURS DU CHAMP PASSWORD #} 
 	{{ form_errors(registrationForm.plainPassword) }}
 
@@ -67,7 +67,11 @@
 		checkbox_selector: '#groupe-liste', 
 		target_selector: '#nouveau-groupe-field' 
  	} %}	
-	{{ form_end(registrationForm) }}
+
+	{# IMPORTANT : rendre le token manuellement #}
+	{{ form_row(registrationForm._token) }}
+	{{ form_end(registrationForm, { render_rest: false }) }}
+
 
 {##### bloc JS remplacé par le component toggle_field
 	{% block javascripts %}
