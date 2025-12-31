@@ -27,25 +27,32 @@
                     }
                 }
             </script>
-
         {% endblock %}
     </head>
-    <body>
-       <div class="row">
-        <div class="col-6 bg-secondary" style "height: 4rem"></div>
-        </div>
-        {% block body %}
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="flash-message flash-{{ label }}">
-                        {{ message }}
-                        <button type="button" class="flash-close" aria-label="Fermer">&times;</button>
-                    </div>
-                {% endfor %}
-            {% endfor %}
 
-            {# Ici viendra le contenu spécifique à chaque page #}
-        {% endblock %}
+    <body>
+        {% include 'partials/_header.html.twig' %}
+
+        <div class="row">
+            <div class="col-6 bg-secondary" style="height: 4rem">ddddddd</div>
+        </div>
+
+        <main>
+            {% block body %}
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="flash-message flash-{{ label }}">
+                            {{ message }}
+                            <button type="button" class="flash-close" aria-label="Fermer">&times;</button>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+
+                {# Ici viendra le contenu spécifique à chaque page #}
+            {% endblock %}
+        </main>
+
+        {#{% include 'partials/_footer.html.twig' %}#}
     </body>
 </html>
 

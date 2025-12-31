@@ -28,6 +28,10 @@ class RegistrationController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
+        // dd($form->get('plainPassword')->getData());
+        // dd($form->getData());
+
+
         if ($form->isSubmitted() && $form->isValid()) {
             // Vérifie si l'email existe déjà
             if ($userRepository->existsByEmail($user->getEmail())) {

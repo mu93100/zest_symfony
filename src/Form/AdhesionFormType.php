@@ -35,9 +35,7 @@ class AdhesionFormType extends AbstractType
                 'label' => false,
                 'attr' => ['style' => 'display:none'], // caché
                 'data' => $options['user']->getGroupe(), // groupe pré rempli
-            ]) // Important: ce champ DOIT être mappé (par défaut mappé = true) pour hydrater l’entité.
-
-
+            ]) // Important: ce champ DOIT être mappé (par défaut mappé = true) pour hydrater l’entite
 
             // Choisir un autre groupe existant
             ->add('changeGroupe', EntityType::class, [

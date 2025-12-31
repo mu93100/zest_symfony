@@ -65,6 +65,7 @@ templates/security/login.html.twig :
         {% endif %}
 
         <h2>connexion</h2>
+        <img src="/images/logo.png" alt="logo zest" class="logo">
 
         {% block modal_body %}
         <form action="{{ path('app_login') }}" method="post">
@@ -89,6 +90,7 @@ templates/security/login.html.twig :
             <div class="form-links">
                 <a href="{{ path('app_forgot_password_request') }}">mot de passe oublié</a>
             </div>
+            <li><a href="https://www.socleo.com/demandez-une-demo/">commander</a></li>
 
         </form>
         {% endblock %}

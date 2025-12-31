@@ -1,0 +1,31 @@
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const checkbox = document.querySelector('{{ checkbox_selector }}');
+    const target = document.querySelector('{{ target_selector }}');
+
+    if (!checkbox || !target) {
+        return;
+    }
+
+    function updateVisibility() {
+        if (checkbox.value && checkbox.value !== '') {
+            // si un groupe est sélectionné → cacher le champ nouveau groupe
+            target.style.display = 'none';
+            target.required = false;
+        } else {
+            // si aucun groupe sélectionné → afficher le champ nouveau groupe
+            target.style.display = 'block';
+            target.required = true;
+        }
+    }
+
+    checkbox.addEventListener('change', updateVisibility);
+    target.addEventListener('input', function () {
+        if (target.value.trim()) {
+            checkbox.value = '';
+        }
+    });
+
+    updateVisibility();
+});
+</script>

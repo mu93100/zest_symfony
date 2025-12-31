@@ -19,10 +19,12 @@
     </div>
 
     {% include 'components/password_field.html.twig' with {
-        id: 'newPassword',
-        name: 'newPassword',
-        label: 'Mot de passe'
+        id: 'inputPassword',
+        name: '_password',
+        label: 'Mot de passe',
+        autocomplete: 'current-password'
     } %}
+    
 
 
     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">

@@ -1,8 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}adhesion
-{% endblock %}
-
+{% block title %}adhesion{% endblock %}
 
 {% block body %}
 	<div class="example-wrapper">
@@ -95,22 +93,22 @@
 
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
-const changeCheckbox = document.querySelector('.change-groupe-checkbox');
-const nouveauInput = document.querySelector('.nouveau-groupe-input');
+		const changeCheckbox = document.querySelector('.change-groupe-checkbox');
+		const nouveauInput = document.querySelector('.nouveau-groupe-input');
 
-if (! changeCheckbox || ! nouveauInput) {
-return;
-}
+		if (! changeCheckbox || ! nouveauInput) {
+		return;
+		}
 
-changeCheckbox.addEventListener('change', function () {
-if (this.checked) {
-nouveauInput.style.display = 'block';
-nouveauInput.required = true;
-} else {
-nouveauInput.style.display = 'none';
-nouveauInput.required = false;
-}
-});
-});
+		changeCheckbox.addEventListener('change', function () {
+			if (this.checked) {
+			nouveauInput.style.display = 'block';
+			nouveauInput.required = true;
+			} else {
+			nouveauInput.style.display = 'none';
+			nouveauInput.required = false;
+			}
+		});
+		});
 	</script>
 {% endblock %}

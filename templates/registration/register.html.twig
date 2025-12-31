@@ -3,11 +3,13 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-	<h1>s'enregistrer</h1>
+	<h1>création de compte<br>corto-zest</h1>
 
 	{{ form_errors(registrationForm) }}
 
 	{{ form_start(registrationForm) }}
+	{{ dump(registrationForm.vars.full_name) }}
+
 	{{ form_row(registrationForm.prenom) }}
 	{{ form_row(registrationForm.nom) }}
 	{{ form_row(registrationForm.email) }}
@@ -18,18 +20,28 @@
 	{{ form_row(registrationForm.dateDeNaissance) }}
 	{{ form_row(registrationForm.compositionFoyer) }}
 	{{ form_row(registrationForm.nombreEnfants) }}
-    {# Groupe - avec ID pour le JavaScript #}
+
+    {##### GROUPE je choisis un groupe existant - avec ID pour le JS #}
 	{{ form_row(registrationForm.groupe, { 'attr': {'id': 'groupe-liste'} }) }}
-    {# Nouveau groupe - caché par défaut #}
+    {##### je crée un nouveau groupe #}
 	{{ form_row(registrationForm.nouveauGroupe, { 'attr': {'id': 'nouveau-groupe-field'} }) }}
-    {{ form_row(registrationForm.isReferent) }}
     
-    {% include 'components/password_field.html.twig' with {
-        id: 'newPassword',
-        name: 'newPassword',
-        label: 'Mot de passe'
-    } %}
+	{{ form_row(registrationForm.isReferent) }}
+    
+	{##### PASSWORD avec oeil templates/components/password_field.html.twig 
+	≠login :::avec plainpassword pour hashedpassword + on doit cacher le champs plainpassword natif symfony #}
+    {% include 'components/password_field.html.twig' with { 
+		id: 'plainPasswordCustom', 
+		label: 'Mot de passe', 
+		autocomplete: 'new-password',
+ 		field_name: (registrationForm.plainPassword.vars.full_name)	
+	} %} 
+
+	{##### cacher le champs plainpassword natif symfony POUR ÉVITER QU’IL APPARAISSE À LA FIN #} 
+	{{ form_row(registrationForm.plainPassword, { 'attr': {'style': 'display:none'} }) }}
+	{##### AFFICHAGE DES ERREURS DU CHAMP PASSWORD #} 
 	{{ form_errors(registrationForm.plainPassword) }}
+
 
     <div class="agree_section">
         <label class="agree_item">
@@ -49,33 +61,39 @@
 	</div>
 
 	<button type="submit" class="btn">je crée mon compte</button>
-	{{ form_end(registrationForm) }}
-{% endblock %}
 
-{% block javascripts %}
+ 	{##### COMPOSANT TOGGLE POUR GESTION changement de GROUPE / NOUVEAU GROUPE #} 
+ 	{% include 'components/toggle_field.html.twig' with { 
+		checkbox_selector: '#groupe-liste', 
+		target_selector: '#nouveau-groupe-field' 
+ 	} %}	
+	{{ form_end(registrationForm) }}
+
+{##### bloc JS remplacé par le component toggle_field
+	{% block javascripts %}
 	{{ parent() }}
-	<script>
+	<script> // je choisis un groupe existant OU je cree un nouveau groupe
 		document.addEventListener('DOMContentLoaded', function () {
 			const groupeListe = document.getElementById('groupe-liste');
 			const nouveauGroupeField = document.getElementById('nouveau-groupe-field');
 
 			if (groupeListe && nouveauGroupeField) {
-				// Quand on sélectionne un groupe existant, vider le champ nouveau groupe
+				// si le user choisit un groupe dans la liste, le champ “nouveau groupe” est automatiquement vide
 				groupeListe.addEventListener('change', function () {
 					if (groupeListe.value) {
 						nouveauGroupeField.value = '';
-					}
+					}		
 				});
 
-				// Quand on tape dans nouveau groupe, désélectionner la liste
+				// si le user ecrit un nouveau groupe, ça deselectionne la liste
 				nouveauGroupeField.addEventListener('input', function () {
-					if (nouveauGroupeField.value.trim()) {
+					if (nouveauGroupeField.value.trim()) {		// trim => pour enlever les espaces
 						groupeListe.value = '';
 					}
 				});
 			}
 		});
-	</script>
+	</script>#}
 {% endblock %}
 
 

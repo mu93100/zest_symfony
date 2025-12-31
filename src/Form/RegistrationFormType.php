@@ -95,7 +95,7 @@ class RegistrationFormType extends AbstractType
                 'choice_label' => 'nom',
                 'required' => false, // ← Important !
                 'placeholder' => 'Choisir un groupe existant',
-                // 'attr' => ['id' => 'groupe-liste'], MERCREDI / VOIR A QUOI SERT LE id groupe-liste
+                // A SUPPRIMER 'attr' => ['id' => 'groupe-liste'], MERCREDI / VOIR A QUOI SERT LE id groupe-liste
             ])
             // Champ texte pour nouveau groupe            
             ->add('nouveauGroupe', TextType::class, [
@@ -103,8 +103,8 @@ class RegistrationFormType extends AbstractType
                 'required' => false,
                 'label' => 'Je crée un nouveau groupe',
                 'attr' => [
-                    // 'id' => 'nouveau-groupe-field',  MERCREDI / VOIR A QUOI SERT LE id
-                    'placeholder' => 'Nom du nouveau groupe'
+                // A SUPPRIMER 'id' => 'nouveau-groupe-field',  MERCREDI / VOIR A QUOI SERT LE id
+                'placeholder' => 'Nom du nouveau groupe'
                 ],
             ])
             ->add('isReferent', CheckboxType::class, [
