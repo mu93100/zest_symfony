@@ -2,65 +2,110 @@
 
 {% block title %}Register{% endblock %}
 
-{% block body %}
-	<h1>création de compte<br>corto-zest</h1>
+{# ICI : charge form.css #}
+{% block form_styles %}{% endblock %}
 
-	{{ form_errors(registrationForm) }}
+
+{% block body %}
+<main class= "form-container">
+	<h2>création de compte<br>corto-zest</h2>
 
 	{{ form_start(registrationForm) }}
-	{{ dump(registrationForm.vars.full_name) }}
+	{{ form_errors(registrationForm) }}
 
-	{{ form_row(registrationForm.prenom) }}
-	{{ form_row(registrationForm.nom) }}
-	{{ form_row(registrationForm.email) }}
-	{{ form_row(registrationForm.telephone) }}
-	{{ form_row(registrationForm.adresse) }}
-	{{ form_row(registrationForm.codePostal) }}
-	{{ form_row(registrationForm.ville) }}
-	{{ form_row(registrationForm.dateDeNaissance) }}
-	{{ form_row(registrationForm.compositionFoyer) }}
-	{{ form_row(registrationForm.nombreEnfants) }}
+	<div class="container-form">
+		<div class="form-grid">
+    	
+		<div class="field field--medium">{{ form_row(registrationForm.prenom) }}</div>
+    	<div class="field field--medium">{{ form_row(registrationForm.nom) }}</div>
+    	<div class="field field--large">{{ form_row(registrationForm.email) }}</div>
+    	<div class="field field--small">{{ form_row(registrationForm.telephone) }}</div>
+		</div>
 
-    {##### GROUPE je choisis un groupe existant - avec ID pour le JS #}
-	{{ form_row(registrationForm.groupe, { 'attr': {'id': 'groupe-liste'} }) }}
-    {##### je crée un nouveau groupe #}
-	{{ form_row(registrationForm.nouveauGroupe, { 'attr': {'id': 'nouveau-groupe-field'} }) }}
-    
-	{{ form_row(registrationForm.isReferent) }}
-    
-	{##### PASSWORD avec oeil templates/components/password_field.html.twig 
-	≠login :::avec plainpassword pour hashedpassword + on doit cacher le champs plainpassword natif symfony #}
-    {% include 'components/password_field.html.twig' with { 
-		id: 'plainPasswordCustom', 
-		label: 'Mot de passe', 
-		autocomplete: 'new-password',
- 		field_name: (registrationForm.plainPassword.vars.full_name)	
-	} %} 
+    	<div class="form-grid">
+		<div class="field field--xlarge">{{ form_row(registrationForm.adresse) }}</div>
+    	<div class="field field--small">{{ form_row(registrationForm.codePostal) }}</div>
+    	<div class="field field--medium">{{ form_row(registrationForm.ville) }}</div>
+		</div>
 
-	{##### cacher le champs plainpassword natif symfony POUR ÉVITER QU’IL APPARAISSE À LA FIN #}
-	{#{{ form_row(registrationForm.plainPassword, { 'attr': {'style': 'display:none'} }) }}#} 
-	{##### AFFICHAGE DES ERREURS DU CHAMP PASSWORD #} 
-	{{ form_errors(registrationForm.plainPassword) }}
+    	<div class="form-grid">
+		<div class="field field--small">{{ form_row(registrationForm.dateDeNaissance) }}</div>
+    	<div class="field field--small">{{ form_row(registrationForm.compositionFoyer) }}</div>
+    	<div class="field field--small">{{ form_row(registrationForm.nombreEnfants) }}</div>
+		</div>
 
-
-    <div class="agree_section">
-        <label class="agree_item">
-			{{ form_widget(registrationForm.agree_rgpd) }}
-			{{ form_label(registrationForm.agree_rgpd) }}
-		</label>
-
-		<label class="agree_item">
-			{{ form_widget(registrationForm.agree_infos_mail) }}
-			{{ form_label(registrationForm.agree_infos_mail) }}
-		</label>
-
-		<label class="agree_item">
-			{{ form_widget(registrationForm.agree_fonctionnement) }}
-			{{ form_label(registrationForm.agree_fonctionnement) }}
-		</label>
+{#
+		<div class="row">
+		{{ form_row(registrationForm.prenom) }}
+		{{ form_row(registrationForm.nom) }}
+		{{ form_row(registrationForm.email) }}
+		{{ form_row(registrationForm.telephone) }}
+		</div>
+		<div class="row">
+		{{ form_row(registrationForm.adresse) }}
+		{{ form_row(registrationForm.codePostal) }}
+		{{ form_row(registrationForm.ville) }}
+		</div>
+		<div class="row">
+		{{ form_row(registrationForm.dateDeNaissance) }}
+		{{ form_row(registrationForm.compositionFoyer) }}
+		{{ form_row(registrationForm.nombreEnfants) }}
+		</div>#}
 	</div>
 
-	<button type="submit" class="btn">je crée mon compte</button>
+	<div class="container-form">
+		<h3>mon groupe</h3>
+		
+    	{##### GROUPE je choisis un groupe existant - avec ID pour le JS #}
+		{{ form_row(registrationForm.groupe, { 'attr': {'class': 'form-input', 'id': 'groupe-liste'} }) }}
+    	{##### je crée un nouveau groupe #}
+		{{ form_row(registrationForm.nouveauGroupe, { 'attr': {'id': 'nouveau-groupe-field'} }) }}
+	
+		<div class="agree_item">
+			{{ form_widget(registrationForm.isReferent) }}
+			{{ form_label(registrationForm.isReferent) }}
+		</div>
+    </div>
+
+    <div class="container-form">
+        <div class="agree_item">
+			{{ form_widget(registrationForm.agree_rgpd) }}
+			{{ form_label(registrationForm.agree_rgpd) }}
+		 	{{ form_errors(registrationForm.agree_rgpd) }}	
+		</div>
+
+		<div class="agree_item">
+			{{ form_widget(registrationForm.agree_infos_mail) }}
+			{{ form_label(registrationForm.agree_infos_mail) }}
+			 {{ form_errors(registrationForm.agree_infos_mail) }}
+		</div>
+
+		<div class="agree_item">
+			{{ form_widget(registrationForm.agree_fonctionnement) }}
+			{{ form_label(registrationForm.agree_fonctionnement) }}
+			{{ form_errors(registrationForm.agree_fonctionnement) }}
+			
+		</div>
+	</div>
+
+	<div class="container-form">
+		{##### PASSWORD avec oeil templates/components/password_field.html.twig 
+		≠login :::avec plainpassword pour hashedpassword + on doit cacher le champs plainpassword natif symfony #}
+    	{% include 'components/password_field.html.twig' with { 
+			id: 'plainPasswordCustom', 
+			label: 'Mot de passe', 
+			autocomplete: 'new-password',
+ 			field_name: registrationForm.plainPassword.vars.full_name,
+			errors: registrationForm.plainPassword.vars.errors
+		} %} 
+
+		{##### cacher le champs plainpassword natif symfony POUR ÉVITER QU’IL APPARAISSE À LA FIN #}
+		{#{{ form_row(registrationForm.plainPassword, { 'attr': {'style': 'display:none'} }) }}#} 
+		{##### AFFICHAGE DES ERREURS DU CHAMP PASSWORD #} 
+		{{ form_errors(registrationForm.plainPassword) }}
+
+		<button type="submit" class="form-submit">je crée mon compte</button>
+	</div>
 
  	{##### COMPOSANT TOGGLE POUR GESTION changement de GROUPE / NOUVEAU GROUPE #} 
  	{% include 'components/toggle_field.html.twig' with { 
@@ -72,7 +117,7 @@
 	{{ form_row(registrationForm._token) }}
 	{{ form_end(registrationForm, { render_rest: false }) }}
 
-
+</main>
 {##### bloc JS remplacé par le component toggle_field
 	{% block javascripts %}
 	{{ parent() }}
@@ -98,6 +143,6 @@
 			}
 		});
 	</script>#}
-{% endblock %}
+{% endblock %} 
 
 

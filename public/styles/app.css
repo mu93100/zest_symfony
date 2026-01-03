@@ -1,33 +1,28 @@
+@import 'header.css';  
+@import 'footer.css';
 @import 'form.css';  
 
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.06rem;
+    /* border: 1px dotted blue; */
+}
+
 body {
-    /* background-color: rgb(195, 221, 252); */
-    background-image: url('/images/nuage2222222.jpg');
+    /* background-image: url('/images/nuage.jpg');
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: cover; */
+    background-color: aquamarine; 
     font-family: "Inter", sans-serif;
     font-optical-sizing: auto;
     font-weight: 300;
     font-style: normal;
 }
 
-/* registration */
-.agree_section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-}
 
-.agree_item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-}
-
-.agree_item input[type="checkbox"] {
-    margin-top: 4px;
-}
 /* registration */
 
 /* recap adhesion sur page accueil */

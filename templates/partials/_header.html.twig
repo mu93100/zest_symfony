@@ -1,22 +1,35 @@
 <header>
-  <div class="logo">
+  <div class="logo-header">
     <img src="/images/logo.png" alt="logo zest"> 
   </div>
 
-  <nav class="main-nav">
-    <ul>
-      <li><a href="{#{{ path('forum') }}#}">forum</a></li>
-         <li><a href="{#{{ path('faq') }}#}">F.A.Q</a></li>
-        <li><a href="{{ path('app_adhesion') }}">adhérer</a></li>
-        <li><a href="https://www.socleo.com/demandez-une-demo/">commander</a></li>
-    </ul>
-  </nav>
+  <div class="nav-header">
+    <div class="nav-pill-header">
+      <div class="pill-group">
+        <a class="pill" href="{{ path('app_register') }}">créer un compte</a>{#rejoindre le GAS vers p.fonctionnement#}
+        <a class="pill" href="{{ path('app_adhesion') }}">adhérer</a>
+        <a class="pill pill-black" href="{{ path('app_login') }}">se connecter</a>
+      </div>
+      <div class="pill-group">
+        <a class="pill research" href="{#{{ path('app_recherche') }}#}">rechercher</a>
+        <a class="pill" href="https://www.socleo.com/demandez-une-demo/">commander</a>
+        {#<a class="pill" href="{{ path('faq') }}">F.A.Q</a>
+        <a class="pill" href="{{ path('app_recettes') }}">recettes</a>#}
+        <a class="pill" href="{#{{ path('forum') }}#}">forum</a>
+        <a class="pill" href="{#{{ path('app_calendrier') }}#}">calendrier</a>
+      </div>
+    </div>
 
-  <div class="header-actions">
-    <a href="{{ path('app_contact') }}">contact</a>
-    <a href="{{ path('app_recettes') }}">recettes</a>
-    {#<a href="{{ path('app_articles') }}">voir + d'articles</a>#}
-    {#<a href="{{ path('app_calendrier') }}">calendrier</a>#}
-    <a href="{{ path('app_login') }}" class="btn-login">se connecter</a>
+    <nav class="nav-nav-header">
+      <ul>
+        <li><a href="{{ path('app_accueil') }}">accueil</a></li>
+        <li><a href="{#{{ path('app_fonctionnement') }}#}">fonctionnement</a></li>
+        <li><a href="{#{{ path('app_ressources') }}#}">ressources</a></li>
+        <li><a href="{#{{ path('app_producteurices') }}#}">producteur.ices</a></li>
+        <li><a href="{#{{ path('app_produits') }}#}">produits</a></li>
+        <li><a href="{#{{ path('app_contact') }}#}">contact</a></li>
+        <li><a href="{{ path('app_compte') }}">mon compte</a></li>
+      </ul>
+    </nav>
   </div>
 </header>

@@ -7,11 +7,9 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-        {% block stylesheets %}
-        {% endblock %}
+
 
         {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
 
             <script>
                 function togglePasswordVisibility(inputId, button) {
@@ -29,7 +27,18 @@
             </script>
         {% endblock %}
     </head>
+    
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/header.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/footer.css') }}">
 
+        {# form.css seulement sur pages avec forms #}
+        {% if block('form_styles') is defined %}
+            <link rel="stylesheet" href="{{ asset('styles/form.css') }}">
+        {% endif %}
+    {% endblock %}
+    
     <body>
         {% include 'partials/_header.html.twig' %}
 

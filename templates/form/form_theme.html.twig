@@ -1,10 +1,59 @@
+{# theme pour les form avec form.css 
++ rajout dans config/packages/twig.yaml: 
+twig:
+form_themes:
+        - 'form/form_theme.html.twig'#}
+
+
+{# row #}
+{% block form_row %}
+    <div class="form-field">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endblock %}
+
+{# Label #}
 {% block form_label %}
-    {% if label is not same as(false) %}
-        {% set labelText = label|default(name)|trans %}
-        {% if required %}
-            {{ labelText }} *
-        {% else %}
-            {{ labelText }}
-        {% endif %}
+    <label{% with { attr: attr|merge({ class: (attr.class|default('') ~ ' form-label')|trim }) } %}{{ block('attributes') }}{% endwith %}>
+        {{ label|trans({}, translation_domain) }}
+    </label>
+{% endblock %}
+
+{# Widget (input) #}
+{% block form_widget_simple %}
+    {% set invalid = (not compound and not valid) ? 'is-invalid' : '' %}
+    {% set classes = (attr.class|default('') ~ ' form-input ' ~ invalid)|trim %}
+    <input
+        type="{{ type|default('text') }}"
+        {{ block('widget_attributes') }}
+        value="{{ value }}"
+        class="{{ classes }}"
+    >
+{% endblock %}
+
+
+
+{#
+{% block choice_widget %}
+    {% set classes = (attr.class|default('') ~ ' form-input')|trim %}
+    <select {{ block('widget_attributes') }} class="{{ classes }}">
+        {% for group in choices %}
+            {{ block('choice_widget_option') }}
+        {% endfor %}
+    </select>
+{% endblock %}
+#}
+
+
+{# Erreurs #}
+{% block form_errors %}
+    {% if errors|length > 0 %}
+        <div class="invalid-feedback">
+            {% for error in errors %}
+                {{ error.message }}
+            {% endfor %}
+        </div>
     {% endif %}
 {% endblock %}
