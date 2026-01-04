@@ -2,72 +2,64 @@
 
 {% block title %}Register{% endblock %}
 
-{# ICI : charge form.css #}
-{% block form_styles %}{% endblock %}
-
-
 {% block body %}
 <main class= "form-container">
-	<h2>création de compte<br>corto-zest</h2>
+	<h1>création de compte<br>corto-zest</h1>
 
 	{{ form_start(registrationForm) }}
 	{{ form_errors(registrationForm) }}
 
-	<div class="container-form">
+	<div class="form-section">
+	<h3>mes infos personnelles</h3>
+{#		<div class="form-field">
+			{{ form_row(registrationForm.prenom) }}
+    		{{ form_row(registrationForm.nom) }}
+    		{{ form_row(registrationForm.email) }}
+    		{{ form_row(registrationForm.telephone) }}
+		</div>
+#}
 		<div class="form-grid">
-    	
-		<div class="field field--medium">{{ form_row(registrationForm.prenom) }}</div>
-    	<div class="field field--medium">{{ form_row(registrationForm.nom) }}</div>
-    	<div class="field field--large">{{ form_row(registrationForm.email) }}</div>
-    	<div class="field field--small">{{ form_row(registrationForm.telephone) }}</div>
+			<div class="row row--medium">{
+				{ form_row(registrationForm.prenom) }}</div>
+    		<div class="row row--medium">{{ form_row(registrationForm.nom) }}</div>
+    		<div class="row row--large">{{ form_row(registrationForm.email) }}</div>
+    		<div class="row row--small">{{ form_row(registrationForm.telephone) }}</div>
 		</div>
 
     	<div class="form-grid">
-		<div class="field field--xlarge">{{ form_row(registrationForm.adresse) }}</div>
-    	<div class="field field--small">{{ form_row(registrationForm.codePostal) }}</div>
-    	<div class="field field--medium">{{ form_row(registrationForm.ville) }}</div>
+			<div class="row row--xlarge">{{ form_row(registrationForm.adresse) }}</div>
+    		<div class="row row--small">{{ form_row(registrationForm.codePostal) }}</div>
+    		<div class="row row--medium">{{ form_row(registrationForm.ville) }}</div>
 		</div>
 
     	<div class="form-grid">
-		<div class="field field--small">{{ form_row(registrationForm.dateDeNaissance) }}</div>
-    	<div class="field field--small">{{ form_row(registrationForm.compositionFoyer) }}</div>
-    	<div class="field field--small">{{ form_row(registrationForm.nombreEnfants) }}</div>
+			<div class="row row--small">{{ form_row(registrationForm.dateDeNaissance) }}</div>
+    		<div class="row row--small">{{ form_row(registrationForm.compositionFoyer) }}</div>
+    		<div class="row row--small">{{ form_row(registrationForm.nombreEnfants) }}</div>
 		</div>
-
-{#
-		<div class="row">
-		{{ form_row(registrationForm.prenom) }}
-		{{ form_row(registrationForm.nom) }}
-		{{ form_row(registrationForm.email) }}
-		{{ form_row(registrationForm.telephone) }}
-		</div>
-		<div class="row">
-		{{ form_row(registrationForm.adresse) }}
-		{{ form_row(registrationForm.codePostal) }}
-		{{ form_row(registrationForm.ville) }}
-		</div>
-		<div class="row">
-		{{ form_row(registrationForm.dateDeNaissance) }}
-		{{ form_row(registrationForm.compositionFoyer) }}
-		{{ form_row(registrationForm.nombreEnfants) }}
-		</div>#}
 	</div>
 
-	<div class="container-form">
+	<div class="form-section">
 		<h3>mon groupe</h3>
-		
-    	{##### GROUPE je choisis un groupe existant - avec ID pour le JS #}
-		{{ form_row(registrationForm.groupe, { 'attr': {'class': 'form-input', 'id': 'groupe-liste'} }) }}
-    	{##### je crée un nouveau groupe #}
-		{{ form_row(registrationForm.nouveauGroupe, { 'attr': {'id': 'nouveau-groupe-field'} }) }}
-	
+
+		<div class="form-grid">  
+    		{##### GROUPE je choisis un groupe existant - avec ID pour le JS #}
+			<div class="row row--medium">
+				{{ form_row(registrationForm.groupe, { 'attr': {'class': 'form-input', 'id': 'groupe-liste'} }) }}
+    		</div>
+			{##### je crée un nouveau groupe #}
+			<div class="row row--medium">
+				{{ form_row(registrationForm.nouveauGroupe, { 'attr': {'id': 'nouveau-groupe-field'} }) }}
+			</div>
+		</div>
+
 		<div class="agree_item">
 			{{ form_widget(registrationForm.isReferent) }}
 			{{ form_label(registrationForm.isReferent) }}
 		</div>
     </div>
 
-    <div class="container-form">
+    <div class="form-section">
         <div class="agree_item">
 			{{ form_widget(registrationForm.agree_rgpd) }}
 			{{ form_label(registrationForm.agree_rgpd) }}
@@ -83,21 +75,24 @@
 		<div class="agree_item">
 			{{ form_widget(registrationForm.agree_fonctionnement) }}
 			{{ form_label(registrationForm.agree_fonctionnement) }}
-			{{ form_errors(registrationForm.agree_fonctionnement) }}
-			
+			{{ form_errors(registrationForm.agree_fonctionnement) }}	
 		</div>
 	</div>
 
-	<div class="container-form">
+	<div class="form-section row--medium">
 		{##### PASSWORD avec oeil templates/components/password_field.html.twig 
 		≠login :::avec plainpassword pour hashedpassword + on doit cacher le champs plainpassword natif symfony #}
-    	{% include 'components/password_field.html.twig' with { 
-			id: 'plainPasswordCustom', 
-			label: 'Mot de passe', 
-			autocomplete: 'new-password',
- 			field_name: registrationForm.plainPassword.vars.full_name,
-			errors: registrationForm.plainPassword.vars.errors
-		} %} 
+    	<div class="form-grid">
+			<div class="row row--medium">
+				{% include 'components/password_field.html.twig' with { 
+				id: 'plainPasswordCustom', 
+				label: 'Mot de passe', 
+				autocomplete: 'new-password',
+ 				field_name: registrationForm.plainPassword.vars.full_name,
+				errors: registrationForm.plainPassword.vars.errors
+				} %} 
+			</div>
+		</div>
 
 		{##### cacher le champs plainpassword natif symfony POUR ÉVITER QU’IL APPARAISSE À LA FIN #}
 		{#{{ form_row(registrationForm.plainPassword, { 'attr': {'style': 'display:none'} }) }}#} 

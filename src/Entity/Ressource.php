@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Entity\Categorie;
-use App\Entity\Photos;
 use App\Entity\Pole;
 use App\Entity\User;    
 use App\Repository\RessourceRepository;
@@ -66,18 +65,7 @@ class Ressource
     #[ORM\ManyToOne(inversedBy: 'ressource')]
     private ?User $user = null;
 
-    //----------------r e l a t i o n s  OneToOne
-    #[ORM\OneToOne(inversedBy: 'ressourcePrincipale', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: true)] 
-    private ?Photos $photoPrincipale = null;
-
     //----------------r e l a t i o n s  OneToMany
-    /**
-     * @var Collection<int, Photos>
-     */
-    #[ORM\OneToMany(mappedBy: 'ressource', targetEntity: Photos::class)]
-    private Collection $photosSupp;
-
     /**
      * @var Collection<int, Media>
      */
@@ -89,7 +77,6 @@ class Ressource
 
     public function __construct()
     {
-        $this->photosSupp = new ArrayCollection();
         $this->medias = new ArrayCollection();
     }
 
@@ -233,45 +220,6 @@ public function setStatut(string $statut): self
     {
         $this->user = $user;
 
-        return $this;
-    }
-
-    // --- Photo principale ---
-    public function getPhotoPrincipale(): ?Photos
-    {
-        return $this->photoPrincipale;
-    }
-
-    public function setPhotoPrincipale(?Photos $photoPrincipale): self
-    {
-        $this->photoPrincipale = $photoPrincipale;
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Photos>
-     */
-    public function getPhotosSupp(): Collection
-    {
-        return $this->photosSupp;
-    }
-
-    public function addPhotosSupp(Photos $photo): self
-    {
-        if (!$this->photosSupp->contains($photo)) {
-            $this->photosSupp->add($photo);
-            $photo->setRessource($this); // lien côté Photos
-        }
-        return $this;
-    }
-
-    public function removePhotosSupp(Photos $photo): self
-    {
-        if ($this->photosSupp->removeElement($photo)) {
-            if ($photo->getRessource() === $this) {
-                $photo->setRessource(null);
-            }
-        }
         return $this;
     }
 

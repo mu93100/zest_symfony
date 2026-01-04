@@ -2,11 +2,14 @@
 
 {% block title %}Reset your password{% endblock %}
 
-{% block body %}
-    <h1>nouveau mot de passe</h1>
+{% block modal_title %}reset-password{% endblock %}
+
+{% block modal_body %}
+    <h1>réinitialiser<br>mon mot<br>de passe</h1>
 
     {{ form_start(resetForm) }}
         {{ form_row(resetForm.plainPassword) }}
-        <button class="btn btn-primary">Valider</button>
+        <button class="form-submit">Valider</button>
     {{ form_end(resetForm) }}
 {% endblock %}
+

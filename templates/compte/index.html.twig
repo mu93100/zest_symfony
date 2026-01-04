@@ -9,7 +9,7 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>M O N    C O M P T E </h1>
+    <h2>M O N    C O M P T E </h2>
 
     {{ form_start(form) }}
 
@@ -26,12 +26,12 @@
         {{ form_row(form.compositionFoyer) }}
         {{ form_row(form.nombreEnfants) }}
 
-        <h2>Mon groupe</h2>
+        <h4>Mon groupe</h4>
         {{ form_row(form.groupe) }}
         {{ form_row(form.nouveauGroupe) }}
         {{ form_row(form.isReferent) }}
 
-        <h2>Changer mon mot de passe</h2>
+        <h4>Changer mon mot de passe</h4>
         {{ form_row(form.newPassword) }}
 
     </div>

@@ -13,44 +13,30 @@
     padding: 2.7rem 4.5rem 3rem 4.5rem;
 }
 
-/* .row { 
-    display: flex;  
-    flex-wrap: wrap; 
-} */
+
 .row { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    display: flex;
+    flex-direction: column;  /* label au dessus de input  */
+    width: 100%;
 }
 
-/* ***************GRID  */
+/* --------- I N P U T   GRID  */
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(12, 1fr); 
+    grid-template-columns: repeat(16, 1fr); 
 }
 
-/* .field {
-    display: flex;
-    flex-direction: column;
-} */
+.row--small { grid-column: span 3;}
+.row--medium { grid-column: span 4;}
+.row--large { grid-column: span 5;}
+.row--xlarge { grid-column: span 8;}
+.row--full { grid-column: span 16;}
 
-.field--small { grid-column: span 2;}
-.field--medium { grid-column: span 3;}
-.field--large { grid-column: span 5;}
-.field--xlarge { grid-column: span 7;}
-.field--full { grid-column: span 12;}
-
-/* registration */
-/* .agree_section {
-    display: flex;
-    flex-direction: column;
-    /* align-items: flex-start; */
-    /* gap: 1rem;
-}  */
-
-.agree_item {
+.agree_item, .form-check {
     display: flex;
     align-items: flex-start;
     gap: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
 .agree_item input[type="checkbox"], input[type="checkbox"] {
@@ -88,29 +74,15 @@
     to   { opacity: 1; transform: translateY(0); }
 }
 
-/* --- TITRE --- */
-h2 {
-    font-size: 3.7rem;
-    font-weight: 850;
-    letter-spacing: 0.1rem;
-    line-height: 3.8rem;
-    margin-bottom: 5.5rem;
-    color: #FFFFFF;
-}
 
-h3 {
-    font-size: 1.5rem;
-    font-weight: 850;
-    letter-spacing: 0.05rem;
-    color: black;
-    margin-bottom: 0.8rem;
-}
 
 /* --- CHAMPS --- */
-.container-form {
-    margin-top: 1.5rem;
+.form-section {
+    margin-top: 3.5rem;
     font-size: 0.8rem;
 }
+/* form field pour CONNEXION et RESET MDP
+pour les champs de formulaire avec 1 seul input width=100% */
 .form-field {
     margin-bottom: 0.5rem;
 }

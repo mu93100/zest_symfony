@@ -21,8 +21,49 @@ body {
     font-weight: 300;
     font-style: normal;
 }
-
-
+/* --- F O N T S --- */
+/* figma 46/48px */
+h1 {
+    font-size: 3.7rem;
+    font-weight: 850;
+    letter-spacing: 0.1rem;
+    line-height: 3.8rem;
+    margin-bottom: 5.5rem;
+    color: #FFFFFF;
+}
+/* figma 36px */
+h2 {
+    font-size: 2rem;
+    font-weight: 850;
+    letter-spacing: 0.05rem;
+    color: black;
+    margin-bottom: 0.8rem;
+}
+/* figma 32px */
+h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 0.05rem;
+    color: black;
+    margin-bottom: 0.3rem;
+}
+/* figma 17px */
+h4 {
+    font-size: 0.8rem;
+    font-weight: 850;
+    letter-spacing: 0.1rem;
+    line-height: 3.8rem;
+    margin-bottom: 5.5rem;
+    color: #FFFFFF;
+}
+/* figma 15px */
+h5 {
+    font-size: 0.7rem;
+    font-weight: 850;
+    letter-spacing: 0.05rem;
+    color: black;
+    margin-bottom: 0.8rem;
+}
 /* registration */
 
 /* recap adhesion sur page accueil */

@@ -3,28 +3,28 @@
 {% block title %}adhesion{% endblock %}
 
 {% block body %}
-	<div class="example-wrapper">
-		<h1>adhésion saison
-			{{ saison.nom }}</h1>
+	<main class= "form-container">
+		<h1>adhésion saison {{ saison.nom }}</h1>
 
-		{# Affichage des messages flash OPTION 2 FLASH AVEC _recap # } #}
+		{# affichage des messages flash #}
 		{% for message in app.flashes('success') %}
 			<div class="alert alert-success">
 				{{ message|raw }}
 			</div>
 		{% endfor %}
 
-		{# Formulaire d'adhésion #}
+		{# affichage du nom mail groupe du user connecté #}
 		{% if app.user %} <p>[ {{ app.user.prenom }} ({{ app.user.email }}) du groupe {{ app.user.groupe.nom }} ]</p>
 		{% else %}
 			<p>E R R O R   vous devez vous connecter avant l'adhesion de la saison</p>
 		{% endif %}
 
-		{{ form_errors(adhesionForm) }}
 
+		{{ form_errors(adhesionForm) }}
 		{{ form_start(adhesionForm) }}
-		<div>
-			<h2>modifier les infos groupe</h2>
+
+		<div class="form-section">
+			<h3>modifier les infos groupe</h3>
 			{# <a href="https://umap.openstreetmap.fr/fr/map/cartographie-zest-2024_1119693" target="_blank">
 				<img src="{{ asset('images/map.webp') }}" alt="Plan d'accès">
 			</a> #}
@@ -32,7 +32,7 @@
 			{{ form_row(adhesionForm.nouveauGroupe) }}
 			{{ form_row(adhesionForm.adresseDistribNouveau) }}
 			{{ form_row(adhesionForm.villeNouveau) }}
-			<h2>à remplir si je suis référent.e</h2>
+			<h3>à remplir si je suis référent.e</h3>
 			<div class="form-check">
 				{{ form_widget(adhesionForm.isReferent) }}
 				{{ form_label(adhesionForm.isReferent) }}
@@ -44,17 +44,29 @@
 			{{ form_row(adhesionForm.adresseDistrib) }}
 			{{ form_row(adhesionForm.ville) }}
 		</div>
-		<div>
-			<h2>motivations et attentes</h2>
-			{{ form_row(adhesionForm.motivations) }}
+		<div class="form-section">
+			<h3>motivations et attentes</h3>
+			<div class="form-check">
+				{{ form_label(adhesionForm.motivations) }}
+				{{ form_widget(adhesionForm.motivations) }}
+				
+			</div>
 			{{ form_row(adhesionForm.attentesTexte) }}
-			<h2>participation et disponibilités</h2>
-			{{ form_row(adhesionForm.dispos) }}
+
+			<h3>participation et disponibilités</h3>
+			<div class="form-check">
+				{{ form_label(adhesionForm.dispos) }}
+				{{ form_widget(adhesionForm.dispos) }}
+				
+			</div>
 			{{ form_row(adhesionForm.competencesTexte) }}
-			{{ form_row(adhesionForm.poles) }}
+			<div class="form-check">
+				{{ form_widget(adhesionForm.poles) }}
+				{{ form_label(adhesionForm.poles) }}
+			</div>			
 		</div>
-		<div>
-			<h2>informations importantes</h2>
+		<div class="form-section">
+			<h3>informations importantes</h3>
 			<p>
 				<span>Adhésion annuelle :</span>
 				10€ par foyer - adhésion solidaire : 5€ - adhésion de soutien : à partir de 15€<br>
@@ -65,7 +77,7 @@
 				<span>Lieu de livraison :</span>
 				On Sème Tous - 102 Rue Hoche, 93100 Montreuil</p>
 		</div>
-		<div class="agree_section">
+		<div class="form-section agree_section">
 			<label class="agree_item">
 				{{ form_widget(adhesionForm.agree_fonctionnement) }}
 				{{ form_label(adhesionForm.agree_fonctionnement) }}
@@ -85,7 +97,7 @@
 			{# Réservé admin si tu veux : #}
 			{{ form_row(adhesionForm.paiement) }}
 
-			<button type="submit" class="btn">j’adhère pour la saison</button>
+			<button type="submit" class="form-submit">j’adhère pour la saison</button>
 			{{ form_end(adhesionForm) }}
 		</div>
 	</div>

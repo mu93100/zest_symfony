@@ -1,32 +1,32 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello RecettesController!{% endblock %}
-
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<section class="recette-container">
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    {% set photo = recette.medias|filter(m => m.role == 'photo_principale')|first %}
+    {% if photo %}
+        <img src="{{ asset('uploads/media/' ~ photo.nomFichier) }}" alt="{{ photo.description }}" class="recette-photo">
+    {% endif %}
 
+    <h1>{{ recette.titre }}</h1>
 
-{# Récupérer la photo principale #}
-{% set photoPrincipale = recette.medias|filter(m => m.role == 'photo_principale')|first %}
-{# afficher la photo principale #}
-{% if photoPrincipale %}
-    <img src="{{ asset('uploads/media/' ~ photoPrincipale.nomFichier) }}" alt="{{ photoPrincipale.description }}">
-{% endif %}
+    <p class="meta">
+        Publiée le {{ recette.datePublication|date('d/m/Y') }} par {{ recette.auteurice.nom }}
+        — pour {{ recette.nombreMangeurs }} mangeurs
+    </p>
 
+    <h3>Ingrédients</h3>
+    <p>{{ recette.ingredients }}</p>
 
+    <h3>Description</h3>
+    <p>{{ recette.description|nl2br }}</p>
 
-
-
-    This friendly message is coming from:
+    <h3>Produits utilisés</h3>
     <ul>
-        <li>Your controller at <code>C:/Users/EDW2425/Desktop/zest_symfony/src/Controller/RecettesController.php</code></li>
-        <li>Your template at <code>C:/Users/EDW2425/Desktop/zest_symfony/templates/recettes/index.html.twig</code></li>
+        {% for produit in recette.produit %}
+            <li>{{ produit.nom }}</li>
+        {% endfor %}
     </ul>
-</div>
+
+</section>
 {% endblock %}

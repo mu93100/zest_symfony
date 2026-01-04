@@ -9,7 +9,7 @@
             
         {% if results.ressources|length > 0 %}
             <section>
-                <h2>ressources ({{ results.ressources|length }})</h2>
+                <h4>ressources ({{ results.ressources|length }})</h4>
                 {% for ressource in results.ressources %}
                     <div class="search-result">
                         <a href="{{ path('app_ressource_show', {'id': ressource.id}) }}">{{ ressource.nom }}</a>
@@ -19,7 +19,7 @@
         {% endif %}
         {% if results.produits|length > 0 %}
             <section>
-                <h2>Produits ({{ results.produits|length }})</h2>
+                <h4>Produits ({{ results.produits|length }})</h4>
                 {% for produit in results.produits %}
                     <div class="search-result">
                         <a href="{{ path('app_produit_show', {'id': produit.id}) }}">{{ produit.nom }}</a>
@@ -30,7 +30,7 @@
 
         {% if results.producteurices|length > 0 %}
             <section>
-                <h2>producteurices ({{ results.producteurices|length }})</h2>
+                <h4>producteurices ({{ results.producteurices|length }})</h4>
                 {% for producteurice in results.producteurices %}
                     <div class="search-result">
                         <a href="{{ path('app_producteurice_show', {'id': producteurice.id}) }}">{{ producteurice.nom }}</a>
@@ -41,7 +41,7 @@
 
         {% if results.recettes|length > 0 %}
             <section>
-                <h2>Recettes ({{ results.recettes|length }})</h2>
+                <h4>Recettes ({{ results.recettes|length }})</h4>
                 {% for recette in results.recettes %}
                     <div class="search-result">
                         <a href="{{ path('app_recette_show', {'id': recette.id}) }}">{{ recette.titre }}</a>
@@ -51,7 +51,7 @@
         {% endif %}
         {% if results.poles|length > 0 %}
             <section>
-                <h2>poles ({{ results.poles|length }})</h2>
+                <h4>poles ({{ results.poles|length }})</h4>
                 {% for pole in results.poles %}
                     <div class="search-result">
                         <a href="{{ path('app_pole_show', {'id': pole.id}) }}">{{ pole.titre }}</a>
