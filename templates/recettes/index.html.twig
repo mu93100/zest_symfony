@@ -11,6 +11,18 @@
 <div class="example-wrapper">
     <h1>Hello {{ controller_name }}! ✅</h1>
 
+
+{# Récupérer la photo principale #}
+{% set photoPrincipale = recette.medias|filter(m => m.role == 'photo_principale')|first %}
+{# afficher la photo principale #}
+{% if photoPrincipale %}
+    <img src="{{ asset('uploads/media/' ~ photoPrincipale.nomFichier) }}" alt="{{ photoPrincipale.description }}">
+{% endif %}
+
+
+
+
+
     This friendly message is coming from:
     <ul>
         <li>Your controller at <code>C:/Users/EDW2425/Desktop/zest_symfony/src/Controller/RecettesController.php</code></li>

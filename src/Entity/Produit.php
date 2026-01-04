@@ -26,15 +26,27 @@ class Produit
     #[ORM\Column(length: 255)]
     private ?string $photo = null;
 
+    //---------------- r e l a t i o n s  ManyToMany
     /**
      * @var Collection<int, Producteurice>
      */
     #[ORM\ManyToMany(targetEntity: Producteurice::class, mappedBy: 'produit')]
     private Collection $producteurices;
 
+    //---------------- r e l a t i o n s  OneToMany
+    /**
+     * @var Collection<int, Media>
+     */
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'produit')]
+    private Collection $medias;
+
+
+
+
     public function __construct()
     {
         $this->producteurices = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,6 +112,35 @@ class Produit
     {
         if ($this->producteurices->removeElement($producteurice)) {
             $producteurice->removeProduit($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Media>
+     */
+    public function getMedias(): Collection
+    {
+        return $this->medias;
+    }
+
+    public function addMedia(Media $media): static
+    {
+        if (!$this->medias->contains($media)) {
+            $this->medias->add($media);
+            $media->setProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedia(Media $media): static
+    {
+        if ($this->medias->removeElement($media)) {
+            if ($media->getProduit() === $this) {
+                $media->setProduit(null);
+            }
         }
 
         return $this;

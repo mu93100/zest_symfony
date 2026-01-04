@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Résultat de la recherche " {{ query }} "{% endblock %}
+
+{% block body %}
+<div class="search-results">
+    {% if query %}
+        <h1>{{ query }} → {{ results|filter(results => results|length > 0)|length }} section{{ results|filter(v => v|length > 0)|length > 1 ? 's' }} trouvé{{ results|filter(v => v|length > 0)|length > 1 ? 'es' }}</h1>
+            
+        {% if results.ressources|length > 0 %}
+            <section>
+                <h2>ressources ({{ results.ressources|length }})</h2>
+                {% for ressource in results.ressources %}
+                    <div class="search-result">
+                        <a href="{{ path('app_ressource_show', {'id': ressource.id}) }}">{{ ressource.nom }}</a>
+                    </div>
+                {% endfor %}
+            </section>
+        {% endif %}
+        {% if results.produits|length > 0 %}
+            <section>
+                <h2>Produits ({{ results.produits|length }})</h2>
+                {% for produit in results.produits %}
+                    <div class="search-result">
+                        <a href="{{ path('app_produit_show', {'id': produit.id}) }}">{{ produit.nom }}</a>
+                    </div>
+                {% endfor %}
+            </section>
+        {% endif %}
+
+        {% if results.producteurices|length > 0 %}
+            <section>
+                <h2>producteurices ({{ results.producteurices|length }})</h2>
+                {% for producteurice in results.producteurices %}
+                    <div class="search-result">
+                        <a href="{{ path('app_producteurice_show', {'id': producteurice.id}) }}">{{ producteurice.nom }}</a>
+                    </div>
+                {% endfor %}
+            </section>
+        {% endif %}
+
+        {% if results.recettes|length > 0 %}
+            <section>
+                <h2>Recettes ({{ results.recettes|length }})</h2>
+                {% for recette in results.recettes %}
+                    <div class="search-result">
+                        <a href="{{ path('app_recette_show', {'id': recette.id}) }}">{{ recette.titre }}</a>
+                    </div>
+                {% endfor %}
+            </section>
+        {% endif %}
+        {% if results.poles|length > 0 %}
+            <section>
+                <h2>poles ({{ results.poles|length }})</h2>
+                {% for pole in results.poles %}
+                    <div class="search-result">
+                        <a href="{{ path('app_pole_show', {'id': pole.id}) }}">{{ pole.titre }}</a>
+                    </div>
+                {% endfor %}
+            </section>
+        {% endif %}
+    {% else %}
+        <p>Tape un mot dans la recherche !</p>
+    {% endif %}
+</div>
+{% endblock %}

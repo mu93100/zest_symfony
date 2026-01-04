@@ -78,12 +78,19 @@ class Ressource
     #[ORM\OneToMany(mappedBy: 'ressource', targetEntity: Photos::class)]
     private Collection $photosSupp;
 
+    /**
+     * @var Collection<int, Media>
+     */
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'ressource')]
+    private Collection $medias;
+
 
 
 
     public function __construct()
     {
         $this->photosSupp = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -265,6 +272,35 @@ public function setStatut(string $statut): self
                 $photo->setRessource(null);
             }
         }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Media>
+     */
+    public function getMedias(): Collection
+    {
+        return $this->medias;
+    }
+
+    public function addMedia(Media $media): static
+    {
+        if (!$this->medias->contains($media)) {
+            $this->medias->add($media);
+            $media->setRessource($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedia(Media $media): static
+    {
+        if ($this->medias->removeElement($media)) {
+            if ($media->getRessource() === $this) {
+                $media->setRessource(null);
+            }
+        }
+
         return $this;
     }
 }

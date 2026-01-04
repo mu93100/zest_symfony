@@ -11,7 +11,18 @@
         <a class="pill pill-black" href="{{ path('app_login') }}">se connecter</a>
       </div>
       <div class="pill-group">
-        <a class="pill research" href="{#{{ path('app_recherche') }}#}">rechercher</a>
+        <form method="get" action="{{ path('app_recherche') }}" class="search-form">
+            <input
+                type="search"
+                name="q"
+                class="pill pill-search-input"
+                placeholder="rechercher"
+                value="{{ searchQuery ?? app.request.get('q') }}"
+            >
+            <input type="submit" style="display: none;">
+        </form>
+        {# search avec Controller/SearchController.php + templates/search/index.html.twig #}
+
         <a class="pill" href="https://www.socleo.com/demandez-une-demo/">commander</a>
         {#<a class="pill" href="{{ path('faq') }}">F.A.Q</a>
         <a class="pill" href="{{ path('app_recettes') }}">recettes</a>#}

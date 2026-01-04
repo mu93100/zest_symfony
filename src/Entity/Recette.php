@@ -33,9 +33,6 @@ class Recette
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $photo = null;
-
 //----------------r e l a t i o n s  ManyToMany
     /**
      * @var Collection<int, Produit>
@@ -48,11 +45,20 @@ class Recette
     #[ORM\JoinColumn(nullable: false)]
     private ?User $auteurice = null;
 
+    /**
+     * @var Collection<int, Media>
+     */
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'recette')] 
+    private Collection $medias;
+
+
+
 
 
     public function __construct()
     {
         $this->produit = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -121,17 +127,7 @@ class Recette
         return $this;
     }
 
-    public function getPhoto(): ?string
-    {
-        return $this->photo;
-    }
 
-    public function setPhoto(string $photo): static
-    {
-        $this->photo = $photo;
-
-        return $this;
-    }
 
     // public function getUser(): ?User
     // {
@@ -181,4 +177,32 @@ class Recette
         return $this;
     }
 
+    /**
+     * @return Collection<int, Media>
+     */
+    public function getMedias(): Collection
+    {
+        return $this->medias;
+    }
+
+    public function addMedia(Media $media): static
+    {
+        if (!$this->medias->contains($media)) {
+            $this->medias->add($media);
+            $media->setRecette($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedia(Media $media): static
+    {
+        if ($this->medias->removeElement($media)) {
+            if ($media->getRecette() === $this) {
+                $media->setRecette(null);
+            }
+        }
+
+        return $this;
+    }
 }

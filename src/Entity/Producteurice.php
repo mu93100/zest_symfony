@@ -45,12 +45,20 @@ class Producteurice
     #[ORM\ManyToMany(targetEntity: Produit::class, inversedBy: 'producteurices')]
     private Collection $produit;
 
+    //---------------- r e l a t i o n s  OneToMany
+    /**
+     * @var Collection<int, Media>
+     */
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'producteurice')]
+    private Collection $medias;
+
 
 
 
     public function __construct()
     {
         $this->produit = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -162,6 +170,35 @@ class Producteurice
     public function removeProduit(Produit $produit): static
     {
         $this->produit->removeElement($produit);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Media>
+     */
+    public function getMedias(): Collection
+    {
+        return $this->medias;
+    }
+
+    public function addMedia(Media $media): static
+    {
+        if (!$this->medias->contains($media)) {
+            $this->medias->add($media);
+            $media->setProducteurice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedia(Media $media): static
+    {
+        if ($this->medias->removeElement($media)) {
+            if ($media->getProducteurice() === $this) {
+                $media->setProducteurice(null);
+            }
+        }
 
         return $this;
     }

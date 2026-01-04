@@ -1,0 +1,136 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\MediaRepository;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: MediaRepository::class)]
+class Media
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    
+    #[ORM\Column(length: 255)]
+    private ?string $nomFichier = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $description = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $type = null; // image, pdf, doc...
+
+    #[ORM\Column(length: 50)]
+    private ?string $role = null; // photo_principale, photo_supplementaire, fichier
+
+    //---------------- r e l a t i o n s  ManyToOne
+    #[ORM\ManyToOne(inversedBy: 'medias')]
+    private ?Recette $recette = null;
+
+    #[ORM\ManyToOne(inversedBy: 'medias')]
+    private ?Produit $produit = null;
+
+    #[ORM\ManyToOne(inversedBy: 'medias')]
+    private ?Producteurice $producteurice = null;
+
+    #[ORM\ManyToOne(inversedBy: 'medias')]
+    private ?Ressource $ressource = null;
+
+
+    
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getNomFichier(): ?string
+    {
+        return $this->nomFichier;
+    }
+
+    public function setNomFichier(string $nomFichier): static
+    {
+        $this->nomFichier = $nomFichier;
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    public function getRole(): ?string
+    {
+        return $this->role;
+    }
+
+    public function setRole(string $role): static
+    {
+        $this->role = $role;
+        return $this;
+    }
+
+    public function getRecette(): ?Recette
+    {
+        return $this->recette;
+    }
+
+    public function setRecette(?Recette $recette): static
+    {
+        $this->recette = $recette;
+        return $this;
+    }
+
+    public function getProduit(): ?Produit
+    {
+        return $this->produit;
+    }
+
+    public function setProduit(?Produit $produit): static
+    {
+        $this->produit = $produit;
+        return $this;
+    }
+
+    public function getProducteurice(): ?Producteurice
+    {
+        return $this->producteurice;
+    }
+
+    public function setProducteurice(?Producteurice $producteurice): static
+    {
+        $this->producteurice = $producteurice;
+        return $this;
+    }
+
+    public function getRessource(): ?Ressource
+    {
+        return $this->ressource;
+    }
+
+    public function setRessource(?Ressource $ressource): static
+    {
+        $this->ressource = $ressource;
+        return $this;
+    }
+}
