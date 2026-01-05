@@ -1,0 +1,46 @@
+@import 'pills.css'; 
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem;
+    background-color: black;
+}
+
+.logo-footer {
+    flex-shrink: 0; /* Logo à gauche */
+}
+
+.logo-footer img {
+    height: 3.1rem;
+    padding-left: 0.5rem; 
+    width: auto;
+} 
+
+.nav-footer {
+    flex: 1; /* prend l'espace dispo */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 1.2rem;
+}
+
+.pill-group {
+    align-items: end;
+}
+
+.footer-text {
+    font-size: 0.5rem;
+    color: white;
+    font-weight: 300;
+    margin-right: 0.3rem;
+    
+    /* margin: 0.4rem 0; */
+}
+.mentions{
+    background-color: black;
+    border: 0.01rem solid white;
+    color: white;
+    font-weight: 300;
+}

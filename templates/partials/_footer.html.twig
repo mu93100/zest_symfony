@@ -1,9 +1,35 @@
 <footer>
-  <nav class="footer-nav">
-    <ul>
-      <li><a href="{{ path('mentions_legales') }}">mentions légales</a></li>
-      <li><a href="{{ path('contact') }}">contact</a></li>
-    </ul>
-  </nav>
-  <p>&copy; corto zest {{ "now"|date("Y") }}</p>
+  <div class="logo-footer ">
+    <img src="/images/logo_b.png" alt="logo zest">
+  </div>
+
+  <div class="nav-footer">
+
+    <div class="nav-pill">
+
+      <!-- Groupe 1 -->
+      <div class="pill-group">
+        <a class="pill" href="{#{{ path('forum') }}#}">forum</a>
+        <a class="pill" href="{#{{ path('faq') }}#}">F.A.Q</a>
+        <a class="pill" href="{{ path('app_adhesion') }}">adhérer</a>
+        <a class="pill" href="https://www.socleo.com/demandez-une-demo/">commander</a>
+      </div>
+
+      <!-- Groupe 2 -->
+      <div class="pill-group">
+        <a class="pill" href="{#{{ path('app_contact') }}#}">contact</a>
+        <a class="pill" href="{#{{ path('app_recettes') }}#}">recettes</a>
+        <a class="pill" href="{#{{ path('app_calendrier') }}#}">calendrier</a>
+      </div>
+
+    </div>
+
+
+    <!-- Mentions légales -->
+    <div class="pill-group">
+    <p class="footer-text">©corto-zest 2025</p>
+      <a class="pill mentions" href="{#{{ path('app_mentions_legales') }}#}">mentions légales</a>
+    </div>
+
+  </div>
 </footer>

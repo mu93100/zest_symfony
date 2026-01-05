@@ -11,39 +11,42 @@
 {% endblock %}
 
 {% block modal_body %}
-<form action="{{ path('app_login') }}" method="post">
+     {# close modale et overlay #}
+     <button type="button" class="close" onclick="document.querySelector('.modal-overlay').remove();">✕</button>
 
-    <div class="form-field">
-        <label for="inputEmail">Email</label>
-        <input 
-            type="email" 
-            id="inputEmail" 
-            name="_username" 
-            value="{{ last_username }}" 
-            required 
-            autocomplete="email"
-            class="form-input"
-        >
-    </div>
+    <form action="{{ path('app_login') }}" method="post">
 
-    {% include 'components/password_field.html.twig' with {
-        id: 'inputPassword',
-        field_name: '_password',
-        label: 'Mot de passe',
-        autocomplete: 'current-password',
-        hasError: error is defined and error
-    } %}
-    
+        <div class="form-field">
+            <label for="inputEmail">Email</label>
+            <input 
+                type="email" 
+                id="inputEmail" 
+                name="_username" 
+                value="{{ last_username }}" 
+                required 
+                autocomplete="email"
+                class="form-input"
+            >
+        </div>
+
+        {% include 'components/password_field.html.twig' with {
+            id: 'inputPassword',
+            field_name: '_password',
+            label: 'Mot de passe',
+            autocomplete: 'current-password',
+            hasError: error is defined and error
+        } %}
 
 
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-    <button type="submit" class="form-submit">se connecter</button>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-    <div class="form-links">
-        <a href="{{ path('app_forgot_password_request') }}">mot de passe oublié</a>
-    </div>
+        <button type="submit" class="form-submit">se connecter</button>
 
-</form>
+        <div class="form-links">
+            <a href="{{ path('app_forgot_password_request') }}">mot de passe oublié</a>
+        </div>
+
+    </form>
 {% endblock %}
 

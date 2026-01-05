@@ -10,8 +10,8 @@
 
 
         {% block javascripts %}
-
             <script>
+                {# oeil password #}
                 function togglePasswordVisibility(inputId, button) {
                     const input = document.getElementById(inputId);
                     const img = button.querySelector('img');
@@ -26,12 +26,15 @@
                 }
             </script>
         {% endblock %}
+        
     </head>
     
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/pills.css') }}">
         <link rel="stylesheet" href="{{ asset('styles/header.css') }}">
         <link rel="stylesheet" href="{{ asset('styles/footer.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/nav_page.css') }}">
         <link rel="stylesheet" href="{{ asset('styles/form.css') }}">
         <link rel="stylesheet" href="{{ asset('styles/recette.css') }}">
 
@@ -64,7 +67,7 @@
             {% endblock %}
         </main>
 
-        {#{% include 'partials/_footer.html.twig' %}#}
+        {% include 'partials/_footer.html.twig' %}
     </body>
 </html>
 

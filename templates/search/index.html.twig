@@ -3,9 +3,10 @@
 {% block title %}Résultat de la recherche " {{ query }} "{% endblock %}
 
 {% block body %}
+<style> main, section, .search-results { background: aquamarine !important; } </style>
 <div class="search-results">
     {% if query %}
-        <h1>{{ query }} → {{ results|filter(results => results|length > 0)|length }} section{{ results|filter(v => v|length > 0)|length > 1 ? 's' }} trouvé{{ results|filter(v => v|length > 0)|length > 1 ? 'es' }}</h1>
+        <h3>{{ query }} : {{ results|filter(results => results|length > 0)|length }} références{{ results|filter(v => v|length > 0)|length > 1 ? 's' }} trouvée(s){{ results|filter(v => v|length > 0)|length > 1 ? 'es' }}</h3>
             
         {% if results.ressources|length > 0 %}
             <section>
@@ -60,7 +61,7 @@
             </section>
         {% endif %}
     {% else %}
-        <p>Tape un mot dans la recherche !</p>
+        <h4>Tape un mot dans la recherche !</h4>
     {% endif %}
 </div>
 {% endblock %}

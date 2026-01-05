@@ -1,18 +1,18 @@
+@import 'pills.css'; 
+
 header {
     display: flex;
     justify-content: space-between;
     align-items: end;
     padding: 1.2rem 1.2rem 0.5rem 1.2rem;
-    /* gap: 40px; */
     background-color: white;
 }
 
-/* Logo à gauche */
-.logo-header {
-    flex-shrink: 0;
+.logo-header{
+    flex-shrink: 0; /* Logo à gauche */
 }
 
-.logo-header img {
+.logo img {
     height: 4rem;
     width: auto;
 }
@@ -22,144 +22,7 @@ header {
     display: flex;
     flex-direction: column;
     align-items: end;
-    /* justify-content: space-between; */
     gap: 0.6rem;
-}
-
-/* -------- P I L L S -------- */
-/* Dans header.css */
-input[type="search"]:focus,
-.pill-search-input:focus,
-input.pill:focus {
-    outline: none !important;
-    box-shadow: none !important;
-    outline: 2px solid #000000 
-}
-
-.nav-pill-header {
-    margin-left: auto; /* pousse à droite */
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    align-items: flex-end;
-}
-
-
-/* Pills (reste identique) */
-.pill-group {
-    display: flex;
-    /* overflow: hidden; */
-}
-
-.pill {
-    width: 9.5rem;
-    text-align: end; 
-    height: 1.6rem;
-    padding: 0.35rem 1rem;
-    border-radius: 0.55rem;
-    border: 0.01rem solid #000000;
-    background: #FFFFFF;
-    color: black;
-    font-size: 0.6rem;
-    font-weight: 300;
-    text-decoration: none;
-    transition:  all 0.3s;
-    /* white-space: nowrap; */
-}
-
-.pill:hover {
-    /* background: #1DFF83; */
-    /* width: 9.36rem; */
-    /* font-weight: 900;
-    box-shadow: 0 0 0 0.07rem black; border inside  */
-}
-.pill:hover {
-    background: #1dff833d;
-    border-color: #1dff833d; /* #1dff8374; */
-    box-shadow: none;
-}
-
-
-.pill-black {
-    background: black;
-    color: white;
-    font-weight: 800;
-}
-.pill-black:hover {
-    background: #1DFF83;
-    font-weight: 900;
-    border-color: #1DFF83;
-    box-shadow: none;
-}
-/* -------- P I L L    S E A R C H -------- */
-.search-form {
-    display: contents; /* disparaît visuellement */
-    
-}
-
-.pill-search-input::placeholder {
-    color: black;
-} 
-
-.pill-search-input:hover {
-    width: 19rem;
-    background-color: white;
-    border-color: black;
-} 
-
-.pill-search-input:focus {
-    /* border: 0.17rem solid black; */
-    width: 19rem;
-    text-align: left; /* texte se décale à gauche quand grand */
-    font-weight: 300;
-}
-/* pour que le placeholder "rechercher" disparaisse au FOCUS */
-.pill-search-input:focus::placeholder {
-    color: transparent !important;
-    opacity: 0 !important;
-}
-
-/* pour que le placeholder "rechercher" disparaisse sur TOUS les navigateurs au FOCUS */
-.pill-search-input:focus::-webkit-input-placeholder { 
-    color: transparent !important; 
-}
-
-.pill-search-input:focus::-moz-placeholder { 
-    color: transparent !important; 
-}
-/* -------- P A G E  résultat  search/index.html.twig -------- */
-
-/* TOUJOURS allongé sur page recherche */
-body:has(.search-results) .pill-search-input,
-.search-results-page .pill-search-input,
-[route="app_recherche"] .pill-search-input {
-    width: 19rem !important;
-    text-align: left !important;
-}
-/* input "rechercher" allongé avec texte de la recherche à Gche 
-TANT qu'on est sur p. résultat de recherche*/
-.pill-search-input:focus {
-    width: 19rem !important;
-    text-align: left !important;
-}
-
-.search-results {
-    max-width: 800px;
-    margin: 2rem auto;
-}
-
-.search-result {
-    display: block;
-    padding: 1rem;
-    border: 1px solid #eee;
-    border-radius: 0.5rem;
-    margin-bottom: 0.5rem;
-    text-decoration: none;
-    color: #000;
-}
-
-.search-result:hover {
-    background: #f5f5f5;
 }
 
 /* -------- N A V   N A V -------- */
