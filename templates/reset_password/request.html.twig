@@ -1,19 +1,20 @@
+{% extends 'modal_base.html.twig' %}
 
-{% block body %}
-    <div class="container">
-        <div class="reset-password-modal">
-            <h1>réinitialiser mon mot de passe</h1>
-            {{ form_start(requestForm) }}
-                <div class="form-group">
-                    {{ form_label(requestForm.email, 'Email') }}
-                    {{ form_widget(requestForm.email, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(requestForm.email) }}
-                </div>
+{% block title %}mot de passe oublié{% endblock %}
+{% block modal_title %}mot de passe oublié{% endblock %}
 
-                <button type="submit" class="form-submit">
-                    Envoyer le lien de réinitialisation
-                </button>
-            {{ form_end(requestForm) }}
-        </div>
+{% block modal_body %}    
+    {{ form_start(requestForm) }}
+    
+    <div class="form-field">
+        {{ form_label(requestForm.email, 'Email') }}
+        {{ form_widget(requestForm.email, {'attr': {'class': 'form-input'}}) }}  <!-- ✅ form-input -->
+        {{ form_errors(requestForm.email) }}
     </div>
+
+    <button type="submit" class="form-submit submit-full">
+        Envoyer le lien de réinitialisation
+    </button>
+    
+    {{ form_end(requestForm, {'render_rest': false}) }}
 {% endblock %}

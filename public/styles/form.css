@@ -7,23 +7,27 @@
     background-color: #1DFF83; 
     font-weight: 900; 
 }
-
+/* --------------------------- FORMULAIRE QUESTIONNAIRE --------------------------- */ 
 .form-container {
     background: linear-gradient( #1DFF83 5%, #FFFFFF 50%, #FFFFFF 100% );
-    padding: 2.7rem 4.5rem 3rem 4.5rem;
+    padding: 3rem 4.5rem 3rem 4.5rem;
 }
 
+.form-section {
+    margin-top: 3.5rem;
+    font-size: 0.8rem;
+}
+
+/* --- I N P U T   GRID --- */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(16, 1fr); 
+}
 
 .row { 
     display: flex;
     flex-direction: column;  /* label au dessus de input  */
     width: 100%;
-}
-
-/* --------- I N P U T   GRID  */
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(16, 1fr); 
 }
 
 .row--small { grid-column: span 3;}
@@ -32,6 +36,7 @@
 .row--xlarge { grid-column: span 8;}
 .row--full { grid-column: span 16;}
 
+/* --- A G R E E   I T E M S --- */
 .agree_item, .form-check {
     display: flex;
     align-items: flex-start;
@@ -42,9 +47,9 @@
 .agree_item input[type="checkbox"], input[type="checkbox"] {
     accent-color: black;
 }
-/* --------------------------------- FORMULAIRE MODALE --------------------------------- */ 
-/* --- OVERLAY --- */
-.modal-overlay {
+
+/* --------------------------- FORMULAIRE MODALE / login+reset --------------------------- */ 
+.modal-overlay { /* --- arriere champ modale --- */
     position: fixed;
     inset: 0;
     background: rgba(255, 255, 255, 0.55); 
@@ -55,17 +60,21 @@
     z-index: 1000;
 }
 
-/* --- MODALE --- */
 .modal-box {
-    width: 90%;
-    max-width: 28rem;
+    /* width: 100%; */
+    max-width: 33rem;
     background: linear-gradient( #1DFF83 5%, #FFFFFF 50%, #FFFFFF 100% );
-    padding: 2.7rem 4.5rem 3rem 4.5rem;
+    padding: 3rem 4.5rem 3.9rem 4.5rem;
     border-radius: 2.5rem;
     border: 0.15rem solid black;
     box-shadow: 0 0.8rem 0 black;
     animation: modalFade 0.25s ease-out;
     text-align: left;
+    font-size: 0.8rem;  
+}
+
+.modal-content {
+    margin-top: 6rem;
 }
 
 /* Animation d’apparition */
@@ -74,15 +83,6 @@
     to   { opacity: 1; transform: translateY(0); }
 }
 
-
-
-/* --- CHAMPS --- */
-.form-section {
-    margin-top: 3.5rem;
-    font-size: 0.8rem;
-}
-/* form field pour CONNEXION et RESET MDP
-pour les champs de formulaire avec 1 seul input width=100% */
 .form-field {
     margin-bottom: 0.5rem;
 }
@@ -92,23 +92,33 @@ pour les champs de formulaire avec 1 seul input width=100% */
     margin-bottom: 0.4rem;
     border: none;
     padding: 0;
-    color: #2d2e2d;
 }
 
-
-.form-input, .form-field select, .form-submit {
+.form-input, .form-field select {
     width: 100%;
     padding: 0.45em 1rem;
     border-radius: 0.6rem;
     border: 1px solid #000000;
     background: #FFFFFF;
-    color: #2d2e2d;
 }
+
 .form-input:focus, .form-field select:focus {
-    outline: none;
-    border-color: #1DFF83;
-    box-shadow: 0 0 5px rgba(29, 255, 131, 0.5);
+    /* outline: 3px solid rgba(29, 255, 131, 0.5);
+    border-color: #1DFF83; */
+    outline: 3px solid black
 }
+
+/* --- mdp oublie --- */
+.form-links {
+    margin-top: 0.8rem;
+    text-align: right;
+}
+
+.form-links a {
+    text-decoration: underline;
+}
+
+
 /* --- MOT DE PASSE + BOUTON OEIL --- */
 .password-wrapper {
     position: relative;
@@ -131,39 +141,20 @@ pour les champs de formulaire avec 1 seul input width=100% */
     cursor: pointer;
 }
 
-
 .password-toggle img.eye-icon {
     width: 2.25rem;
     height: auto;
 }
 
-/* 
-.password-wrapper {
-    position: relative;
-    height: fit-content;
-}
-
-.password-toggle {
-    position: absolute;
-    right: 0.6rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    /* font-size: 0.1rem; */
-    /* opacity: 0.7; */
-/* } */
-
-/* .password-toggle:hover {
-    opacity: 1;
-} */
-
 /* --- BOUTON SUBMIT --- */
-.form-submit { 
+ .form-submit { /* pour TOUT */
     width: 60%;
+    padding: 0.45em 1rem;
+    border-radius: 0.6rem;
+    border: 1px solid #000000;
+    background: #FFFFFF;
     text-align: end;
-    margin-top: 1.5rem; 
+    margin-top: 2.1rem; 
     margin-left: auto; /* pousse le bouton à droite */ 
     display: block; /* pour que margin-left: auto fonctionne */    
     cursor: pointer;
@@ -176,18 +167,11 @@ pour les champs de formulaire avec 1 seul input width=100% */
     color: white;
 }
 
-/* --- mdp oublie --- */
-.form-links {
-    margin-top: 0.8rem;
-    text-align: right;
+.submit-full{
+    width: 100%;
 }
-
-.form-links a {
-    text-decoration: underline;
-}
-
-/* --- MESSAGE D’ERREUR --- */
-.form-error {
+/* --- MESSAGE D’ERREUR --- A SUPPRIMER   */
+/* .form-error {
     background: #ffe5e5;
     color: #a30000;
     padding: 0.7rem;
@@ -196,4 +180,4 @@ pour les champs de formulaire avec 1 seul input width=100% */
     text-align: center;
     font-weight: 600;
     border: 1px solid #ffb3b3;
-}
+} */

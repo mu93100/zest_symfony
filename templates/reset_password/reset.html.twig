@@ -1,3 +1,4 @@
+{# ecrit par symfony
 {% extends 'base.html.twig' %}
 
 {% block title %}Reset your password{% endblock %}
@@ -12,4 +13,26 @@
         <button class="form-submit">Valider</button>
     {{ form_end(resetForm) }}
 {% endblock %}
+#}
 
+
+{% extends 'modal_base.html.twig' %}
+
+{% block title %}réinitialiser mot de passe{% endblock %}
+{% block modal_title %}réinitialiser mon mot de passe{% endblock %}
+
+{% block modal_body %}
+    {{ form_start(resetForm) }}
+    
+    {% include 'components/password_field.html.twig' with {
+        id: 'inputPassword',
+        field_name: resetForm.plainPassword.vars.full_name,
+        label: 'Nouveau mot de passe',
+        autocomplete: 'new-password',
+        errors: resetForm.plainPassword.vars.errors
+    } %}
+
+    <button type="submit" class="form-submit submit-full">Valider</button>
+    
+    {{ form_end(resetForm, {'render_rest': false}) }}
+{% endblock %}
