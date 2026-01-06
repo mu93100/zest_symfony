@@ -1,9 +1,15 @@
 .nav-pill {
-    margin-left: auto; /* pousse à droite */
+    margin-left: auto; /* pousse à droite pour footer */
     display: flex;
     flex-direction: column;
     gap: 0;
     align-items: flex-end;
+}
+.nav-page-pill {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    align-items: flex-start;
 }
 
 .pill-group {
@@ -19,10 +25,18 @@
     border: 0.01rem solid #000000;
     background: #FFFFFF;
     color: black;
-    font-size: 0.6rem;
-    font-weight: 300;
+    font-size: 0.63rem;
+    font-weight: 500;
+    letter-spacing: 0.015rem;
     text-decoration: none;
     transition:  all 0.3s;
+}
+.pill-straight{
+    width: auto;
+    text-align: none;
+    padding: 0.35rem 0.45rem;
+    font-size: 0.6rem; 
+    font-weight: 200;
 }
 
 /*.pill:hover {
@@ -32,7 +46,7 @@
     box-shadow: 0 0 0 0.07rem black; border inside  
 }*/
 .pill:hover {
-    background: #1dff833d;
+    background: hsla(147, 100%, 56%, 0.239);
     border-color: #1dff833d; /* #1dff8374; */
     box-shadow: none;
 }
@@ -40,17 +54,40 @@
 .pill-black {
     background: black;
     color: white;
-    font-weight: 800;
+    font-weight: 700;
 }
 .pill-black:hover {
-    background: #1DFF83;
+    background: #00ff9d;
     font-weight: 900;
-    border-color: #1DFF83;
+    border-color: #00ff9d;
     box-shadow: none;
 }
 .pill-vert {
-    background: #1DFF83;
+    background: #00ff9d;
 }
+
+/* --- C O L O R S --- */
+/* vert fluo 1DFF83 remplacé par 00ff9d */
+
+.bgv {background-color: #00ff9d; }
+.bgvm {background-color: #1fff849f;}
+.bgvc {background-color: #B5FFD7;}
+.bgvf {background-color: #0B4023;}
+.bgvff {background-color: #0B2416;}
+.bgro {background-color: #ffd7c745;}
+.bgrose {background-color: #FFD8C8;}
+.bgpink {background-color: #FA04D9;}
+.bgm {background-color: #AE6D05;}
+.bgsaf {background-color: #B79331;}
+.bgmc {background-color: #b5923062;}
+.bgblue {background-color: #3C07FB;}
+.bgb {background-color: #B8C1FF;}
+.bgbc {background-color: #b8c1ff45;}
+.bgbd {background-color: #A91E1E;}
+.bgbdf {background-color: #761925;}
+.bgj {background-color: #f7ff00;}
+
+
 /* -------- P I L L    S E A R C H -------- */
 .search-form {
     display: contents; /* disparaît visuellement */

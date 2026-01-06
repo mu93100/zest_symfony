@@ -1,15 +1,15 @@
 .invalid-feedback { 
-    color: #1DFF83; 
+    color: #00ff9d; 
     font-weight: 900;  
 } 
 
 .is-invalid { 
-    background-color: #1DFF83; 
+    background-color: #00ff9d; 
     font-weight: 900; 
 }
 /* --------------------------- FORMULAIRE QUESTIONNAIRE --------------------------- */ 
 .form-container {
-    background: linear-gradient( #1DFF83 5%, #FFFFFF 50%, #FFFFFF 100% );
+    background: linear-gradient( #00ff9d 5%, #FFFFFF 50%, #FFFFFF 100% );
     padding: 3rem 4.5rem 3rem 4.5rem;
 }
 
@@ -63,7 +63,7 @@
 .modal-box {
     /* width: 100%; */
     max-width: 33rem;
-    background: linear-gradient( #1DFF83 5%, #FFFFFF 50%, #FFFFFF 100% );
+    background: linear-gradient( #00ff9d 5%, #FFFFFF 50%, #FFFFFF 100% );
     padding: 3rem 4.5rem 3.9rem 4.5rem;
     border-radius: 2.5rem;
     border: 0.15rem solid black;
@@ -120,7 +120,7 @@
 
 .form-input:focus, .form-field select:focus {
     /* outline: 3px solid rgba(29, 255, 131, 0.5);
-    border-color: #1DFF83; */
+    border-color: #00ff9d; */
     outline: 3px solid black
 }
 

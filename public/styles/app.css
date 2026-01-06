@@ -1,38 +1,87 @@
-@import 'header.css';  
-@import 'footer.css';
-@import 'form.css';  
+@import "header.css";
+@import "footer.css";
+@import "form.css";
 
-*{
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Inter', sans-serif;
-    letter-spacing: 0.06rem;
     /* border: 1px dotted blue; */
 }
+
+/* font INTER /CDN Cloudflare*/
+:root {
+    font-family: Inter, sans-serif;
+    font-feature-settings: "liga" 1, "calt" 1;
+    /* fix for Chrome */
+}
+
+@supports (font-variation-settings: normal) {
+    :root {
+        font-family: InterVariable, sans-serif;
+    }
+}
+
+/* OU google /+grasse +rammassée
+// <weight>: Use a value from 100 to 900
+// <uniquifier>: Use a unique and descriptive class name
+
+.inter-<uniquifier> {
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: <weight>;
+    font-style: normal;
+} */
 
 body {
     /* background-image: url('/images/nuage.jpg');
     background-repeat: no-repeat;
     background-size: cover; */
-    background-color: white 
-    font-family: "Inter", sans-serif;
+    background-color: white;
+    /* font-family: "Inter", sans-serif;
     font-optical-sizing: auto;
     font-weight: 300;
-    font-style: normal;
-}   
-.container_fonctionnement{
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1.2rem;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* pour footer en bas */
+    font-style: normal; */
 }
 
-main{
+/* pages full width  */
+.container-accueil,
+.container-ressource,
+.container-ressources-detail {
+    /* max-width: 1200px; */
+    margin: 8rem 0 2rem 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.5rem;
+    font-weight: 200;
+    letter-spacing: 0.02rem;
+    /* min-height: 100vh; */
+}
+
+/* pages avec margin  */
+.container-fonctionnement,
+.container-recette,
+.container-produit,
+.container-producteurice,
+.container-contact,
+.container-mentions-legales {
+    margin: 8rem 1.2rem auto 10rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+    font-size: 0.65rem;
+    font-weight: 200;
+    letter-spacing: 0.06rem;
+    /* min-height: 100vh; */
+}
+
+main {
     background: white;
-    flex: 1; /* pour footer en bas / main prend toute la place */
+    min-height: 100vh;
+    /* pour footer en bas */
+    flex: 1;
+    /* pour footer en bas / main prend toute la place */
 }
 
 section {
@@ -45,18 +94,20 @@ h1 {
     font-size: 3.7rem;
     font-weight: 850;
     letter-spacing: 0.1rem;
-    line-height: 3.8rem;
+    /* line-height: 3.8rem; */
     margin-bottom: 5.5rem;
-    color: #FFFFFF;
+    color: #ffffff;
 }
+
 /* figma 36px */
 h2 {
-    font-size: 2rem;
-    font-weight: 850;
-    letter-spacing: 0.05rem;
+    font-size: 1.9rem;
+    font-weight: 900;
+    letter-spacing: 0.15rem;
     color: black;
     margin-bottom: 0.8rem;
 }
+
 /* figma 32px */
 h3 {
     font-size: 1.5rem;
@@ -65,24 +116,29 @@ h3 {
     color: black;
     margin-bottom: 0.3rem;
 }
+
 /* figma 17px */
 h4 {
-    font-size: 0.8rem;
+    font-size: 1.05rem;
     font-weight: 850;
-    letter-spacing: 0.1rem;
-    line-height: 3.8rem;
-    margin-bottom: 5.5rem;
-    color: #FFFFFF;
+    letter-spacing: 0.06rem;
+    /* line-height: 3.8rem; */
 }
+
 /* figma 15px */
 h5 {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     font-weight: 850;
     letter-spacing: 0.05rem;
     color: black;
     margin-bottom: 0.8rem;
 }
+
 /* registration */
+
+.it {
+    font-style: italic;
+}
 
 /* recap adhesion sur page accueil */
 .adhesion-recap {
@@ -90,7 +146,6 @@ h5 {
     /* ton style existant */
     width: 50%;
     border: 1 dotted white;
-
 }
 
 .adhesion-recap-close {
@@ -102,4 +157,3 @@ h5 {
     font-size: 1.2rem;
     cursor: pointer;
 }
-    

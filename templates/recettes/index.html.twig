@@ -2,40 +2,44 @@
 
 {% block body %}
 <div class="container-recette">
-    <div class="nav-recette">
-        <div class="nav-pill">
-            <form method="get" action="{{ path('app_recherche') }}" class="search-form">
-                <input
-                    type="search"
-                    name="q"
-                    class="pill pill-search-input"
-                    placeholder="rechercher"
-                    value="{{ searchQuery ?? app.request.get('q') }}"
-                >
-                <input type="submit" style="display: none;">
-            </form>
-        </div>
+    <div class="section-nav-recette">
+        <h2>Les recettes</h2>
 
-        <div class="nav-pill">
-            <div class="pill-group">
-                <a class="pill pill-black" href="{# {{ path('app_recette_new') }} #}">ajouter une recette</a>
+        <div class="nav-recette">
+            <div class="nav-pill">
+                <form method="get" action="{{ path('app_recherche') }}" class="search-form">
+                    <input
+                        type="search"
+                        name="q"
+                        class="pill pill-search-input"
+                        placeholder="rechercher"
+                        value="{{ searchQuery ?? app.request.get('q') }}"
+                    >
+                    <input type="submit" style="display: none;">
+                </form>
             </div>
+        
+            <div class="nav-page-pill">
+                <div class="pill-group">
+                    <a class="pill" href="{# {{ path('app_recette_new') }} #}">ajouter une recette</a>
+                </div>
 
-            <div class="pill-group">
-                <a class="pill" href="?produit=pates">PÂTES</a>
-                <a class="pill" href="?produit=riz">RIZ</a>
-                <a class="pill" href="?produit=legumineuse">LÉGUMINEUSES</a>
-                <a class="pill" href="?produit=fromage">FROMAGE</a>
-                <a class="pill" href="?produit=fromage">AGRUMES</a>
-            </div>
+                <div class="pill-group">
+                    <a class="pill pill-straight bgro" href="?produit=pates">PÂTES</a>
+                    <a class="pill pill-straight bgmc" href="?produit=riz">RIZ</a>
+                    <a class="pill pill-straight bgvc" href="?produit=legumineuse">LÉGUMINEUSES</a>
+                    <a class="pill pill-straight bgsaf" href="?produit=fromage">FROMAGE</a>
+                    <a class="pill pill-straight bgj" href="?produit=fromage">AGRUMES</a>
+                </div>
 
-            <div class="pill-group">
-                <a class="pill" href="?producteurice=galline">Galline Felici</a>
-                <a class="pill" href="?producteurice=iris">Agricola IRIS</a>
-                <a class="pill" href="?producteurice=lesca">Lesca Simone</a>
-                <a class="pill" href="?producteurice=astra">Astra IRIS</a>
-                <a class="pill" href="?producteurice=antico">Antico</a>
-                <a class="pill" href="?producteurice=biosmurra">Biosmurra</a>
+                <div class="pill-group">
+                    <a class="pill pill-straight" href="?producteurice=galline">Galline Felici</a>
+                    <a class="pill pill-straight" href="?producteurice=iris">Agricola IRIS</a>
+                    <a class="pill pill-straight" href="?producteurice=lesca">Lesca Simone</a>
+                    <a class="pill pill-straight" href="?producteurice=astra">Astra IRIS</a>
+                    <a class="pill pill-straight" href="?producteurice=antico">Antico Colle Fiorito</a>
+                    <a class="pill pill-straight" href="?producteurice=biosmurra">Biosmurra</a>
+                </div>
             </div>
         </div>
     </div>
@@ -44,38 +48,42 @@
         {% for recette in recettes %}
 
             <div class="recette">
-                <p>Publié le {{ recette.datePublication|date('d/m/Y') }} par {{ recette.auteurice.prenom }}  
-                    du groupe {{ recette.auteurice.groupe.nom }}</p>
-                
-                <div>
-                    <h4>{{ recette.titre }}</h4>
-                    <p>pour {{ recette.nombreMangeurs }} personnes</p>
-                    <div class="pill-group">
-                        {% for produit in recette.produit %}
-                            <span class="pill">
-                                {{ produit.nom }}
-                                {% if produit.producteurices %} 
-                                    <small>({{ produit.producteurices.nom }})</small> 
-                                {% endif %}
-                            </span>
-                        {% endfor %}
-                    </div>
+                <div class="recette-titre">
+                    <p class="it">Publié le {{ recette.datePublication|date('d/m/Y') }} par {{ recette.auteurice.prenom }}  
+                        du groupe {{ recette.auteurice.groupe.nom }}</p>
 
+                    <div class="recette-titre-titre">
+                        <h4>{{ recette.titre }}</h4>
+                        <p class="it">pour {{ recette.nombreMangeurs }} personnes</p>
+                        <div class="pill-group">
+                            {% for produit in recette.produit %}
+                                <span class="pill">
+                                    {{ produit.nom }}
+                                    {% if produit.producteurices %} 
+                                        <small>({{ produit.producteurices.nom }})</small> 
+                                    {% endif %}
+                                </span>
+                            {% endfor %}
+                        </div>
+
+                    </div>
                 </div>
-                
-                <div>
+
+                <div class="recette-texte">
                     <div>
                         <p><strong>Ingrédients :</strong></p>
                         <p>{{ recette.ingredients }}</p>                
                     </div>
+
                     <div>{{ recette.description }}</div>
-                    <div>
+
+                    <div class="recette-photo">
                     {% set photo = recette.medias|filter(m => m.role == 'photo_principale')|first %}
                         {% if photo %}
-                          <img src="{{ asset('uploads/media/' ~ photo.nomFichier) }}" alt="{{ photo.description }}" class="recette-photo">
+                          <img src="{{ asset('uploads/media/' ~ photo.nomFichier) }}" alt="{{ photo.description }}">
                         {% endif %}
                     </div>
-                </div>    
+                </div>  
                 
             </div>
         {% endfor %}
