@@ -1,32 +1,91 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<section class="recette-container">
+<div class="container-recette">
+    <div class="nav-recette">
+        <div class="nav-pill">
+            <form method="get" action="{{ path('app_recherche') }}" class="search-form">
+                <input
+                    type="search"
+                    name="q"
+                    class="pill pill-search-input"
+                    placeholder="rechercher"
+                    value="{{ searchQuery ?? app.request.get('q') }}"
+                >
+                <input type="submit" style="display: none;">
+            </form>
+        </div>
 
-    {% set photo = recette.medias|filter(m => m.role == 'photo_principale')|first %}
-    {% if photo %}
-        <img src="{{ asset('uploads/media/' ~ photo.nomFichier) }}" alt="{{ photo.description }}" class="recette-photo">
-    {% endif %}
+        <div class="nav-pill">
+            <div class="pill-group">
+                <a class="pill pill-black" href="{# {{ path('app_recette_new') }} #}">ajouter une recette</a>
+            </div>
 
-    <h1>{{ recette.titre }}</h1>
+            <div class="pill-group">
+                <a class="pill" href="?produit=pates">PÂTES</a>
+                <a class="pill" href="?produit=riz">RIZ</a>
+                <a class="pill" href="?produit=legumineuse">LÉGUMINEUSES</a>
+                <a class="pill" href="?produit=fromage">FROMAGE</a>
+                <a class="pill" href="?produit=fromage">AGRUMES</a>
+            </div>
 
-    <p class="meta">
-        Publiée le {{ recette.datePublication|date('d/m/Y') }} par {{ recette.auteurice.nom }}
-        — pour {{ recette.nombreMangeurs }} mangeurs
-    </p>
+            <div class="pill-group">
+                <a class="pill" href="?producteurice=galline">Galline Felici</a>
+                <a class="pill" href="?producteurice=iris">Agricola IRIS</a>
+                <a class="pill" href="?producteurice=lesca">Lesca Simone</a>
+                <a class="pill" href="?producteurice=astra">Astra IRIS</a>
+                <a class="pill" href="?producteurice=antico">Antico</a>
+                <a class="pill" href="?producteurice=biosmurra">Biosmurra</a>
+            </div>
+        </div>
+    </div>
 
-    <h3>Ingrédients</h3>
-    <p>{{ recette.ingredients }}</p>
+    <section class="section-recette">
+        {% for recette in recettes %}
 
-    <h3>Description</h3>
-    <p>{{ recette.description|nl2br }}</p>
+            <div class="recette">
+                <p>Publié le {{ recette.datePublication|date('d/m/Y') }} par {{ recette.auteurice.prenom }}  
+                    du groupe {{ recette.auteurice.groupe.nom }}</p>
+                
+                <div>
+                    <h4>{{ recette.titre }}</h4>
+                    <p>pour {{ recette.nombreMangeurs }} personnes</p>
+                    <div class="pill-group">
+                        {% for produit in recette.produit %}
+                            <span class="pill">
+                                {{ produit.nom }}
+                                {% if produit.producteurices %} 
+                                    <small>({{ produit.producteurices.nom }})</small> 
+                                {% endif %}
+                            </span>
+                        {% endfor %}
+                    </div>
 
-    <h3>Produits utilisés</h3>
-    <ul>
-        {% for produit in recette.produit %}
-            <li>{{ produit.nom }}</li>
+                </div>
+                
+                <div>
+                    <div>
+                        <p><strong>Ingrédients :</strong></p>
+                        <p>{{ recette.ingredients }}</p>                
+                    </div>
+                    <div>{{ recette.description }}</div>
+                    <div>
+                    {% set photo = recette.medias|filter(m => m.role == 'photo_principale')|first %}
+                        {% if photo %}
+                          <img src="{{ asset('uploads/media/' ~ photo.nomFichier) }}" alt="{{ photo.description }}" class="recette-photo">
+                        {% endif %}
+                    </div>
+                </div>    
+                
+            </div>
         {% endfor %}
-    </ul>
+    </section>
 
-</section>
+    {# bouton voir + #}
+    {% if recettes|length == 4 %}
+        <div class="recette-pagination">
+          <a href="{{ path('app_recettes', {'page': page + 1}) }}" class="pill pill-vert">voir + de recettes</a>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}
