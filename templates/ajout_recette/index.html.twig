@@ -1,20 +1,47 @@
-{% extends 'base.html.twig' %}
+{% extends 'modal_base.html.twig' %}
 
-{% block title %}Hello AjoutRecetteController!{% endblock %}
+{% block modal_body %}
+{# close modale et overlay #}
+    <button type="button" class="close" onclick="document.querySelector('.modal-overlay').remove();">✕</button>
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="form-container-gd ">
+        {{ form_start(recetteForm) }}
+        <h1>ajouter une recette</h1>
+        <div class="form-section-mini form-grid">
+            <div class="row row--xxl"> {{ form_row(recetteForm.titre) }} </div>
+            <div class="row row--medium"> {{ form_row(recetteForm.nombreMangeurs) }} </div>
+        </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+		<div class="form-section-mini form-check">
+			{{ form_label(recetteForm.produit) }}
+			{{ form_widget(recetteForm.produit) }}
+		</div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/EDW2425/Desktop/zest_symfony/src/Controller/AjoutRecetteController.php</code></li>
-        <li>Your template at <code>C:/Users/EDW2425/Desktop/zest_symfony/templates/ajout_recette/index.html.twig</code></li>
-    </ul>
-</div>
+        <div class="form-section-mini">{{ form_row(recetteForm.ingredients) }}</div>
+
+        <div class="form-section-mini"> {{ form_row(recetteForm.description) }} </div>
+
+        <div class="form-field photo-upload">
+            <label>Photo de la recette</label>
+            
+            <div class="file-input-wrapper">
+                <input 
+                    type="file" 
+                    id="recette_photo"
+                    name="{{ recetteForm.photo.vars.full_name }}"
+                    accept="image/*"
+                    class="file-hidden"
+                >
+            </div>
+            
+            {{ form_errors(recetteForm.photo) }}
+        </div>
+        
+
+<div class="form-section-mini media-up"> {{ form_row(recetteForm.photo) }} </div>
+        
+        {{ form_widget(recetteForm.submit) }} 
+    
+        {{ form_end(recetteForm) }}
+    </div>
 {% endblock %}

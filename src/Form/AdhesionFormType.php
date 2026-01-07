@@ -3,9 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Adhesion;
-use App\Entity\User;
 use App\Entity\Groupe;
-use App\Entity\Saison;
 use App\Entity\MontantAdhesion;
 use App\Entity\Motivation;
 use App\Entity\Dispo;
@@ -17,8 +15,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
 use App\Validator\Constraints\GroupeObligatoire;
 
 

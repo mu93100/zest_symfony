@@ -46,6 +46,7 @@ class Recette
     #[ORM\JoinColumn(nullable: false)]
     private ?User $auteurice = null;
 
+//----------------r e l a t i o n s  OneToMany
     /**
      * @var Collection<int, Media>
      */

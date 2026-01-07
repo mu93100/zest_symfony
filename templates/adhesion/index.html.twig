@@ -3,7 +3,7 @@
 {% block title %}adhesion{% endblock %}
 
 {% block body %}
-	<main class= "form-container">
+	<main class="form-container">
 		<h1>adhésion saison {{ saison.nom }}</h1>
 
 		{# affichage des messages flash #}
@@ -49,15 +49,13 @@
 			<div class="form-check">
 				{{ form_label(adhesionForm.motivations) }}
 				{{ form_widget(adhesionForm.motivations) }}
-				
 			</div>
 			{{ form_row(adhesionForm.attentesTexte) }}
 
 			<h3>participation et disponibilités</h3>
 			<div class="form-check">
 				{{ form_label(adhesionForm.dispos) }}
-				{{ form_widget(adhesionForm.dispos) }}
-				
+				{{ form_widget(adhesionForm.dispos) }}	
 			</div>
 			{{ form_row(adhesionForm.competencesTexte) }}
 			<div class="form-check">
