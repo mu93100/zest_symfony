@@ -21,24 +21,21 @@
 
         <div class="form-section-mini"> {{ form_row(recetteForm.description) }} </div>
 
-        <div class="form-field photo-upload">
-            <label>Photo de la recette</label>
-            
-            <div class="file-input-wrapper">
-                <input 
-                    type="file" 
-                    id="recette_photo"
-                    name="{{ recetteForm.photo.vars.full_name }}"
-                    accept="image/*"
-                    class="file-hidden"
-                >
-            </div>
-            
+        <div class="form-section-mini photo-upload">
+            {{ form_label(recetteForm.photo) }}
+            {{ form_widget(recetteForm.photo, {
+                attr: {
+                    class: 'file-inline',
+                    accept: 'image/*'
+                }
+            }) }}
             {{ form_errors(recetteForm.photo) }}
         </div>
+
+        
         
 
-<div class="form-section-mini media-up"> {{ form_row(recetteForm.photo) }} </div>
+
         
         {{ form_widget(recetteForm.submit) }} 
     

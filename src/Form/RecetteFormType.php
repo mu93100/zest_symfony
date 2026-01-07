@@ -44,7 +44,7 @@ class RecetteFormType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => "Description de la recette    [ Le texte sera publié à l' identique ]",
-                'attr' => ['placeholder' => 'soit drôle sérieux.se créatif.ve vénère militant.e .. on adorera tous les tons excepté les contenus haineux et discriminatoires']
+                'attr' => ['placeholder' => 'soit drôle sérieux.se créatif.ve vénère militant.e .. [ on adorera tous les tons, exceptés les contenus haineux et discriminatoires ]']
             ])
             ->add('photo', FileType::class, [
                 'label' => 'Photo de la recette',

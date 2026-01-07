@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Recette;
+use App\Entity\Media;
 use App\Form\RecetteFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,21 +14,46 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AjoutRecetteController extends AbstractController
 {
     #[Route('/ajout/recette', name: 'app_ajout_recette')]
-    public function index(Request $request, EntityManagerInterface $em): Response
+    public function index(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
         $recette = new Recette();
-        $recette->setDatePublication(new \DateTime());
-        $recette->setAuteurice($this->getUser());
+        $recette->setDatePublication(new \DateTimeImmutable());
 
         $form = $this->createForm(RecetteFormType::class, $recette);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // gestion de la photo (Media) si tu veux
+            // 🔥 Associer l’utilisateur connecté
+            $recette->setAuteurice($this->getUser());
+
+            // 🔥 Gestion de la photo
             $photoFile = $form->get('photo')->getData();
+
             if ($photoFile) {
-                // on fera l’upload ici
+
+                // Nom de fichier sécurisé
+                $originalName = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeName = $slugger->slug($originalName);
+                $newFilename = $safeName . '-' . uniqid() . '.' . $photoFile->guessExtension();
+
+                // Déplacement du fichier
+                $photoFile->move(
+                    $this->getParameter('uploads_directory'),
+                    $newFilename
+                );
+
+                // 🔥 Création du Media
+                $media = new Media();
+                $media->setNomFichier($newFilename);
+                $media->setDescription("Photo de la recette : " . $recette->getTitre());
+                $media->setType("image");
+                $media->setRole("photo_principale");
+
+                // 🔥 Lier le media à la recette
+                $media->setRecette($recette);
+
+                $em->persist($media);
             }
 
             $em->persist($recette);

@@ -1,19 +1,12 @@
-.invalid-feedback { 
-    color: #00ff9d; 
-    font-weight: 900;  
-} 
-
-.is-invalid { 
-    background-color: #00ff9d; 
-    font-weight: 900; 
-}
-/* ----------------------- FORMULAIRE QUESTIONNAIRE ----------------------- */ 
+/* ------------------- form sur page ------------------- */ 
 .form-container {
     padding: 3rem 4.5rem 3rem 4.5rem;
 }
+
 .form-container-gd {
-    padding: 2rem 3rem 2rem 3rem;
+    padding: 2rem 2.5rem 2rem 2.5rem;
 }
+
 .form-section {
     margin-top: 3.5rem;
     font-size: 0.8rem;
@@ -21,9 +14,31 @@
 
 .form-section-mini {
     margin-top: 1.1rem;
-    /* font-size: 0.8rem; */
 }
-/* --- I N P U T   GRID --- */
+
+.form-field {
+    margin-bottom: 0.5rem;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 0.4rem;
+    border: none;
+    padding: 0;
+}
+
+.form-input, .form-field select {
+    width: 100%;
+    padding: 0.45em 1rem;
+    border-radius: 0.6rem;
+    border: 1px solid #000000;
+    background: #FFFFFF;
+}
+
+.form-input:focus, .form-field select:focus {
+    outline: 3px solid black
+}
+/* --------------- I N P U T   GRID --------------- */
 .form-grid {
     display: grid;
     grid-template-columns: repeat(16, 1fr); 
@@ -42,65 +57,7 @@
 .row--xxl { grid-column: span 12;}
 .row--full { grid-column: span 16;}
 
-/* --------- A G R E E   I T E M S --------- */
-.agree_item, .form-check {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    padding-bottom: 0.5rem;
-}
-
-.agree_item input[type="checkbox"], input[type="checkbox"] {
-    accent-color: black;
-}
-
-textarea { 
-    width: 100%;
-    padding: 0.5rem;
-}
-/* --------- télécharger photos fichiers --------- */
-/* .media-up {
-    display: flex;
-    flex-direction: row;
-    gap: 2rem;
-    border: none!important;
-} */
-/* RECETTE PHOTO - Garde texte natif, enlève bordure input */
-.form-field input[type="file"] {
-    border: none !important;        /* ← ENLÈVE bordure input */
-    background: transparent !important;
-    padding: 0;
-    height: auto;
-}
-
-/* Style UNIQUEMENT le bouton "Parcourir" */
-/* .form-field input[type="file"]::file-selector-button {
-    border: none;
-    background: #1DFF83;
-    color: white;
-    padding: 0.5rem 1.5rem;
-    border-radius: 0.4rem;
-    margin-right: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-} */
-
-/* Texte "Aucun fichier choisi" */
-.form-field input[type="file"]::-webkit-file-upload-button {
-    background: transparent;
-    border: none;
-    color: #666;
-    padding: 0.5rem;
-}
-
-/* Cache padding inutile */
-input[type="file"]::-webkit-file-upload-button {
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-
-/* ----------------- FORMULAIRE MODALE / login+reset ---------------- */ 
+/* ----------------- form sur modale / login+reset+ ---------------- */ 
 .modal-overlay { /* --- arriere champ modale --- */
     position: fixed;
     inset: 0;
@@ -151,45 +108,46 @@ input[type="file"]::-webkit-file-upload-button {
     from { opacity: 0; transform: translateY(-18px); }
     to   { opacity: 1; transform: translateY(0); }
 }
-
-.form-field {
-    margin-bottom: 0.5rem;
+/* --------- A G R E E   I T E M S --------- */
+.agree_item, .form-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
-.form-field label {
-    display: block;
-    margin-bottom: 0.4rem;
-    border: none;
-    padding: 0;
+.agree_item input[type="checkbox"], input[type="checkbox"] {
+    accent-color: black;
 }
 
-.form-input, .form-field select {
+textarea { 
     width: 100%;
-    padding: 0.45em 1rem;
-    border-radius: 0.6rem;
-    border: 1px solid #000000;
-    background: #FFFFFF;
+    padding: 0.8rem;
+    font-family: InterVariable, sans-serif;
+    font-size: 0.8rem;
+    border: 0.01rem solid #000000;
+    border-radius: 0.55rem 0.55rem 0 0.55rem;
+}
+/* --------- télécharger photos fichiers --------- */
+.photo-upload {
+    display: flex;
+    align-self: flex-end;
+    gap: 1rem;
 }
 
-.form-input:focus, .form-field select:focus {
-    /* outline: 3px solid rgba(29, 255, 131, 0.5);
-    border-color: #00ff9d; */
-    outline: 3px solid black
+.photo-upload label {
+    display: inline-block;
+    align-self: center;
+    margin-bottom: 0 !important; 
 }
 
-/* --- mdp oublie --- */
-.form-links {
-    margin-top: 0.8rem;
-    text-align: right;
+.file-inline {
+    border: none !important;
+    background: transparent !important;
+    padding: 0;
+    height: auto;
 }
-
-.form-links a {
-    text-decoration: underline;
-    color: black;
-}
-
-
-/* --- MOT DE PASSE + BOUTON OEIL --- */
+/* ------------- M D P + bouton oeil ------------ */
 .password-wrapper {
     position: relative;
 }
@@ -215,9 +173,18 @@ input[type="file"]::-webkit-file-upload-button {
     width: 2.25rem;
     height: auto;
 }
+/* -------------- M D P  oublié ------------- */
+.form-links {
+    margin-top: 0.8rem;
+    text-align: right;
+}
 
-/* --- BOUTON SUBMIT --- */
- .form-submit { /* pour TOUT */
+.form-links a {
+    text-decoration: underline;
+    color: black;
+}
+/* -------------- message d'erreur -------------- */ 
+.form-submit { 
     width: 60%;
     max-width: 11rem;
     padding: 0.45em 0.9rem;
@@ -241,14 +208,12 @@ input[type="file"]::-webkit-file-upload-button {
 .submit-full{
     width: 100%;
 }
-/* --- MESSAGE D’ERREUR --- A SUPPRIMER   */
-/* .form-error {
-    background: #ffe5e5;
-    color: #a30000;
-    padding: 0.7rem;
-    border-radius: 6px;
-    margin-bottom: 1.2rem;
-    text-align: center;
-    font-weight: 600;
-    border: 1px solid #ffb3b3;
-} */
+/* ------------------- message d'erreur ------------------- */ 
+.invalid-feedback { 
+    color: #00ff9d; 
+    font-weight: 900;  
+} 
+.is-invalid { 
+    background-color: #00ff9d; 
+    font-weight: 900; 
+}

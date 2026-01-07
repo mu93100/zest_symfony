@@ -91,7 +91,6 @@
 /* -------- P I L L    S E A R C H -------- */
 .search-form {
     display: contents; /* disparaît visuellement */
-    
 }
 
 .pill-search-input::placeholder {
@@ -105,7 +104,7 @@
 } 
 
 /* input "rechercher" allongé avec texte de la recherche à Gche 
-TANT qu'on est sur p. résultat de recherche*/
+TANT qu'on est sur page résultat de recherche */
 .pill-search-input:focus {
     width: 19rem !important;
     text-align: left !important; /* texte se décale à gauche quand grand */

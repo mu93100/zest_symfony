@@ -13,7 +13,7 @@
 :root {
     font-family: Inter, sans-serif;
     font-feature-settings: "liga" 1, "calt" 1;
-    /* fix for Chrome */
+    /* fixe pour Chrome */
 }
 
 @supports (font-variation-settings: normal) {
@@ -53,7 +53,7 @@ body {
     padding: 0;
     display: flex;
     flex-direction: column;
-    font-size: 0.5rem;
+    font-size: 0.65rem;
     font-weight: 200;
     letter-spacing: 0.02rem;
     /* min-height: 100vh; */
