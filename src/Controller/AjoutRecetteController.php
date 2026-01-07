@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+
 final class AjoutRecetteController extends AbstractController
 {
     #[Route('/ajout/recette', name: 'app_ajout_recette')]
