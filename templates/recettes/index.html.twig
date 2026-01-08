@@ -29,19 +29,34 @@
                         <a class="pill login-tooltip" 
                            href="#" 
                            onclick="openLoginModalWithRedirect(); return false;"
-                           title="Connecte-toi pour ajouter une recette">ajouter une recette</a>
+                           title="ConnRECETTE TWIGecte-toi pour ajouter une recette">ajouter une recette</a>
                      {% endif %}
                 </div>     #}
-                <div class="pill-group">
-                    {% if app.user %}
-                        <a class="pill" href="{{ path('app_ajout_recette') }}">ajouter une recette</a>
-                    {% else %}
-                        <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-                            <a class="pill" href="#" onclick="openLoginModal(); return false;">ajouter une recette</a>
-                            <small style="color: #c33; font-size: 0.8rem;">E R R O R [ connecte-toi pour ajouter la recette ]</small>
-                        </div>
-                    {% endif %}
-                </div>
+                
+            {#                 <div class="pill-group">
+                {% if app.user %}
+                    <a class="pill" href="{{ path('app_ajout_recette') }}">ajouter une recette</a>
+                {% else %}
+                    <div class="error-clickable">
+                        <a href="#" onclick="openLoginModal(); return false;" class="pill error-pill">ajouter une recette</a>
+                        <span class="error-text">E R R O R [ connecte-toi pour ajouter la recette ]</span>
+                    </div>
+                {% endif %}
+            </div>     #}
+
+<div class="pill-group">
+    <a class="pill {% if not app.user %}error-tooltip{% endif %}" 
+       href="{% if app.user %}{{ path('app_ajout_recette') }}{% else %}#{% endif %}"
+       onclick="{% if not app.user %}openLoginModal(); return false;{% endif %}">
+        ajouter une recette
+        {% if not app.user %}
+            <span class="error-tooltip-text">E R R O R [ connecte-toi pour ajouter la recette ]</span>
+        {% endif %}
+    </a>
+</div>
+
+
+
                 
 
 {# P I L L S  produit+producteurice #} 
@@ -90,16 +105,12 @@
                 </div>
 
                 <div class="recette-texte">
-                    <div>
+                    <div class="ingredients">
                         <p><strong>Ingrédients :</strong></p>
-                        <div class="ingredients-colonnes">
-                            {{ recette.ingredients|nl2br }}
-                        </div>
-
-                        <p>{{ recette.ingredients }}</p>                
+                        <p class="ingredients-colonnes">{{ recette.ingredients|nl2br }}</p>                  
                     </div>
 
-                    <div>{{ recette.description }}</div>
+                    <div class="description">{{ recette.description }}</div>
 
                     <div class="recette-photo">
                     {% set photo = recette.medias|filter(m => m.role == 'photo_principale')|first %}

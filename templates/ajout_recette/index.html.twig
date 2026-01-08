@@ -13,10 +13,6 @@
 		{% endfor %}
 
 		{# affichage du nom mail groupe du user connecté #}
-		{% if app.user %} <p>[ {{ app.user.prenom }} ({{ app.user.email }}) du groupe {{ app.user.groupe.nom }} ]</p>
-		{% else %}
-			<p>E R R O R    [ connectes-toi pour ajouter la recette ]</p>
-		{% endif %}
 
         {{ form_start(recetteForm) }}
         <h1>ajouter une recette</h1>

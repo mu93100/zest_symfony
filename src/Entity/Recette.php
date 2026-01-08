@@ -50,9 +50,9 @@ class Recette
     /**
      * @var Collection<int, Media>
      */
-    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'recette')] 
-    private Collection $medias;
 
+    #[ORM\OneToMany(mappedBy: 'recette', targetEntity: Media::class, cascade: ['persist', 'remove'])]
+private Collection $medias;
 
 
 

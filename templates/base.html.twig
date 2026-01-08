@@ -41,15 +41,38 @@
                     window.location.href = '/login';
                 }.  #}
 
+function showLoginError() {
+    // Supprime anciens messages
+    document.querySelectorAll('.login-error').forEach(el => el.classList.remove('show'));
+    
+    // Crée le message
+    const pill = event.target.closest('.pill');
+    let errorMsg = pill.querySelector('.login-error');
+    
+    if (!errorMsg) {
+        errorMsg = document.createElement('div');
+        errorMsg.className = 'login-error';
+        errorMsg.textContent = 'E R R O R [ connecte-toi pour ajouter la recette ]';
+        pill.parentNode.classList.add('relative');
+        pill.parentNode.appendChild(errorMsg);
+    }
+    
+    errorMsg.classList.add('show');
+    
+    // Cache après 3s
+    setTimeout(() => errorMsg.classList.remove('show'), 4000);
+}
+
+function openLoginModal() {
+    window.location.href = '/login';
+}
 
 
 
 {#.  function openLoginModalWithRedirect() {
     window.location.href = '/login?return_url=ajout/recette';
 }       #}
-function openLoginModal() {
-    window.location.href = '/login';
-}
+
 
 
             </script>

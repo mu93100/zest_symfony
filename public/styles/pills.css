@@ -39,12 +39,6 @@
     font-weight: 200;
 }
 
-/*.pill:hover {
-     background: #1DFF83; */
-    /* width: 9.36rem; */
-    /* font-weight: 900;
-    box-shadow: 0 0 0 0.07rem black; border inside  
-}*/
 .pill:hover {
     background: hsla(147, 100%, 56%, 0.239);
     border-color: #1dff833d; /* #1dff8374; */

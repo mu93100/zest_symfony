@@ -3,7 +3,7 @@
 }
 
 .form-container-gd {
-    padding: 2rem 2.5rem 2rem 2.5rem;
+    padding: 0 2.5rem 2rem 2.5rem;
 }
 
 .form-section {
@@ -140,7 +140,8 @@
 .modal-box {
     max-width: 55rem;
     background: linear-gradient( #00ff9d 5%, #FFFFFF 50%, #FFFFFF 100% );
-    padding: 3rem 4.5rem 3.9rem 4.5rem;
+    padding: 0 4rem 2rem 4rem;
+    margin-top: 1rem;
     border-radius: 2.5rem;
     border: 0.15rem solid black;
     box-shadow: 0 0.8rem 0 black;
@@ -165,9 +166,9 @@
     font-weight: 900;       
 }
 
-.modal-content {
+/* .modal-content {
     margin-top: 6rem;
-}
+} */
 
 /* Animation d’apparition */
 @keyframes modalFade {
@@ -214,7 +215,7 @@ textarea {
     padding: 0;
     height: auto;
 }
-/* ------------- M D P + bouton oeil ------------ */
+/* ------------- P A S S W O R D + bouton oeil ------------ */
 .password-wrapper {
     position: relative;
 }
@@ -250,7 +251,7 @@ textarea {
     text-decoration: underline;
     color: black;
 }
-/* -------------- message d'erreur -------------- */ 
+/* -------------- S U B M I T -------------- */ 
 .form-submit { 
     width: 60%;
     max-width: 11rem;
