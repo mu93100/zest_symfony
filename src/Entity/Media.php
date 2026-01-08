@@ -21,10 +21,11 @@ class Media
     private ?string $description = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $type = null; // image, pdf, doc...
+    private ?string $type = null; // image, pdf, doc, mp4...
 
     #[ORM\Column(length: 50)]
-    private ?string $role = null; // photo_principale, photo_supplementaire, fichier
+    private ?string $role = null; // photo_principale, photo_supplementaire, 
+                                  // fichier, video, logo
 
     //---------------- r e l a t i o n s  ManyToOne
     #[ORM\ManyToOne(inversedBy: 'medias')]

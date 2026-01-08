@@ -10,22 +10,25 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260104005448 extends AbstractMigration
+final class Version20260107232618 extends AbstractMigration
 {
     public function getDescription(): string
     {
         return '';
     }
 
-    public function up(Schema $schema): void
-    {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE media DROP categorie');
-    }
+public function up(Schema $schema): void
+{
+    
+}
+
+
+
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE media ADD categorie VARCHAR(100) DEFAULT NULL');
+        $this->addSql('ALTER TABLE ressource ADD photo_principale_id INT DEFAULT NULL');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_939F454451C718BE ON ressource (photo_principale_id)');
     }
 }

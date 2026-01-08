@@ -5,6 +5,19 @@
     <button type="button" class="close" onclick="document.querySelector('.modal-overlay').remove();">✕</button>
 
     <div class="form-container-gd ">
+        {# affichage des messages flash #}
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">
+				{{ message|raw }}
+			</div>
+		{% endfor %}
+
+		{# affichage du nom mail groupe du user connecté #}
+		{% if app.user %} <p>[ {{ app.user.prenom }} ({{ app.user.email }}) du groupe {{ app.user.groupe.nom }} ]</p>
+		{% else %}
+			<p>E R R O R    [ connectes-toi pour ajouter la recette ]</p>
+		{% endif %}
+
         {{ form_start(recetteForm) }}
         <h1>ajouter une recette</h1>
         <div class="form-section-mini form-grid">
@@ -12,10 +25,17 @@
             <div class="row row--medium"> {{ form_row(recetteForm.nombreMangeurs) }} </div>
         </div>
 
-		<div class="form-section-mini form-check">
-			{{ form_label(recetteForm.produit) }}
-			{{ form_widget(recetteForm.produit) }}
-		</div>
+
+
+
+
+        <div class="form-section-mini form-check-produit ">
+            {{ form_label(recetteForm.produit) }}
+
+            <div class="">
+                {{ form_widget(recetteForm.produit) }}
+            </div>
+
 
         <div class="form-section-mini">{{ form_row(recetteForm.ingredients) }}</div>
 

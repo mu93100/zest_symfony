@@ -16,7 +16,7 @@
 		{# affichage du nom mail groupe du user connecté #}
 		{% if app.user %} <p>[ {{ app.user.prenom }} ({{ app.user.email }}) du groupe {{ app.user.groupe.nom }} ]</p>
 		{% else %}
-			<p>E R R O R   vous devez vous connecter avant l'adhesion de la saison</p>
+			<p>E R R O R   [ connectes-toi pour l'adhesion {{ saison.nom }} ]</p>
 		{% endif %}
 
 

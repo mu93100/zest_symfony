@@ -19,8 +19,8 @@ class Recette
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?\DateTime $datePublication = null;
+    #[ORM\Column(type: 'datetime_immutable')]
+    private ?\DateTimeImmutable $datePublication = null;
 
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
@@ -68,15 +68,14 @@ class Recette
         return $this->id;
     }
 
-    public function getDatePublication(): ?\DateTime
+    public function getDatePublication(): ?\DateTimeImmutable
     {
         return $this->datePublication;
     }
 
-    public function setDatePublication(\DateTime $datePublication): static
+    public function setDatePublication(\DateTimeImmutable $datePublication): static
     {
         $this->datePublication = $datePublication;
-
 
         return $this;
     }

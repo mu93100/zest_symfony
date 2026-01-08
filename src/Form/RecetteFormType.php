@@ -20,11 +20,11 @@ class RecetteFormType extends AbstractType
     {
         $builder
             ->add('titre', TextType::class, [
-                'label' => 'Titre de la recette *',
+                'label' => 'Titre de la recette',
                 'attr' => ['placeholder' => 'ex: Risotto cédrat burrata']
             ])
             ->add('nombreMangeurs', IntegerType::class, [
-                'label' => 'Nombre de mangeurs *'
+                'label' => 'Nombre de mangeurs'
             ])
             // src/Form/RecetteFormType.php
 
@@ -32,14 +32,13 @@ class RecetteFormType extends AbstractType
                 'class' => Produit::class,
                 'choice_label' => 'nom',
                 'multiple' => true,
-                'expanded' => true, // checkbox
-                'label' => 'Produits utilisés *',
-                'attr' => [
-                    'class' => 'form-produits-utilises'
-                ],
+                'expanded' => true,
+                'required' => true,
+                'label' => 'Produits utilisés',
             ])
+
             ->add('ingredients', TextareaType::class, [
-                'label' => 'Ingrédients *',
+                'label' => 'Ingrédients',
                 'attr' => ['placeholder' => 'ex: 3 citrons bergamote, 80g sucre, 100g farine...']
             ])
             ->add('description', TextareaType::class, [
