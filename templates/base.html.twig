@@ -29,6 +29,29 @@
                         img.src = "/images/oeilOuvert.webp";
                     }
                 }
+
+                {# pour ajout recette : ouverture de modale login si user pas connecté #}
+      {#          function openLoginModalWithRedirect() {
+                    // Sauvegarde l'URL cible dans la session
+                    sessionStorage.setItem('login_redirect', '/ajout/recette');
+                    window.location.href = '/login';
+                }
+
+                function openLoginModal() {
+                    window.location.href = '/login';
+                }.  #}
+
+
+
+
+{#.  function openLoginModalWithRedirect() {
+    window.location.href = '/login?return_url=ajout/recette';
+}       #}
+function openLoginModal() {
+    window.location.href = '/login';
+}
+
+
             </script>
         {% endblock %}
         

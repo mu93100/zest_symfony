@@ -18,6 +18,12 @@
     flex-direction: column !important;
 }
 
+.form-section-mini-produit {
+    /* width: 100%; */
+    margin-top: 0rem !important;
+    display: flex;
+    flex-direction: column !important;
+}
 .form-field {
     margin-bottom: 0.5rem;
 }
@@ -59,13 +65,37 @@
 .row--xxl { grid-column: span 12;}
 .row--full { grid-column: span 16;}
 
-/* grid pour produit utilises recettes */
-.form-check-produit{
+/* grid 4 colonnesc pour produit utilises */
+.produits-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);  
+    gap: 0.2rem;
+    margin-top: 0.3rem;
+}
+
+.produits-grid-item {  
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+@media (max-width: 768px) {
+    .produits-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+
+/* .form-check-produit{
     display: flex;
     flex-wrap: wrap;
-} 
+}  */
 /* grille spécifique aux produits */
-.row--xs { grid-column: span 1;}
+/* .row--xs { grid-column: span 1;} */
+
+
+
 /* .produit-grid{
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -165,13 +195,14 @@ textarea {
     border-radius: 0.55rem 0.55rem 0 0.55rem;
 }
 /* --------- télécharger photos fichiers --------- */
-.photo-upload {
-    display: flex;
+.section-photo-upload {
+    margin-top: 1.1rem;
+    display: flex !important;
     align-self: flex-end;
     gap: 1rem;
 }
 
-.photo-upload label {
+.section-photo-upload label {
     display: inline-block;
     align-self: center;
     margin-bottom: 0 !important; 
@@ -192,6 +223,7 @@ textarea {
     width: 100%;
    /* padding: 2.5rem;  espace pour l’œil */
     padding: 0.45em 1rem;
+    
 }
 
 .password-toggle {
@@ -206,8 +238,7 @@ textarea {
 }
 
 .password-toggle img.eye-icon {
-    width: 2.25rem;
-    height: auto;
+    height: 1.55rem;
 }
 /* -------------- M D P  oublié ------------- */
 .form-links {

@@ -1,6 +1,40 @@
 *{
     /* border: 1px dotted blue;  */
 }
+.login-tooltip::after {
+    content: "Connecte-toi pour ajouter une recette";
+    position: absolute;
+    bottom: -2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #c33;
+    color: white;
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.3rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.login-tooltip:hover::after {
+    opacity: 1;
+}
+
+.relative { position: relative; }
+.error-message {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fee;
+    color: #c33;
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.3rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    margin-top: 0.2rem;
+}
 
 .section-nav-recette {
     display: flex;
@@ -49,6 +83,14 @@
 .recette-titre p, .recette-titre-titre p{
     font-size: 0.58rem;
 }
+
+.ingredients-colonnes {
+    line-height: 1.6;
+    font-family: monospace;
+    white-space: pre-wrap;  /* Garde les retours à la ligne */
+    max-width: 400px;
+}
+
 .recette-texte {
     width: 100%;
     display: flex;
@@ -58,12 +100,14 @@
     padding: 0!important;
     /* border: 1px solid rgb(255, 89, 0); */
 }
+
 .recette-photo {
     width: 100rem;
     height: 10rem;
     overflow: hidden;
     background-color: aquamarine;
 }
+
 .recette-photo img { 
     width: 100%; 
     height: 100%; 

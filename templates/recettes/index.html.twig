@@ -6,6 +6,7 @@
         <h2>Les recettes</h2>
 
         <div class="nav-recette">
+{# P I L L   rechercher #}            
             <div class="nav-pill">
                 <form method="get" action="{{ path('app_recherche') }}" class="search-form">
                     <input
@@ -20,10 +21,30 @@
             </div>
         
             <div class="nav-page-pill">
+{# P I L L   ajouter une recette #} 
+                {# <div class="pill-group">
+                     {% if app.user %}
+                        <a class="pill" href="{{ path('app_ajout_recette') }}">ajouter une recette</a>
+                     {% else %}
+                        <a class="pill login-tooltip" 
+                           href="#" 
+                           onclick="openLoginModalWithRedirect(); return false;"
+                           title="Connecte-toi pour ajouter une recette">ajouter une recette</a>
+                     {% endif %}
+                </div>     #}
                 <div class="pill-group">
-                    <a class="pill" href="{# {{ path('app_recette_new') }} #}">ajouter une recette</a>
+                    {% if app.user %}
+                        <a class="pill" href="{{ path('app_ajout_recette') }}">ajouter une recette</a>
+                    {% else %}
+                        <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                            <a class="pill" href="#" onclick="openLoginModal(); return false;">ajouter une recette</a>
+                            <small style="color: #c33; font-size: 0.8rem;">E R R O R [ connecte-toi pour ajouter la recette ]</small>
+                        </div>
+                    {% endif %}
                 </div>
+                
 
+{# P I L L S  produit+producteurice #} 
                 <div class="pill-group">
                     <a class="pill pill-straight bgro" href="?produit=pates">PÂTES</a>
                     <a class="pill pill-straight bgmc" href="?produit=riz">RIZ</a>
@@ -71,6 +92,10 @@
                 <div class="recette-texte">
                     <div>
                         <p><strong>Ingrédients :</strong></p>
+                        <div class="ingredients-colonnes">
+                            {{ recette.ingredients|nl2br }}
+                        </div>
+
                         <p>{{ recette.ingredients }}</p>                
                     </div>
 

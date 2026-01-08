@@ -14,6 +14,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+
+
 class RecetteFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -24,10 +26,12 @@ class RecetteFormType extends AbstractType
                 'attr' => ['placeholder' => 'ex: Risotto cédrat burrata']
             ])
             ->add('nombreMangeurs', IntegerType::class, [
-                'label' => 'Nombre de mangeurs'
+                'label' => 'Nombre de mangeurs',
+                'attr' => [
+                    'min' => 1,          
+                    'step' => 1
+                ],
             ])
-            // src/Form/RecetteFormType.php
-
             ->add('produit', EntityType::class, [
                 'class' => Produit::class,
                 'choice_label' => 'nom',
@@ -36,7 +40,6 @@ class RecetteFormType extends AbstractType
                 'required' => true,
                 'label' => 'Produits utilisés',
             ])
-
             ->add('ingredients', TextareaType::class, [
                 'label' => 'Ingrédients',
                 'attr' => ['placeholder' => 'ex: 3 citrons bergamote, 80g sucre, 100g farine...']

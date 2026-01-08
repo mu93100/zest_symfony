@@ -25,23 +25,24 @@
             <div class="row row--medium"> {{ form_row(recetteForm.nombreMangeurs) }} </div>
         </div>
 
-
-
-
-
-        <div class="form-section-mini form-check-produit ">
+        <div class="form-section-mini">
             {{ form_label(recetteForm.produit) }}
 
-            <div class="">
-                {{ form_widget(recetteForm.produit) }}
+            <div class="produits-grid">
+                {% for child in recetteForm.produit %}
+                    <div class="produits-grid-item">
+                        {{ form_widget(child) }}
+                        {{ form_label(child) }}
+                    </div>
+                {% endfor %}
             </div>
-
+        </div>
 
         <div class="form-section-mini">{{ form_row(recetteForm.ingredients) }}</div>
 
         <div class="form-section-mini"> {{ form_row(recetteForm.description) }} </div>
 
-        <div class="form-section-mini photo-upload">
+        <div class="section-photo-upload">
             {{ form_label(recetteForm.photo) }}
             {{ form_widget(recetteForm.photo, {
                 attr: {
@@ -51,11 +52,6 @@
             }) }}
             {{ form_errors(recetteForm.photo) }}
         </div>
-
-        
-        
-
-
         
         {{ form_widget(recetteForm.submit) }} 
     

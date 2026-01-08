@@ -4,12 +4,19 @@
   </div>
 
   <div class="nav-header">
+    {#   P I L L S   #}
     <div class="nav-pill">
       <div class="pill-group">
         <a class="pill" href="{{ path('app_register') }}">créer un compte</a>{#rejoindre le GAS vers p.fonctionnement#}
         <a class="pill" href="{{ path('app_adhesion') }}">adhérer</a>
-        <a class="pill pill-black" href="{{ path('app_login') }}">se connecter</a>
+
+        {% if app.user %}
+            <a class="pill" href="/logout">déconnexion</a>
+        {% else %}
+            <a class="pill pill-black" href="/login">se connecter</a>
+        {% endif %}
       </div>
+
       <div class="pill-group">
         <form method="get" action="{{ path('app_recherche') }}" class="search-form">
             <input
@@ -31,6 +38,7 @@
       </div>
     </div>
 
+    {#   M E N U   #}
     <nav class="nav-nav-header">
       <ul>
         <li><a href="{{ path('app_accueil') }}">accueil</a></li>
