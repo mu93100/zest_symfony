@@ -20,10 +20,22 @@ final class RecettesController extends AbstractController
         $produit = $request->query->get('produit');
         $producteurice = $request->query->get('producteurice');
 
+        // Groupes de produits pour agrumes = plusieurs slugs
+        $groupes = [
+            'agrumes' => ['citron', 'orange', 'pamplemousse'],
+        ];
+
+        // Détermination des slugs produits à filtrer
+        if ($produit && isset($groupes[$produit])) {
+            $produitSlugs = $groupes[$produit]; // tableau de slugs
+        } else {
+            $produitSlugs = $produit ? [$produit] : [];
+        }
+
         // Si un filtre est appliqué → utiliser la méthode personnalisée
-        if ($produit || $producteurice) {
+        if (!empty($produitSlugs) || $producteurice) {
             $recettes = $recetteRepo->findByProduitOrProducteurice(
-                $produit,
+                $produitSlugs,      // <-- ICI la correction
                 $producteurice,
                 $limit,
                 ($page - 1) * $limit

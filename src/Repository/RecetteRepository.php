@@ -16,7 +16,7 @@ class RecetteRepository extends ServiceEntityRepository
         parent::__construct($registry, Recette::class);
     }
     
-    public function findByProduitOrProducteurice(?string $produitSlug, ?string $producteuriceSlug, int $limit, int $offset): array
+    public function findByProduitOrProducteurice(array $produitSlugs, ?string $producteuriceSlug, int $limit, int $offset): array
     {
         $qb = $this->createQueryBuilder('r')
             ->leftJoin('r.produit', 'p')
@@ -26,9 +26,9 @@ class RecetteRepository extends ServiceEntityRepository
             ->setMaxResults($limit)
             ->setFirstResult($offset);
 
-        if ($produitSlug) {
-            $qb->andWhere('p.slug = :produit')
-                ->setParameter('produit', $produitSlug);
+        if (!empty($produitSlugs)) {
+            $qb->andWhere('p.slug IN (:produits)')
+                ->setParameter('produits', $produitSlugs);
         }
 
         if ($producteuriceSlug) {
