@@ -48,8 +48,8 @@ dump($form->getErrors(true, false));
                 $media->setRole("photo_principale");
 
                 // 🔥 Lier le media à la recette
-                $em->persist($media);
                 $media->setRecette($recette);
+                $em->persist($media);
             }
 
             $em->persist($recette);

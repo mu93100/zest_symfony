@@ -46,8 +46,10 @@ class RecetteFormType extends AbstractType
                 'label' => 'Produits utilisés',
             ])
             ->add('ingredients', TextareaType::class, [
-                'label' => 'Ingrédients',
-                'attr' => ['placeholder' => 'ex: 3 citrons bergamote, 80g sucre, 100g farine...']
+                'label' => "Ingrédients [ Le texte sera publié à l' identique ]",
+                'attr' => ['placeholder' => '3 citrons bergamote,
+80g sucre, 
+100g farine...']
             ])
             ->add('description', TextareaType::class, [
                 'label' => "Description de la recette    [ Le texte sera publié à l' identique ]",

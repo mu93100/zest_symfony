@@ -2,6 +2,10 @@
 
 namespace App\Entity;
 
+use App\Entity\Produit;
+use App\Entity\Producteurice;
+use App\Entity\Ressource;
+use App\Entity\Recette;
 use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
 

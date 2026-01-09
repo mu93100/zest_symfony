@@ -1,6 +1,9 @@
 *{
     /* border: 1px dotted blue;  */
 }
+.modal-box {
+    padding: 0 2.5rem 2rem 2.5rem !important; 
+}
 /* .login-tooltip::after {
     content: "ConCSSRECETTEnecte-toi pour ajouter une recette";
     position: absolute;
@@ -33,12 +36,6 @@
     margin-left: 0.3rem;
 }
 
-
-
-
-
-
-
 .error-clickable {
     display: flex;
     gap: 0.5rem;
@@ -47,7 +44,6 @@
     cursor: pointer;
     transition: all 0.2s;
 }
-
 
 .error-tooltip {
     position: relative;
@@ -74,13 +70,12 @@ pill {
     height: 1.65rem;
     /* left: 50%; */
     transform: translateX(-45%);
-    background: #3C07FB;
+    background: #3C07FB!important;
     color: white;
     padding: 1.5rem 1.5rem 2rem 1.5rem;
     border-radius: 2.5rem;
     border: 0.15rem solid black;
     box-shadow: 0 0.8rem 0 black;
-
     border-radius: 0.55rem;
     font-size: 0.7rem;
     font-weight: 700;
@@ -92,24 +87,6 @@ pill {
     visibility: visible;
 }
 
-
-
-
-
-
-
-
-
-
-
-/* .error-clickable:hover {
-    color: #1DFF83;
-} */
-
-/* .error-pill {
-    font-size: 0.6rem !important;   garde taille pill 
-} */
-
 .error-text {
     color: #3C07FB;
     font-size: 0.7rem;
@@ -120,49 +97,31 @@ pill {
     color: black;
 }
 
-
-/* .relative { position: relative; }
-.error-message {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: #fee;
-    color: #c33;
-    padding: 0.3rem 0.5rem;
-    border-radius: 0.3rem;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    margin-top: 0.2rem;
-} */
-
 .section-nav-recette {
     display: flex;
     /* flex-direction: row; */
     justify-content: space-between;
-    align-items: center;
+    align-items: end;
 }
 
 .nav-recette {
     display: flex;
-    /* flex-direction: row; */
     justify-content: space-between;
-    /* text-align: start; */
     align-items: center;
     margin-right: 7rem;
-    /* border: 1px solid rgb(255, 89, 0);  */
 }
 
 .section-recette {
     display: flex;
     flex-direction: column;
-    gap: 5rem;
+    gap: 4rem;
 }
 
 .recette {
     display: flex;
     flex-direction: column;
     text-align: start;
-    gap: 2rem;
+    gap: 1.2rem;
 }
 
 .recette-titre {
@@ -175,31 +134,45 @@ pill {
     display: flex;
     flex-direction: row;
     align-items: end;
-    gap: 2rem;
+    gap: 1rem;
+}
+.recette-titre-titre p {
+    padding-bottom: 0.2rem;
 }
 
 .recette-titre p, .recette-titre-titre p{
     font-size: 0.58rem;
 }
 
+span {
+    background-color: white!important;
+    border-color: black!important;
+}
+
 .recette-texte {
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
-    gap: 0 2.5rem!important;
+    gap: 0 1.5rem!important;
     text-align: start;
     padding: 0!important;
 }
 
 .ingredients p {
-    margin-bottom: 1rem;
+    margin-bottom: 0.45rem;
+    font-weight: 500;
 }   
 
 .ingredients-colonnes {
     padding: 0;
-    line-height: 0.85;
-    white-space: pre-wrap;  /* Garde les retours à la ligne */
-    /* width: 100%; */
+    margin: 0;
+    list-style: none;
 }
+
+.ingredients-colonnes li {
+    line-height: 1.2;
+    margin-bottom: 0.35rem; /* espace entre les lignes */
+}
+
 .description{
     white-space: pre-wrap;  /* Garde les retours à la ligne */
 }
@@ -207,15 +180,20 @@ pill {
     width: 100%; 
     height: auto; 
     overflow: hidden;
-    background-color: aquamarine;
 }
 
 .recette-photo img { 
     width: 100%; 
-    height: 100%; 
+    height: 12rem; 
     object-fit: cover; 
 }
 
 .recette-pagination {
-    text-align: center;
+    text-align: end;
+    padding-bottom: 1.5rem;
+}
+.recette-pagination .pill:hover{
+    background-color: white;
+    border-color: black;
+    outline: 2px solid black
 }

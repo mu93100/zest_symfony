@@ -44,7 +44,7 @@
 }
 
 .form-input:focus, .form-field select:focus {
-    outline: 3px solid black
+    outline: 2px solid black
 }
 /* --------------- I N P U T   GRID --------------- */
 .form-grid {
@@ -140,7 +140,8 @@
 .modal-box {
     max-width: 55rem;
     background: linear-gradient( #00ff9d 5%, #FFFFFF 50%, #FFFFFF 100% );
-    padding: 0 4rem 2rem 4rem;
+    /* padding: 3 4rem 2rem 4rem; */
+    padding: 3rem 4.5rem 3.9rem 4.5rem;
     margin-top: 1rem;
     border-radius: 2.5rem;
     border: 0.15rem solid black;
@@ -186,13 +187,13 @@
 .agree_item input[type="checkbox"], input[type="checkbox"] {
     accent-color: black;
 }
-
+/* --------- blocs texte long à saisir --------- */
 textarea { 
     width: 100%;
-    padding: 0.8rem;
+    padding: 0.3rem 0.8rem 1.7rem 0.8rem;
     font-family: InterVariable, sans-serif;
     font-size: 0.8rem;
-    border: 0.01rem solid #000000;
+    border: 0.01rem solid black;
     border-radius: 0.55rem 0.55rem 0 0.55rem;
 }
 /* --------- télécharger photos fichiers --------- */

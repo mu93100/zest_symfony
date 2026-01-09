@@ -20,46 +20,20 @@
                 </form>
             </div>
         
+
             <div class="nav-page-pill">
 {# P I L L   ajouter une recette #} 
-                {# <div class="pill-group">
-                     {% if app.user %}
-                        <a class="pill" href="{{ path('app_ajout_recette') }}">ajouter une recette</a>
-                     {% else %}
-                        <a class="pill login-tooltip" 
-                           href="#" 
-                           onclick="openLoginModalWithRedirect(); return false;"
-                           title="ConnRECETTE TWIGecte-toi pour ajouter une recette">ajouter une recette</a>
-                     {% endif %}
-                </div>     #}
-                
-            {#                 <div class="pill-group">
-                {% if app.user %}
-                    <a class="pill" href="{{ path('app_ajout_recette') }}">ajouter une recette</a>
-                {% else %}
-                    <div class="error-clickable">
-                        <a href="#" onclick="openLoginModal(); return false;" class="pill error-pill">ajouter une recette</a>
-                        <span class="error-text">E R R O R [ connecte-toi pour ajouter la recette ]</span>
-                    </div>
-                {% endif %}
-            </div>     #}
-
-<div class="pill-group">
-    <a class="pill {% if not app.user %}error-tooltip{% endif %}" 
-       href="{% if app.user %}{{ path('app_ajout_recette') }}{% else %}#{% endif %}"
-       onclick="{% if not app.user %}openLoginModal(); return false;{% endif %}">
-        ajouter une recette
-        {% if not app.user %}
-            <span class="error-tooltip-text">E R R O R [ connecte-toi pour ajouter la recette ]</span>
-        {% endif %}
-    </a>
-</div>
-
-
-
-                
-
-{# P I L L S  produit+producteurice #} 
+                <div class="pill-group">
+                    <a class="pill {% if not app.user %}error-tooltip{% endif %}" 
+                       href="{% if app.user %}{{ path('app_ajout_recette') }}{% else %}#{% endif %}"
+                       onclick="{% if not app.user %}openLoginModal(); return false;{% endif %}">
+                        ajouter une recette
+                        {% if not app.user %}
+                            <span class="error-tooltip-text">E R R O R [ connecte-toi pour ajouter la recette ]</span>
+                        {% endif %}
+                    </a>
+                </div>
+{# P I L L S  produit #} 
                 <div class="pill-group">
                     <a class="pill pill-straight bgro" href="?produit=pates">PÂTES</a>
                     <a class="pill pill-straight bgmc" href="?produit=riz">RIZ</a>
@@ -67,7 +41,7 @@
                     <a class="pill pill-straight bgsaf" href="?produit=fromage">FROMAGE</a>
                     <a class="pill pill-straight bgj" href="?produit=fromage">AGRUMES</a>
                 </div>
-
+{# P I L L S  producteurice #}
                 <div class="pill-group">
                     <a class="pill pill-straight" href="?producteurice=galline">Galline Felici</a>
                     <a class="pill pill-straight" href="?producteurice=iris">Agricola IRIS</a>
@@ -80,54 +54,64 @@
         </div>
     </div>
 
+
     <section class="section-recette">
         {% for recette in recettes %}
 
-            <div class="recette">
-                <div class="recette-titre">
-                    <p class="it">Publié le {{ recette.datePublication|date('d/m/Y') }} par {{ recette.auteurice.prenom }} du groupe {{ recette.auteurice.groupe.nom }}</p>
-
-                    <div class="recette-titre-titre">
-                        <h4>{{ recette.titre }}</h4>
-                        <p class="it">pour {{ recette.nombreMangeurs }} personnes</p>
-                        <div class="pill-group">
-                            {% for produit in recette.produit %}
-                                <span class="pill">
-                                    {{ produit.nom }}
-                                    {% if produit.producteurices %} 
-                                        <small>({{ produit.producteurices.nom }})</small> 
-                                    {% endif %}
-                                </span>
-                            {% endfor %}
-                        </div>
-
+        <div class="recette">
+            <div class="recette-titre">
+                <p class="it">Publié le {{ recette.datePublication|date('d/m/Y') }} par {{ recette.auteurice.prenom }} du groupe {{ recette.auteurice.groupe.nom }}</p>
+                <div class="recette-titre-titre">
+                    <h4>{{ recette.titre }}</h4>
+                    <p class="it">pour {{ recette.nombreMangeurs }} personnes</p>
+                    <div class="pill-group tag-prod">
+                        {% for produit in recette.produit %}
+                        <span class="pill pill-straight tag-prod">
+                            {{ produit.nom }}
+                
+                            {% if produit.producteurices|length > 0 %}
+                            <span class="tag-prod">[ 
+                                {% for prod in produit.producteurices %}
+                                {{ prod.nom }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                             ]</span>
+                            {% endif %}
+                        </span>
+                        {% endfor %}
                     </div>
                 </div>
-
-                <div class="recette-texte">
-                    <div class="ingredients">
-                        <p><strong>Ingrédients :</strong></p>
-                        <p class="ingredients-colonnes">{{ recette.ingredients|nl2br }}</p>                  
-                    </div>
-
-                    <div class="description">{{ recette.description }}</div>
-
-                    <div class="recette-photo">
-                    {% set photo = recette.medias|filter(m => m.role == 'photo_principale')|first %}
-                        {% if photo %}
-                          <img src="{{ asset('uploads/media/' ~ photo.nomFichier) }}" alt="{{ photo.description }}">
-                        {% endif %}
-                    </div>
-                </div>  
-                
             </div>
+
+            <div class="recette-texte">
+                <div class="ingredients">
+                    <p>Ingrédients</p>
+                    {#<p class="ingredients-colonnes">{{ recette.ingredients|nl2br }}</p> #}
+                    {% set lignes = recette.ingredients|split("\n") %}
+                    <ul class="ingredients-colonnes">
+                        {% for ligne in lignes %}
+                        <li>{{ ligne }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="description">{{ recette.description }}</div>
+
+                <div class="recette-photo">
+                {% set photo = recette.medias|filter(m => m.role == 'photo_principale')|first %}
+                    {% if photo %}
+                    <img src="{{ asset('uploads/' ~ photo.nomFichier) }}" alt="{{ photo.description }}">
+                    {% endif %}
+                </div>
+            </div>  
+            
+        </div>
         {% endfor %}
     </section>
 
     {# bouton voir + #}
-    {% if recettes|length == 4 %}
+    {% if recettes|length == 3 %}
         <div class="recette-pagination">
-          <a href="{{ path('app_recettes', {'page': page + 1}) }}" class="pill pill-vert">voir + de recettes</a>
+          <a href="{{ path('app_recettes', {'page': page + 1}) }}" class="pill ">voir + de recettes</a>
         </div>
     {% endif %}
 </div>
