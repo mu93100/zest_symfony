@@ -9,6 +9,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\AsciiSlugger;
+
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
@@ -26,6 +28,9 @@ class Produit
 
     #[ORM\Column(length: 255)]
     private ?string $photo = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $slug = null;
 
     //---------------- r e l a t i o n s  ManyToMany
     /**
@@ -146,4 +151,22 @@ class Produit
 
         return $this;
     }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
+        return $this;
+    }
+
+    public function generateSlug(): void
+    {
+        $slugger = new AsciiSlugger();
+        $this->slug = strtolower($slugger->slug($this->nom));
+    }
+
 }

@@ -16,12 +16,12 @@ class RecetteRepository extends ServiceEntityRepository
         parent::__construct($registry, Recette::class);
     }
     
-    public function findByProduitOrproducteurice(?string $produitSlug, ?string $producteuriceSlug, int $limit, int $offset): array
+    public function findByProduitOrProducteurice(?string $produitSlug, ?string $producteuriceSlug, int $limit, int $offset): array
     {
         $qb = $this->createQueryBuilder('r')
             ->leftJoin('r.produit', 'p')
-            ->leftJoin('p.producteurices', 'prod') // si tu as cette relation
-            ->addSelect('p')
+            ->leftJoin('p.producteurices', 'prod')
+            ->addSelect('p', 'prod')
             ->orderBy('r.datePublication', 'DESC')
             ->setMaxResults($limit)
             ->setFirstResult($offset);
@@ -38,29 +38,5 @@ class RecetteRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
-
-    //    /**
-    //     * @return Recette[] Returns an array of Recette objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('r.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Recette
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }
+

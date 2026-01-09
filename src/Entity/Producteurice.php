@@ -39,6 +39,9 @@ class Producteurice
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $slug = null;
+
     //----------------r e l a t i o n   ManyToMany
     /**
      * @var Collection<int, Produit>
@@ -201,6 +204,17 @@ class Producteurice
             }
         }
 
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
         return $this;
     }
 }
