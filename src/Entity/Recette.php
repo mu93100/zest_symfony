@@ -50,10 +50,9 @@ class Recette
     /**
      * @var Collection<int, Media>
      */
-
-    #[ORM\OneToMany(mappedBy: 'recette', targetEntity: Media::class, cascade: ['persist', 'remove'])]
-private Collection $medias;
-
+    #[ORM\OneToMany(mappedBy: 'recette', targetEntity: Media::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $medias;
+// orphanRemoval: true/ quand on supprime une recette : ça permet de supprimer le media relié à la recette = orphelin 
 
 
 

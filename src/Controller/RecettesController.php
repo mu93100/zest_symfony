@@ -7,11 +7,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\RecetteRepository;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-
-
-
 
 final class RecettesController extends AbstractController
 {
@@ -19,14 +14,29 @@ final class RecettesController extends AbstractController
     public function index(Request $request, RecetteRepository $recetteRepo): Response
     {
         $page = $request->query->getInt('page', 1);
-        $limit = 4;
+        $limit = 3;
 
-        $recettes = $recetteRepo->findBy([], ['datePublication' => 'DESC'], $limit, ($page - 1) * $limit);
-
+        // Récupération des filtres
         $produit = $request->query->get('produit');
         $producteurice = $request->query->get('producteurice');
 
-        $recettes = $recetteRepo->findByProduitOrProducteurice($produit, $producteurice, $limit, ($page - 1) * $limit);
+        // Si un filtre est appliqué → utiliser la méthode personnalisée
+        if ($produit || $producteurice) {
+            $recettes = $recetteRepo->findByProduitOrProducteurice(
+                $produit,
+                $producteurice,
+                $limit,
+                ($page - 1) * $limit
+            );
+        } else {
+            // Sinon → afficher toutes les recettes
+            $recettes = $recetteRepo->findBy(
+                [],
+                ['datePublication' => 'DESC'],
+                $limit,
+                ($page - 1) * $limit
+            );
+        }
 
         return $this->render('recettes/index.html.twig', [
             'recettes' => $recettes,
@@ -34,4 +44,3 @@ final class RecettesController extends AbstractController
         ]);
     }
 }
-
