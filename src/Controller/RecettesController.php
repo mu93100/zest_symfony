@@ -15,14 +15,14 @@ final class RecettesController extends AbstractController
     {
         $page = $request->query->getInt('page', 1);
         $limit = 3;
-
+ 
         // Récupération des filtres
         $produit = $request->query->get('produit');
         $producteurice = $request->query->get('producteurice');
 
         // Groupes de produits pour agrumes = plusieurs slugs
         $groupes = [
-            'agrumes' => ['citron', 'orange', 'pamplemousse'],
+            'agrumes' => ['citron', 'orange', 'pamplemousse', 'kumquat', 'citron-bergamote', 'clementine-mandarine','cedrat'],
         ];
 
         // Détermination des slugs produits à filtrer
@@ -35,7 +35,7 @@ final class RecettesController extends AbstractController
         // Si un filtre est appliqué → utiliser la méthode personnalisée
         if (!empty($produitSlugs) || $producteurice) {
             $recettes = $recetteRepo->findByProduitOrProducteurice(
-                $produitSlugs,      // <-- ICI la correction
+                $produitSlugs,      
                 $producteurice,
                 $limit,
                 ($page - 1) * $limit
@@ -49,6 +49,7 @@ final class RecettesController extends AbstractController
                 ($page - 1) * $limit
             );
         }
+// dd($recettes);
 
         return $this->render('recettes/index.html.twig', [
             'recettes' => $recettes,

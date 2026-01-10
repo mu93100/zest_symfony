@@ -7,7 +7,6 @@ use App\Entity\Media;
 use App\Repository\ProducteuriceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProducteuriceRepository::class)]
@@ -21,9 +20,6 @@ class Producteurice
     #[ORM\Column(length: 100)]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $produits = null;
-
     #[ORM\Column]
     private ?bool $isCoop = null;
 
@@ -36,26 +32,24 @@ class Producteurice
     #[ORM\Column(length: 255)]
     private ?string $logo = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: 'text')]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
-    //----------------r e l a t i o n   ManyToMany
+    //----------------r e l a t i o n   ManyToMany /côté pas propriétaire = inverse
     /**
      * @var Collection<int, Produit>
      */
-    #[ORM\ManyToMany(targetEntity: Produit::class, inversedBy: 'producteurices')]
+    #[ORM\ManyToMany(targetEntity: Produit::class, mappedBy: 'producteurice')]
     private Collection $produit;
 
     //---------------- r e l a t i o n s  OneToMany
     /**
      * @var Collection<int, Media>
-     */
-    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'producteurice')]
+     */    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'producteurice')]
     private Collection $medias;
-
 
 
 
@@ -65,101 +59,81 @@ class Producteurice
         $this->medias = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
+    public function getId(): ?int 
+    { 
+        return $this->id; 
     }
 
-    public function getNom(): ?string
-    {
-        return $this->nom;
+    public function getNom(): ?string 
+    { 
+        return $this->nom; 
     }
 
-    public function setNom(string $nom): static
-    {
-        $this->nom = $nom;
+    public function setNom(string $nom): static 
+    { 
+        $this->nom = $nom; return $this; }
 
-        return $this;
+    public function isCoop(): ?bool 
+    { 
+        return $this->isCoop; 
     }
 
-    public function getProduits(): ?string
-    {
-        return $this->produits;
+    public function setIsCoop(bool $isCoop): static { $this->isCoop = $isCoop; return $this; }
+
+    public function getSite(): ?string 
+    { 
+        return $this->site; }
+    public function setSite(string $site): static 
+    { 
+        $this->site = $site; return $this; }
+
+    public function getLienProduits(): ?string 
+    { 
+        return $this->lienProduits; 
+    }
+    
+    public function setLienProduits(?string $lienProduits): static 
+    { 
+        $this->lienProduits = $lienProduits; 
+        return $this; 
     }
 
-    public function setProduits(string $produits): static
-    {
-        $this->produits = $produits;
-
-        return $this;
+    public function getLogo(): ?string 
+    { 
+        return $this->logo; 
     }
 
-    public function isCoop(): ?bool
-    {
-        return $this->isCoop;
+    public function setLogo(string $logo): static 
+    { 
+        $this->logo = $logo; return $this; 
     }
 
-    public function setIsCoop(bool $isCoop): static
-    {
-        $this->isCoop = $isCoop;
-
-        return $this;
+    public function getDescription(): ?string 
+    { 
+        return $this->description; 
+    }
+    
+    public function setDescription(string $description): static 
+    { 
+        $this->description = $description; return $this; 
     }
 
-    public function getSite(): ?string
-    {
-        return $this->site;
+    public function getSlug(): ?string 
+    { 
+        return $this->slug; 
     }
-
-    public function setSite(string $site): static
-    {
-        $this->site = $site;
-
-        return $this;
-    }
-
-    public function getLienProduits(): ?string
-    {
-        return $this->lienProduits;
-    }
-
-    public function setLienProduits(?string $lienProduits): static
-    {
-        $this->lienProduits = $lienProduits;
-
-        return $this;
-    }
-
-    public function getLogo(): ?string
-    {
-        return $this->logo;
-    }
-
-    public function setLogo(string $logo): static
-    {
-        $this->logo = $logo;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): static
-    {
-        $this->description = $description;
-
-        return $this;
+    
+    public function setSlug(string $slug): static 
+    { 
+        $this->slug = $slug; return $this; 
     }
 
     /**
      * @return Collection<int, Produit>
      */
-    public function getProduit(): Collection
-    {
-        return $this->produit;
+    public function getProduit(): Collection 
+    { 
+        return $this->produit; 
     }
 
     public function addProduit(Produit $produit): static
@@ -167,23 +141,21 @@ class Producteurice
         if (!$this->produit->contains($produit)) {
             $this->produit->add($produit);
         }
-
         return $this;
     }
 
     public function removeProduit(Produit $produit): static
     {
         $this->produit->removeElement($produit);
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Media>
+    /** 
+     * @return Collection<int, Media> 
      */
-    public function getMedias(): Collection
-    {
-        return $this->medias;
+    public function getMedias(): Collection 
+    { 
+        return $this->medias; 
     }
 
     public function addMedia(Media $media): static
@@ -192,7 +164,6 @@ class Producteurice
             $this->medias->add($media);
             $media->setProducteurice($this);
         }
-
         return $this;
     }
 
@@ -203,18 +174,6 @@ class Producteurice
                 $media->setProducteurice(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(string $slug): static
-    {
-        $this->slug = $slug;
         return $this;
     }
 }

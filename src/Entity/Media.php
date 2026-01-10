@@ -32,7 +32,8 @@ class Media
                                   // fichier, video, logo
 
     //---------------- r e l a t i o n s  ManyToOne
-    #[ORM\ManyToOne(inversedBy: 'medias')]
+    #[ORM\ManyToOne(targetEntity: Recette::class, inversedBy: 'medias')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Recette $recette = null;
 
     #[ORM\ManyToOne(inversedBy: 'medias')]

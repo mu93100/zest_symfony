@@ -18,13 +18,24 @@ class RecetteRepository extends ServiceEntityRepository
     
     public function findByProduitOrProducteurice(array $produitSlugs, ?string $producteuriceSlug, int $limit, int $offset): array
     {
-        $qb = $this->createQueryBuilder('r')
-            ->leftJoin('r.produit', 'p')
-            ->leftJoin('p.producteurices', 'prod')
-            ->addSelect('p', 'prod')
-            ->orderBy('r.datePublication', 'DESC')
-            ->setMaxResults($limit)
-            ->setFirstResult($offset);
+        // $qb = $this->createQueryBuilder('r')
+        //     ->leftJoin('r.produit', 'p')
+        //     ->leftJoin('p.producteurice', 'prod')
+        //     ->addSelect('p', 'prod')
+        //     ->orderBy('r.datePublication', 'DESC')
+        //     ->setMaxResults($limit)
+        //     ->setFirstResult($offset);
+       $qb = $this->createQueryBuilder('r')
+    ->leftJoin('r.produit', 'p')
+    ->leftJoin('p.producteurices', 'prod')
+    ->addSelect('p')
+    ->addSelect('prod')
+    ->leftJoin('r.medias', 'm')
+    ->addSelect('m')
+;
+
+
+
 
         if (!empty($produitSlugs)) {
             $qb->andWhere('p.slug IN (:produits)')

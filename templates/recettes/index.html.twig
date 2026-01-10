@@ -40,22 +40,36 @@
                 <div class="pill-group">
                     <a class="pill pill-straight bgro" href="?produit=pates">PÂTES</a>
                     <a class="pill pill-straight bgmc" href="?produit=riz">RIZ</a>
-                    <a class="pill pill-straight bgvc" href="?produit=legumineuse">LÉGUMINEUSES</a>
-                    <a class="pill pill-straight bgsaf" href="?produit=fromage">FROMAGE</a>
-                    <a class="pill pill-straight bgj" href="?produit=fromage">AGRUMES</a>
+                    <a class="pill pill-straight bgvc" href="?produit=legumineuses">LÉGUMINEUSES</a>
+                    <a class="pill pill-straight bgsaf" href="?produit=parmesan">PARMESAN</a>
+                    <a class="pill pill-straight bgj" href="?produit=agrume">AGRUMES</a>
                 </div>
 {# P I L L S  producteurice #}
                 <div class="pill-group">
-                    <a class="pill pill-straight" href="?producteurice=galline">Galline Felici</a>
-                    <a class="pill pill-straight" href="?producteurice=iris">Agricola IRIS</a>
-                    <a class="pill pill-straight" href="?producteurice=lesca">Lesca Simone</a>
-                    <a class="pill pill-straight" href="?producteurice=astra">Astra IRIS</a>
-                    <a class="pill pill-straight" href="?producteurice=antico">Antico Colle Fiorito</a>
+                    <a class="pill pill-straight" href="?producteurice=galline-felici">Galline Felici</a>
+                    <a class="pill pill-straight" href="?producteurice=agricola-iris">Agricola IRIS</a>
+                    <a class="pill pill-straight" href="?producteurice=lesca-simone">Lesca Simone</a>
+                    <a class="pill pill-straight" href="?producteurice=astra-iris">Astra IRIS</a>
+                    <a class="pill pill-straight" href="?producteurice=antico-colle-fiorito">Antico Colle Fiorito</a>
                     <a class="pill pill-straight" href="?producteurice=biosmurra">Biosmurra</a>
                 </div>
             </div>
         </div>
     </div>
+
+{% for recette in recettes %}
+    <h3>{{ recette.titre }}</h3>
+    {% for produit in recette.produit %}
+        <p>Produit : {{ produit.nom }}</p>
+        {% for prod in produit.producteurices %}
+            <p>→ Producteurice : {{ prod.nom }}</p>
+        {% else %}
+            <p>→ Aucun producteurice</p>
+        {% endfor %}
+    {% else %}
+        <p>Aucun produit</p>
+    {% endfor %}
+{% endfor %}
 
 
     <section class="section-recette">
