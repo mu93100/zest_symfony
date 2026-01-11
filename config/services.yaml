@@ -17,11 +17,16 @@ services:
     App\:
         resource: '../src/'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
-
+    # R A J O U T S
+    # extension twig pour {{ saison_actuelle() }} ou un filtre |saison
     App\Twig\SaisonExtension:
         arguments:
             - '@App\Repository\SaisonRepository'
             - '@request_stack'
         tags: ['twig.extension']
+
+    # pour possibilité ajout uploads multiples avec bundle VichUploader
+    App\EventListener\MediaMultipleUploadSubscriber:
+        tags:
+            - { name: kernel.event_subscriber }
+

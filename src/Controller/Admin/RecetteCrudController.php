@@ -18,83 +18,46 @@ class RecetteCrudController extends AbstractCrudController
     {
         return Recette::class;
     }
-public function configureFields(string $pageName): iterable
-{
-    return [
 
-        IdField::new('id')->hideOnForm(),
+    public function configureFields(string $pageName): iterable
+    {
+        return [
 
-        TextField::new('titre', 'Titre'),
+            IdField::new('id')->hideOnForm(),
 
-        IntegerField::new('nombreMangeurs', 'Nombre de mangeurs'),
+            TextField::new('titre', 'Titre'),
 
-        TextareaField::new('ingredients', 'Ingrédients')
-            ->onlyOnIndex(),
+            IntegerField::new('nombreMangeurs', 'Nombre de mangeurs'),
 
-        TextareaField::new('description', 'Description')
-            ->onlyOnIndex(),
+            TextareaField::new('ingredients', 'Ingrédients'),
 
-        // 👉 Affichage dans l’index (liste)
-        AssociationField::new('produit', 'Produits utilisés')
-            ->formatValue(function ($value, $entity) {
-                return implode(
-                    ', ',
-                    $entity->getProduit()
-                        ->map(fn($p) => $p->__toString())
-                        ->toArray()
-                );
-            })
-            ->onlyOnIndex(),
+            TextareaField::new('description', 'Description'),
 
-        // 👉 Champ pour le formulaire
-        AssociationField::new('produit', 'Produits utilisés')
-            ->setFormTypeOptions(['by_reference' => false])
-            ->onlyOnForms(),
+            // 👉 Affichage dans l’index (liste)
+            AssociationField::new('produit', 'Produits utilisés')
+                ->formatValue(function ($value, $entity) {
+                    return implode(
+                        ', ',
+                        $entity->getProduit()
+                            ->map(fn($p) => $p->__toString())
+                            ->toArray()
+                    );
+                })
+                ->onlyOnIndex(),
 
-        AssociationField::new('auteurice', 'Auteurice'),
+            // 👉 Champ pour le formulaire
+            AssociationField::new('produit', 'Produits utilisés')
+                ->setFormTypeOptions(['by_reference' => false])
+                ->onlyOnForms(),
 
-        CollectionField::new('medias', 'Photos / Fichiers')
-            ->useEntryCrudForm(MediaCrudController::class)
-            ->setFormTypeOptions(['by_reference' => false])
-            ->onlyOnForms(),
-    ];
-}
+            AssociationField::new('auteurice', 'Auteurice'),
 
-    // public function configureFields(string $pageName): iterable
-    // {
-    //     return [
-
-    //         IdField::new('id')->hideOnForm(),
-
-    //         TextField::new('titre', 'Titre'),
-
-    //         IntegerField::new('nombreMangeurs', 'Nombre de mangeurs'),
-
-    //         TextareaField::new('ingredients', 'Ingrédients'),
-    //             // ->onlyOnIndex(),
-
-    //         TextareaField::new('description', 'Description'),
-    //             // ->onlyOnIndex(),
-
-    //         // ManyToMany avec produit
-    //         AssociationField::new('produit', 'Produits utilisés')
-    //             // ->setFormTypeOptions(['by_reference' => false]),
-    //             ->formatValue(function ($value, $entity) { 
-    //                 return $entity->getProduit()
-    //                 ->map(fn($p) => $p->__toString()) 
-    //                 ->join(', ');
-    //             }) 
-    //             ->onlyOnIndex(),
-    //         // ManyToOne avec user
-    //         AssociationField::new('auteurice', 'Auteurice'),
-
-    //         // OneToMany avec Media
-    //         CollectionField::new('medias', 'Photos / Fichiers')
-    //             ->useEntryCrudForm(MediaCrudController::class)
-    //             ->setFormTypeOptions(['by_reference' => false])
-    //             ->onlyOnForms(),
-    //     ];
-    // }
+            CollectionField::new('medias', 'Photos / Fichiers')
+                ->useEntryCrudForm(MediaCrudController::class)
+                ->setFormTypeOptions(['by_reference' => false])
+                ->onlyOnForms(),
+        ];
+    }
 
     public function persistEntity(EntityManagerInterface $em, $entityInstance): void
     {

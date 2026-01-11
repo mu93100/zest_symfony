@@ -33,7 +33,7 @@ class ProducteuriceCrudController extends AbstractCrudController
                 ->setUploadDir('public/uploads/producteurices')
                 ->setRequired(false),
 
-            AssociationField::new('produit', 'Produits')
+            AssociationField::new('produits', 'Produits')
                 ->setFormTypeOptions(['by_reference' => false]),
 
             TextField::new('slug')

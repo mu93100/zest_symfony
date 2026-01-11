@@ -8,24 +8,37 @@ use App\Entity\Ressource;
 use App\Entity\Recette;
 use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
+#[Vich\Uploadable]
 class Media
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
     
-    #[ORM\Column(length: 255)]
+    // activer le bundle VichUploader pour uploader TOUT format de fichier
+    // terminal : composer require vich/uploader-bundle / pas de colonne file en BDD
+    // et création de src/EventListener/MediaMultipleUploadSubscriber.php
+    #[Vich\UploadableField(mapping: 'medias', fileNameProperty: 'nomFichier')] 
+    private ?File $file = null;
+
+    // Champ NON mappé pour upload multiple 
+    private array $files = [];
+    
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $nomFichier = null;
 
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $type = null; // image, pdf, doc, mp4...
+    #[ORM\Column(length: 50)] 
+    private ?string $page = null; // page d'affichage: recette, produit, producteurice, ressource
 
     #[ORM\Column(length: 50)]
     private ?string $role = null; // photo_principale, photo_supplementaire, 
@@ -52,12 +65,33 @@ class Media
         return $this->id;
     }
 
+// Champ NON mappé pour upload multiple
+public function getFiles(): array
+    {
+        return $this->files;
+    }
+
+    public function setFiles(array $files): void
+    {
+        $this->files = $files;
+    }
+    
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    public function setFile(?File $file): void
+    {
+        $this->file = $file;
+    }
+
     public function getNomFichier(): ?string
     {
         return $this->nomFichier;
     }
 
-    public function setNomFichier(string $nomFichier): static
+    public function setNomFichier(?string $nomFichier): static
     {
         $this->nomFichier = $nomFichier;
         return $this;
@@ -74,16 +108,42 @@ class Media
         return $this;
     }
 
-    public function getType(): ?string
+    public function getPage(): ?string
     {
-        return $this->type;
+        return $this->page;
     }
 
-    public function setType(string $type): static
+    public function setPage(string $page): static
     {
-        $this->type = $type;
+        $this->page = $page;
         return $this;
     }
+
+        public function isPageRecette(): bool
+    {
+        return $this->page === 'recette';
+    }
+
+    public function isPageProduit(): bool
+    {
+        return $this->page === 'produit';
+    }
+
+    public function isPageProducteurice(): bool
+    {
+        return $this->page === 'producteurice';
+    }
+
+    public function isPageRessource(): bool
+    {
+        return $this->page === 'ressource';
+    }
+    public function isPage(string $page): bool
+{
+    return $this->page === $page;
+}
+
+
 
     public function getRole(): ?string
     {
@@ -101,11 +161,14 @@ class Media
         return $this->recette;
     }
 
-    public function setRecette(?Recette $recette): static
-    {
-        $this->recette = $recette;
-        return $this;
-    }
+    public function setRecette(?Recette $recette): static 
+    { 
+        $this->recette = $recette; 
+        if ($recette !== null) { 
+            $this->page = 'recette'; 
+        } 
+        return $this; 
+    } 
 
     public function getProduit(): ?Produit
     {
@@ -141,6 +204,7 @@ class Media
     }
     public function __toString(): string
     {
-        return $this->nom ?? 'Media';
+        return $this->nomFichier . ' (' . $this->role . ')';
     }
 }
+

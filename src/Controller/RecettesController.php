@@ -15,7 +15,7 @@ final class RecettesController extends AbstractController
     {
         $page = $request->query->getInt('page', 1);
         $limit = 3;
- 
+
         // Récupération des filtres
         $produit = $request->query->get('produit');
         $producteurice = $request->query->get('producteurice');
@@ -49,7 +49,7 @@ final class RecettesController extends AbstractController
                 ($page - 1) * $limit
             );
         }
-// dd($recettes);
+
 
         return $this->render('recettes/index.html.twig', [
             'recettes' => $recettes,

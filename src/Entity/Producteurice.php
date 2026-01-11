@@ -136,7 +136,7 @@ class Producteurice
     {
         return $this->produits;
     }
-    
+
     public function addProduit(Produit $produit): static
     {
         if (!$this->produits->contains($produit)) {
@@ -145,7 +145,7 @@ class Producteurice
         }
         return $this;
     }
-    
+
     public function removeProduit(Produit $produit): static
     {
         if ($this->produits->removeElement($produit)) {
@@ -153,7 +153,7 @@ class Producteurice
         }
         return $this;
     }
-    
+
 
     /** 
      * @return Collection<int, Media> 
@@ -182,6 +182,18 @@ class Producteurice
         return $this;
     }
 
+    public function getNomMedias(): string
+    {
+        if ($this->medias->isEmpty()) {
+            return '—';
+        }
+
+        return implode(', ', $this->medias
+            ->map(fn(Media $m) => $m->getNomFichier() ?? 'Media')
+            ->toArray()
+        );
+    }
+    
     public function __toString(): string
     {
         return $this->nom ?? 'Producteurice';

@@ -28,7 +28,7 @@ final class AjoutRecetteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-dump($form->getErrors(true, false));
+// dump($form->getErrors(true, false));
             // gestion de la photo
             $photoFile = $form->get('photo')->getData();
 
@@ -44,7 +44,7 @@ dump($form->getErrors(true, false));
                 $media = new Media();
                 $media->setNomFichier($newFilename);
                 $media->setDescription("Photo de la recette : " . $recette->getTitre());
-                $media->setType("image");
+                $media->setPage("recette");
                 $media->setRole("photo_principale");
 
                 // 🔥 Lier le media à la recette

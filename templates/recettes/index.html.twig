@@ -42,7 +42,7 @@
                     <a class="pill pill-straight bgmc" href="?produit=riz">RIZ</a>
                     <a class="pill pill-straight bgvc" href="?produit=legumineuses">LÉGUMINEUSES</a>
                     <a class="pill pill-straight bgsaf" href="?produit=parmesan">PARMESAN</a>
-                    <a class="pill pill-straight bgj" href="?produit=agrume">AGRUMES</a>
+                    <a class="pill pill-straight bgj" href="?produit=agrumes">AGRUMES</a>
                 </div>
 {# P I L L S  producteurice #}
                 <div class="pill-group">
@@ -57,19 +57,7 @@
         </div>
     </div>
 
-{% for recette in recettes %}
-    <h3>{{ recette.titre }}</h3>
-    {% for produit in recette.produit %}
-        <p>Produit : {{ produit.nom }}</p>
-        {% for prod in produit.producteurice %}
-            <p>→ Producteurice : {{ prod.nom }}</p>
-        {% else %}
-            <p>→ Aucun producteurice</p>
-        {% endfor %}
-    {% else %}
-        <p>Aucun produit</p>
-    {% endfor %}
-{% endfor %}
+
 
 
     <section class="section-recette">
@@ -86,7 +74,7 @@
                         <span class="pill pill-straight tag-prod">
                             {{ produit.nom }}
                 
-                            {% if produit.producteurice|length > 0 %}
+                            {% if produit.producteurices|length > 0 %}
                             <span class="tag-prod">[ 
                                 {% for prod in produit.producteurices %}
                                 {{ prod.nom }}{% if not loop.last %}, {% endif %}

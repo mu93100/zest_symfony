@@ -86,28 +86,35 @@ class Produit
         $this->slug = $slug; return $this; 
     }
 
-/** @return Collection<int, Producteurice> */
-public function getProducteurices(): Collection
-{
-    return $this->producteurices;
-}
-
-public function addProducteurice(Producteurice $producteurice): static
-{
-    if (!$this->producteurices->contains($producteurice)) {
-        $this->producteurices->add($producteurice);
-        $producteurice->addProduit($this); // synchronisation indispensable
+    /** @return Collection<int, Producteurice> */
+    public function getProducteurices(): Collection
+    {
+        return $this->producteurices;
     }
-    return $this;
-}
 
-public function removeProducteurice(Producteurice $producteurice): static
-{
-    if ($this->producteurices->removeElement($producteurice)) {
-        $producteurice->removeProduit($this);
+    public function addProducteurice(Producteurice $producteurice): static
+    {
+        if (!$this->producteurices->contains($producteurice)) {
+            $this->producteurices->add($producteurice);
+            $producteurice->addProduit($this); // synchronisation indispensable
+        }
+        return $this;
     }
-    return $this;
-}
+
+    public function removeProducteurice(Producteurice $producteurice): static
+    {
+        if ($this->producteurices->removeElement($producteurice)) {
+            $producteurice->removeProduit($this);
+        }
+        return $this;
+    }
+
+    public function getNomProducteurices(): string
+    {
+        return implode(', ', $this->producteurices 
+            ->map(fn(Producteurice $p) => $p->getNom()) 
+            ->toArray() );
+    }
 
     /** @return Collection<int, Media> */
     public function getMedias(): Collection 
@@ -132,6 +139,18 @@ public function removeProducteurice(Producteurice $producteurice): static
             }
         }
         return $this;
+    }
+
+    public function getNomMedias(): string
+    {
+        if ($this->medias->isEmpty()) {
+            return '—';
+        }
+
+        return implode(', ', $this->medias
+            ->map(fn(Media $m) => $m->getNomFichier() ?? 'Media')
+            ->toArray()
+        );
     }
 
     public function __toString(): string
