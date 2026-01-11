@@ -61,7 +61,7 @@
     <h3>{{ recette.titre }}</h3>
     {% for produit in recette.produit %}
         <p>Produit : {{ produit.nom }}</p>
-        {% for prod in produit.producteurices %}
+        {% for prod in produit.producteurice %}
             <p>→ Producteurice : {{ prod.nom }}</p>
         {% else %}
             <p>→ Aucun producteurice</p>
@@ -86,7 +86,7 @@
                         <span class="pill pill-straight tag-prod">
                             {{ produit.nom }}
                 
-                            {% if produit.producteurices|length > 0 %}
+                            {% if produit.producteurice|length > 0 %}
                             <span class="tag-prod">[ 
                                 {% for prod in produit.producteurices %}
                                 {{ prod.nom }}{% if not loop.last %}, {% endif %}

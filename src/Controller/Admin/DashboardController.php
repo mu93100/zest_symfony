@@ -9,12 +9,12 @@ use App\Entity\Groupe;
 use App\Entity\Adhesion;
 use App\Entity\Dispo;
 use App\Entity\Ressource;
-use App\Entity\Photos;
 use App\Entity\Categorie;
 use App\Entity\Producteurice;
 use App\Entity\Produit;
 use App\Entity\Recette;
 use App\Entity\Saison;
+use App\Entity\Media;
 use App\Repository\SaisonRepository;
 use App\Repository\AdhesionRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
@@ -81,7 +81,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Recettes', '', Recette::class),
             MenuItem::linkToCrud('Ressources', '', Ressource::class),
             MenuItem::linkToCrud('Catégories', '', Categorie::class),
-            MenuItem::linkToCrud('Photos', '', Photos::class),
+            MenuItem::linkToCrud('Medias - photos/fichiers', '', Media::class),
         ]);
 
         // Produits & producteurs

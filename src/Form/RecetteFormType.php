@@ -21,11 +21,6 @@ class RecetteFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            // ->add('auteurice', EntityType::class, [
-            //     'disabled' => true,
-            //     'data' => $this->security->getUser(),
-            //     'attr' => ['style' => 'display:none']
-            // ])
             ->add('titre', TextType::class, [
                 'label' => 'Titre de la recette',
                 'attr' => ['placeholder' => 'ex: Risotto cédrat burrata']

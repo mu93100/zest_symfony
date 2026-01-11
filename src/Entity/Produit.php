@@ -50,21 +50,57 @@ class Produit
         $this->medias = new ArrayCollection();
     }
 
-    public function getId(): ?int { return $this->id; }
-    public function getNom(): ?string { return $this->nom; }
-    public function setNom(string $nom): static { $this->nom = $nom; return $this; }
+    public function getId(): ?int 
+    { 
+        return $this->id; 
+    }
 
-    public function getDescription(): ?string { return $this->description; }
-    public function setDescription(string $description): static { $this->description = $description; return $this; }
+    public function getNom(): ?string 
+    { 
+        return $this->nom; 
+    }
+    
+    public function setNom(string $nom): static 
+    { 
+        $this->nom = $nom; 
+        return $this; 
+    }
 
-    public function getPhoto(): ?string { return $this->photo; }
-    public function setPhoto(string $photo): static { $this->photo = $photo; return $this; }
+    public function getDescription(): ?string 
+    { 
+        return $this->description; 
+    }
 
-    public function getSlug(): ?string { return $this->slug; }
-    public function setSlug(string $slug): static { $this->slug = $slug; return $this; }
+    public function setDescription(string $description): static 
+    { 
+        $this->description = $description; return $this; 
+    }
+
+    public function getPhoto(): ?string 
+    { 
+        return $this->photo; 
+    }
+
+    public function setPhoto(string $photo): static 
+    { 
+        $this->photo = $photo; return $this; 
+    }
+
+    public function getSlug(): ?string 
+    { 
+        return $this->slug; 
+    }
+    
+    public function setSlug(string $slug): static 
+    { 
+        $this->slug = $slug; return $this; 
+    }
 
     /** @return Collection<int, Producteurice> */
-    public function getProducteurice(): Collection { return $this->producteurice; }
+    public function getProducteurice(): Collection 
+    { 
+        return $this->producteurice; 
+    }
 
     public function addProducteurice(Producteurice $producteurice): static
     {
@@ -84,7 +120,10 @@ class Produit
     }
 
     /** @return Collection<int, Media> */
-    public function getMedias(): Collection { return $this->medias; }
+    public function getMedias(): Collection 
+    { 
+        return $this->medias; 
+    }
 
     public function addMedia(Media $media): static
     {
@@ -103,5 +142,10 @@ class Produit
             }
         }
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->nom ?? 'Produit';
     }
 }

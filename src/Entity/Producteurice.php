@@ -176,4 +176,10 @@ class Producteurice
         }
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->nom ?? 'Producteurice';
+    }
+
 }

@@ -9,7 +9,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
 
+#[Route('/admin/produit', name: 'admin_produit_')]
 class ProduitCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string

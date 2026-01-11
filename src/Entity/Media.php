@@ -139,4 +139,8 @@ class Media
         $this->ressource = $ressource;
         return $this;
     }
+    public function __toString(): string
+    {
+        return $this->nom ?? 'Media';
+    }
 }

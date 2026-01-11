@@ -1,16 +1,12 @@
 <?php
-
 namespace App\Controller\Admin;
 
 use App\Entity\Recette;
-use App\Entity\Produit;
-use App\Entity\User;
-use App\Entity\Media;
+use App\Controller\Admin\MediaCrudController;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
@@ -22,73 +18,94 @@ class RecetteCrudController extends AbstractCrudController
     {
         return Recette::class;
     }
+public function configureFields(string $pageName): iterable
+{
+    return [
 
-    public function configureFields(string $pageName): iterable
-    {
-        return [
+        IdField::new('id')->hideOnForm(),
 
-            IdField::new('id')->hideOnForm(),
+        TextField::new('titre', 'Titre'),
 
-            TextField::new('titre', 'Titre'),
+        IntegerField::new('nombreMangeurs', 'Nombre de mangeurs'),
 
-            IntegerField::new('nombreMangeurs', 'Nombre de mangeurs'),
+        TextareaField::new('ingredients', 'Ingrédients')
+            ->onlyOnIndex(),
 
-            TextareaField::new('ingredients', 'Ingrédients')
-                ->hideOnIndex(),
+        TextareaField::new('description', 'Description')
+            ->onlyOnIndex(),
 
-            TextareaField::new('description', 'Description')
-                ->hideOnIndex(),
+        // 👉 Affichage dans l’index (liste)
+        AssociationField::new('produit', 'Produits utilisés')
+            ->formatValue(function ($value, $entity) {
+                return implode(
+                    ', ',
+                    $entity->getProduit()
+                        ->map(fn($p) => $p->__toString())
+                        ->toArray()
+                );
+            })
+            ->onlyOnIndex(),
 
-            DateTimeField::new('datePublication', 'Date de publication')
-                ->setFormTypeOptions([
-                    'html5' => true,
-                ])
-                ->hideOnIndex(),
+        // 👉 Champ pour le formulaire
+        AssociationField::new('produit', 'Produits utilisés')
+            ->setFormTypeOptions(['by_reference' => false])
+            ->onlyOnForms(),
 
-            // Relation ManyToMany avec Produit
-            AssociationField::new('produit', 'Produits utilisés')
-                ->setFormTypeOptions([
-                    'by_reference' => false,
-                ]),
+        AssociationField::new('auteurice', 'Auteurice'),
 
-            // Relation ManyToOne avec User
-            AssociationField::new('auteurice', 'Auteurice'),
+        CollectionField::new('medias', 'Photos / Fichiers')
+            ->useEntryCrudForm(MediaCrudController::class)
+            ->setFormTypeOptions(['by_reference' => false])
+            ->onlyOnForms(),
+    ];
+}
 
-            // Relation OneToMany avec Media
-            CollectionField::new('medias', 'Photos')
-                ->useEntryCrudForm(Media::class)
-                ->setFormTypeOptions([
-                    'by_reference' => false,
-                ])
-                ->onlyOnForms(),
+    // public function configureFields(string $pageName): iterable
+    // {
+    //     return [
 
-            TextField::new('slug')
-                ->onlyOnIndex(),
-        ];
-    }
+    //         IdField::new('id')->hideOnForm(),
+
+    //         TextField::new('titre', 'Titre'),
+
+    //         IntegerField::new('nombreMangeurs', 'Nombre de mangeurs'),
+
+    //         TextareaField::new('ingredients', 'Ingrédients'),
+    //             // ->onlyOnIndex(),
+
+    //         TextareaField::new('description', 'Description'),
+    //             // ->onlyOnIndex(),
+
+    //         // ManyToMany avec produit
+    //         AssociationField::new('produit', 'Produits utilisés')
+    //             // ->setFormTypeOptions(['by_reference' => false]),
+    //             ->formatValue(function ($value, $entity) { 
+    //                 return $entity->getProduit()
+    //                 ->map(fn($p) => $p->__toString()) 
+    //                 ->join(', ');
+    //             }) 
+    //             ->onlyOnIndex(),
+    //         // ManyToOne avec user
+    //         AssociationField::new('auteurice', 'Auteurice'),
+
+    //         // OneToMany avec Media
+    //         CollectionField::new('medias', 'Photos / Fichiers')
+    //             ->useEntryCrudForm(MediaCrudController::class)
+    //             ->setFormTypeOptions(['by_reference' => false])
+    //             ->onlyOnForms(),
+    //     ];
+    // }
 
     public function persistEntity(EntityManagerInterface $em, $entityInstance): void
     {
         if ($entityInstance instanceof Recette) {
 
-            // Si aucune date n'est définie → on met maintenant
+            // date automatique comme l'ID
             if (!$entityInstance->getDatePublication()) {
                 $entityInstance->setDatePublication(new \DateTimeImmutable());
             }
-
-            // Slug auto
-            $entityInstance->generateSlug();
         }
 
         parent::persistEntity($em, $entityInstance);
-    }
-
-    public function updateEntity(EntityManagerInterface $em, $entityInstance): void
-    {
-        if ($entityInstance instanceof Recette) {
-            $entityInstance->generateSlug();
-        }
-
-        parent::updateEntity($em, $entityInstance);
     }
 }
