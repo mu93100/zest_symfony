@@ -38,12 +38,13 @@ class Producteurice
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
+    // “s” obligatoire pour les collections pour variable et inverseBy (Many->s)
     //----------------r e l a t i o n   ManyToMany /côté pas propriétaire = inverse
     /**
      * @var Collection<int, Produit>
      */
-    #[ORM\ManyToMany(targetEntity: Produit::class, mappedBy: 'producteurice')]
-    private Collection $produit;
+    #[ORM\ManyToMany(targetEntity: Produit::class, mappedBy: 'producteurices')]
+    private Collection $produits;
 
     //---------------- r e l a t i o n s  OneToMany
     /**
@@ -55,7 +56,7 @@ class Producteurice
 
     public function __construct()
     {
-        $this->produit = new ArrayCollection();
+        $this->produits = new ArrayCollection();
         $this->medias = new ArrayCollection();
     }
 
@@ -131,24 +132,28 @@ class Producteurice
     /**
      * @return Collection<int, Produit>
      */
-    public function getProduit(): Collection 
-    { 
-        return $this->produit; 
+    public function getProduits(): Collection
+    {
+        return $this->produits;
     }
-
+    
     public function addProduit(Produit $produit): static
     {
-        if (!$this->produit->contains($produit)) {
-            $this->produit->add($produit);
+        if (!$this->produits->contains($produit)) {
+            $this->produits->add($produit);
+            $produit->addProducteurice($this); // synchronisation ManyToMany
         }
         return $this;
     }
-
+    
     public function removeProduit(Produit $produit): static
     {
-        $this->produit->removeElement($produit);
+        if ($this->produits->removeElement($produit)) {
+            $produit->removeProducteurice($this); // synchronisation ManyToMany
+        }
         return $this;
     }
+    
 
     /** 
      * @return Collection<int, Media> 

@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
 class ProducteuriceCrudController extends AbstractCrudController
 {
@@ -31,6 +32,9 @@ class ProducteuriceCrudController extends AbstractCrudController
                 ->setBasePath('uploads/producteurices')
                 ->setUploadDir('public/uploads/producteurices')
                 ->setRequired(false),
+
+            AssociationField::new('produit', 'Produits')
+                ->setFormTypeOptions(['by_reference' => false]),
 
             TextField::new('slug')
                 ->onlyOnIndex(), // visible uniquement dans la liste admin
