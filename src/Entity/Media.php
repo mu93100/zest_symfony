@@ -9,6 +9,7 @@ use App\Entity\Recette;
 use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
@@ -40,7 +41,6 @@ class Media
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $role = null; // photo_principale, photo_supplementaire, fichier, video, logo
 
-
     //---------------- r e l a t i o n s  ManyToOne
     #[ORM\ManyToOne(targetEntity: Recette::class, inversedBy: 'medias')]
     #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
@@ -70,10 +70,23 @@ class Media
         return $this->file;
     }
 
+    // public function setFile(?File $file): void
+    // {
+    //     $this->file = $file;
+    // }
     public function setFile(?File $file): void
-    {
-        $this->file = $file;
-    }
+{
+    $this->file = $file;
+}
+
+// public function setFile(UploadedFile $file): void
+// {
+//     $filename = uniqid().'.'.$file->guessExtension();
+//     $file->move('uploads/medias', $filename);
+//     $this->nomFichier = $filename;
+// }
+
+
 
     public function getNomFichier(): ?string
     {
@@ -173,10 +186,5 @@ class Media
             $this->page = 'ressource';
         }
         return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->nomFichier ?? 'Media';
     }
 }

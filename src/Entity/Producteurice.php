@@ -37,11 +37,15 @@ class Producteurice
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
-    /** pour upload plusieurs photos 
-     * @var UploadedFile[] 
-     */ 
-    private array $photos = [];
+    /** @var UploadedFile|null */
+    private ?UploadedFile $logo = null;
 
+    /** @var UploadedFile|null */
+    private ?UploadedFile $photoPrincipale = null;
+
+    /** @var UploadedFile[] */
+    private array $photosSupplementaires = [];
+    
     // “s” obligatoire pour les collections pour variable et inverseBy (Many->s)
     //----------------r e l a t i o n   ManyToMany /côté pas propriétaire = inverse
     /** 
@@ -207,19 +211,78 @@ class Producteurice
             ->first() ?: null;
     }
 
-    public function getPhotos(): array 
-    { 
-        return $this->photos; 
-    } 
+    public function getLogoMediaPath(): ?string
+    {
+        $logo = $this->getLogoMedia();
+        return $logo ? $logo->getNomFichier() : null;
+    }
+
+
+    // miniatures photo/logo
+    public function getLogo(): ?UploadedFile
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(?UploadedFile $logo): self
+    {
+        $this->logo = $logo;
+        return $this;
+    }
+
+    public function getPhotoPrincipale(): ?UploadedFile
+    {
+        return $this->photoPrincipale;
+    }
+
+    public function setPhotoPrincipale(?UploadedFile $photoPrincipale): self
+    {
+        $this->photoPrincipale = $photoPrincipale;
+        return $this;
+    }
+
+    public function getPhotoPrincipalePath(): ?string
+    {
+        $photo = $this->medias
+            ->filter(fn (Media $m) => $m->getRole() === 'photo_principale')
+            ->first();
+
+        return $photo ? $photo->getNomFichier() : null;
+    }
+
+    public function getPhotosSupplementaires(): array
+    {
+        return $this->photosSupplementaires;
+    }
+
+    public function setPhotosSupplementaires(array $photos): self
+    {
+        $this->photosSupplementaires = $photos;
+        return $this;
+    }
     
-    public function setPhotos(array $photos): self 
+    //pour field plusieurs miniatures avec création de 
+    // templates/admin/fields/photos_supplementaires.html.twig    
+    public function getPhotosSupplementairesPaths(): array
+    {
+        return $this->medias
+            ->filter(fn (Media $m) => $m->getRole() === 'photo_supplementaire')
+            ->map(fn (Media $m) => $m->getNomFichier())
+            ->toArray();
+    }
+
+    public function generateSlug(): void 
     { 
-        $this->photos = $photos; 
-        return $this; 
+        if (!$this->nom) { return; } 
+        $slug = strtolower(trim($this->nom)); 
+        $slug = preg_replace('/[^a-z0-9]+/i', '-', $slug); 
+        $slug = trim($slug, '-'); 
+        $this->slug = $slug; 
     }
     
     public function __toString(): string
     {
         return $this->nom ?? 'Producteurice';
     }
+
 }

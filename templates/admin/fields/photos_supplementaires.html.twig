@@ -1,0 +1,16 @@
+{# templates/admin/fields/photos_supplementaires.html.twig #}
+
+{% set files = field.value %}
+
+{% if files is iterable and files is not empty %}
+    <div style="display:flex;  gap: 0.5rem; ">
+        {% for filename in files %}
+            <img 
+                src="{{ asset('uploads/medias/' ~ filename) }}" 
+                style="width:60px; height:60px; object-fit:cover; border-radius:4px;"
+            >
+        {% endfor %}
+    </div>
+{% else %}
+    —
+{% endif %}

@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;use EasyCorp\Bundle\Easy
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 
+
 class ProducteuriceCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
@@ -39,24 +40,55 @@ class ProducteuriceCrudController extends AbstractCrudController
             TextEditorField::new('description', 'Description')
                 ->hideOnIndex(), // description visible uniquement en édition
 
-            ImageField::new('logoMedia', 'Logo') 
-                ->setBasePath('uploads/medias') 
-                ->formatValue(function ($value, Producteurice $p) { 
-                    $logo = $p->getLogoMedia(); 
-                    return $logo ? $logo->getNomFichier() : null; 
-                }) 
+
+            // miniatures photos/logos
+            ImageField::new('logoMediaPath', 'Logo')
+                ->setBasePath('uploads/medias')
                 ->onlyOnIndex(),
+
+            ImageField::new('photoPrincipalePath', 'Photo principale')
+                ->setBasePath('uploads/medias')
+                ->onlyOnIndex(),
+
+            //pour field plusieurs miniatures avec création de 
+            // templates/admin/fields/photos_supplementaires.html.twig
+            Field::new('photosSupplementairesPaths', 'Photos')
+                ->setCustomOption('mapped', false)
+                ->setTemplatePath('admin/fields/photos_supplementaires.html.twig')
+                ->onlyOnIndex(),
+
 
             TextField::new('nomMedias', 'Médias')
                 ->onlyOnIndex(),
 
-            Field::new('photos')
+            // Field::new('photos')
+            //     ->setFormType(FileType::class)
+            //     ->setFormTypeOptions([
+            //         'multiple' => true,
+            //         'required' => false,
+            //     ])
+                // ->setLabel('Photos'),
+            // miniatures photos/logos
+            Field::new('logo')
                 ->setFormType(FileType::class)
+                ->setLabel('Logo')
+                ->setFormTypeOptions(['required' => false])
+                ->onlyOnForms(),
+
+            Field::new('photoPrincipale')
+                ->setFormType(FileType::class)
+                ->setLabel('Photo principale')
+                ->setFormTypeOptions(['required' => false])
+                ->onlyOnForms(),
+
+            Field::new('photosSupplementaires')
+                ->setFormType(FileType::class)
+                ->setLabel('Photos supplémentaires')
                 ->setFormTypeOptions([
-                    'multiple' => true,
-                    'required' => false,
-                ])
-                ->setLabel('Photos'),
+                'multiple' => true,
+                'required' => false,
+            ])
+            ->onlyOnForms(),
             
                 
             // produit : voir les noms dans INDEX/ vue dashboard
@@ -97,21 +129,58 @@ class ProducteuriceCrudController extends AbstractCrudController
         parent::updateEntity($em, $entityInstance);
     }
 
-    private function handleUploads(Producteurice $producteurice): void
+    // private function handleUploads(Producteurice $producteurice): void
+    // {
+    //     foreach ($producteurice->getPhotos() as $uploadedFile) {
+    //         if ($uploadedFile === null) {
+    //             continue;
+    //         }
+
+    //         $media = new Media();
+    //         $media->setFile($uploadedFile);
+    //         $media->setProducteurice($producteurice);
+    //         $media->setRole('photo_supplementaire');
+
+    //         $producteurice->addMedia($media);
+    //     }
+
+    //     $producteurice->setPhotos([]);
+    // }
+    private function handleUploads(Producteurice $p): void
     {
-        foreach ($producteurice->getPhotos() as $uploadedFile) {
-            if ($uploadedFile === null) {
-                continue;
-            }
-
+        // LOGO
+        if ($p->getLogo()) {
             $media = new Media();
-            $media->setFile($uploadedFile);
-            $media->setProducteurice($producteurice);
-            $media->setRole('photo_supplementaire');
-
-            $producteurice->addMedia($media);
+            $media->setFile($p->getLogo());
+            $media->setProducteurice($p);
+            $media->setRole('logo');
+            $p->addMedia($media);
         }
 
-        $producteurice->setPhotos([]);
+        // PHOTO PRINCIPALE
+        if ($p->getPhotoPrincipale()) {
+            $media = new Media();
+            $media->setFile($p->getPhotoPrincipale());
+            $media->setProducteurice($p);
+            $media->setRole('photo_principale');
+            $p->addMedia($media);
+        }
+
+        // PHOTOS SUPPLÉMENTAIRES
+        foreach ($p->getPhotosSupplementaires() as $file) {
+            if ($file) {
+                $media = new Media();
+                $media->setFile($file);
+                $media->setProducteurice($p);
+                $media->setRole('photo_supplementaire');
+                $p->addMedia($media);
+            }
+        }
+
+        // Nettoyage des champs non mappés
+        $p->setLogo(null);
+        $p->setPhotoPrincipale(null);
+        $p->setPhotosSupplementaires([]);
     }
+
 }
