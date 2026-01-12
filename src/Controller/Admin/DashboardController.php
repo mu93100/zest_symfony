@@ -51,7 +51,10 @@ class DashboardController extends AbstractDashboardController
 //
     public function configureTemplates(Templates $templates): Templates
     {
-        return $templates->addTemplate('layout', 'admin/layout.html.twig');
+        // return $templates->addTemplate('layout', 'admin/layout.html.twig');
+        return $templates
+            ->addTemplate('layout', 'admin/easyadmin_layout.html.twig')
+            ->addTemplate('field/produits', 'admin/fields/produits_flex_row.html.twig');
     }
     
     public function configureMenuItems(): iterable

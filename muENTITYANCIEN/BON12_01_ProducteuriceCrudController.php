@@ -29,14 +29,13 @@ class ProducteuriceCrudController extends AbstractCrudController
     }
 
     public function configureFields(string $pageName): iterable // affichage des champs dans admin
-    
     {
         return [
 
             IdField::new('id')->hideOnForm(),
             TextField::new('nom', 'Nom'),
             TextField::new('slug')->onlyOnForms(),
-            BooleanField::new('isCoop', 'Coopérative ?')->onlyOnIndex(),
+            BooleanField::new('isCoop', 'Coopérative ?'),
             TextField::new('site', 'Site web'),
             // TextField::new('lienProduits', 'Lien externe vers produits'),
 
@@ -47,11 +46,7 @@ class ProducteuriceCrudController extends AbstractCrudController
                 'expanded' => true,
                 'multiple' => true,
                 'by_reference' => false,
-                'attr' => [
-            'class' => 'd-flex flex-wrap gap-2 p-2'  // Bootstrap flex
-                ]
             ])
-            ->setTemplatePath('admin/fields/produits_flex_row.html.twig') // pour CSS personnalisé
             ->onlyOnForms(),
 
             TextEditorField::new('description', 'Description'),
@@ -71,25 +66,9 @@ class ProducteuriceCrudController extends AbstractCrudController
 
 
             // images : affichage F O R M U L A I R E  only
-
-            // Field::new('photosSupplementairesPaths', 'Photos supplémentaires actuelles')
-            //     ->setTemplatePath('admin/fields/photos_supplementaires.html.twig')
-            //     ->onlyOnForms(),
-
-            // TextField::new('logoMediaPath', 'Logo actuel')
-            //     ->onlyOnForms()
-            //     ->setFormTypeOption('disabled', true),
-
-            // Field::new('removeLogo', 'Supprimer le logo')
-            //     ->setFormTypeOption('mapped', false)
-            //     ->setFormTypeOption('required', false)
-            //     ->setFormType(\Symfony\Component\Form\Extension\Core\Type\CheckboxType::class)
-            //     ->onlyOnForms(),
-//  ON TOUCHE PAS
             TextField::new('logoMediaPath', 'Logo actuel')
                 ->onlyOnForms()
                 ->setFormTypeOption('disabled', true),
-
 
             Field::new('logo', 'Nouveau logo')
                 ->setFormType(FileType::class)
@@ -131,8 +110,6 @@ class ProducteuriceCrudController extends AbstractCrudController
             $this->em->persist($media);
         }
 
-        $request = $this->getContext()->getRequest(); 
-        $removeLogo = $request->get('Producteurice')['removeLogo'] ?? false; if ($removeLogo) { $oldLogo = $p->getMedias()->filter(fn($m) => $m->getRole() === 'logo')->first(); if ($oldLogo) { $p->removeMedia($oldLogo); $this->em->remove($oldLogo); } } 
         // PHOTO PRINCIPALE
         if ($p->getPhotoPrincipale()) {
             $media = new Media();

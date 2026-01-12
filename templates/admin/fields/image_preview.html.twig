@@ -1,5 +1,6 @@
 {% if field.value %}
-    <img src="{{ asset('uploads/medias/' ~ field.value) }}" style="max-height: 1rem; border-radius: 6px;">
+    <img src="{{ asset('uploads/medias/' ~ field.value) }}" style="height:2rem; border-radius:0.02rem;">
 {% else %}
-    <span style="color:#888;">Aucune image</span>
+    <span style="color:#00ff9d;">Aucune image</span>
 {% endif %}
+    

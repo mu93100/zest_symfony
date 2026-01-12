@@ -15,7 +15,7 @@ class Media
     #[ORM\Column]
     private ?int $id = null;
 
-    // Fichier uploadé (non mappé)
+    // Fichier uploadé (non mappé en BDD)
     private ?File $file = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -31,22 +31,6 @@ class Media
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getFile(): ?File
-    {
-        return $this->file;
-    }
-
-    public function setFile(?File $file): void
-    {
-        if ($file instanceof UploadedFile) {
-            $filename = uniqid() . '.' . $file->guessExtension();
-            $file->move('uploads/medias', $filename);
-            $this->nomFichier = $filename;
-        }
-
-        $this->file = $file;
     }
 
     public function getNomFichier(): ?string
@@ -69,6 +53,24 @@ class Media
     {
         $this->role = $role;
         return $this;
+    }
+
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    public function setFile(?File $file): void
+    {
+        if ($file instanceof UploadedFile) {
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->guessExtension();
+
+            $filename = $this->getRole() . '-' . $originalName . '.' . $extension;
+            $file->move('uploads/medias', $filename);
+            $this->nomFichier = $filename;
+        }
+        $this->file = $file;
     }
 
     public function getProducteurice(): ?Producteurice
