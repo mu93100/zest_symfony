@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Produit;
+use App\Entity\Media;
 use App\Repository\ProducteuriceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -34,17 +36,26 @@ class Producteurice
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
-    // --- CHAMPS D’UPLOAD (non mappés) ---
+    /** @var UploadedFile|null */
     private ?UploadedFile $logo = null;
+
+    /** @var UploadedFile|null */
     private ?UploadedFile $photoPrincipale = null;
+
+    /** @var UploadedFile[] */
     private array $photosSupplementaires = [];
 
-    // --- RELATION MEDIA ---
-    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'producteurice', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private Collection $medias;
-
+    /**
+     * @var Collection<int, Produit>
+     */
     #[ORM\ManyToMany(targetEntity: Produit::class, mappedBy: 'producteurices')]
     private Collection $produits;
+
+    /**
+     * @var Collection<int, Media>
+     */
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'producteurice', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $medias;
 
     public function __construct()
     {
@@ -123,7 +134,9 @@ class Producteurice
         return $this;
     }
 
-    // --- PRODUITS ---
+    /**
+     * @return Collection<int, Produit>
+     */
     public function getProduits(): Collection
     {
         return $this->produits;
@@ -158,7 +171,9 @@ class Producteurice
         );
     }
 
-    // --- MEDIAS ---
+    /**
+     * @return Collection<int, Media>
+     */
     public function getMedias(): Collection
     {
         return $this->medias;
@@ -167,6 +182,7 @@ class Producteurice
     public function addMedia(Media $media): static
     {
         if (!$this->medias->contains($media)) {
+            // $this->medias->add($media);
             $this->medias[] = $media;
             $media->setProducteurice($this);
         }
@@ -183,39 +199,17 @@ class Producteurice
         return $this;
     }
 
-    // --- GETTERS POUR EASYADMIN ---
+    public function getLogoMedia(): ?Media
+    {
+        return $this->medias
+            ->filter(fn (Media $m) => $m->getRole() === 'logo')
+            ->first() ?: null;
+    }
 
     public function getLogoMediaPath(): ?string
     {
-        $m = $this->medias->filter(fn(Media $m) => $m->getRole() === 'logo')->first();
-        return $m ? $m->getNomFichier() : null;
-    }
-
-    public function getPhotoPrincipalePath(): ?string
-    {
-        $m = $this->medias->filter(fn(Media $m) => $m->getRole() === 'photo_principale')->first();
-        return $m ? $m->getNomFichier() : null;
-    }
-
-    public function getPhotosSupplementairesPaths(): array
-    {
-        return $this->medias
-            ->filter(fn(Media $m) => $m->getRole() === 'photo_supplementaire')
-            ->map(fn(Media $m) => $m->getNomFichier())
-            ->toArray();
-    }
-
-    // --- CHAMPS UPLOAD ---
-
-    public function getLogo(): ?UploadedFile
-    {
-        return $this->logo;
-    }
-
-    public function setLogo(?UploadedFile $logo): self
-    {
-        $this->logo = $logo;
-        return $this;
+        $logo = $this->getLogoMedia();
+        return $logo ? $logo->getNomFichier() : null;
     }
 
     public function getPhotoPrincipale(): ?UploadedFile
@@ -229,6 +223,26 @@ class Producteurice
         return $this;
     }
 
+    public function getPhotoPrincipalePath(): ?string
+    {
+        $photo = $this->medias
+            ->filter(fn (Media $m) => $m->getRole() === 'photo_principale')
+            ->first() ?: null;
+
+        return $photo ? $photo->getNomFichier() : null;
+    }
+
+    public function getLogo(): ?UploadedFile
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(?UploadedFile $logo): self
+    {
+        $this->logo = $logo;
+        return $this;
+    }
+
     public function getPhotosSupplementaires(): array
     {
         return $this->photosSupplementaires;
@@ -238,6 +252,14 @@ class Producteurice
     {
         $this->photosSupplementaires = $photos;
         return $this;
+    }
+
+    public function getPhotosSupplementairesPaths(): array
+    {
+        return $this->medias
+            ->filter(fn (Media $m) => $m->getRole() === 'photo_supplementaire')
+            ->map(fn (Media $m) => $m->getNomFichier())
+            ->toArray();
     }
 
     public function generateSlug(): void
