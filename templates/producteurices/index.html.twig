@@ -1,20 +1,116 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProducteuricesController!{% endblock %}
+{% block title %}{{ producteurice.nom }}{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div class ="container-producteurice">
+<h1>{{ producteurice.nom }}</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+<p>{{ producteurice.description|nl2br }}</p>
 
-    This friendly message is coming from:
+<hr>
+
+{# ============================
+   PHOTO PRINCIPALE
+   ============================ #}
+<h2>Photo principale</h2>
+
+{% set photo_principale = producteurice.medias|filter(m => m.role == 'photo_principale') %}
+
+{% if photo_principale is not empty %}
+    <div class="photo-principale">
+        {% for media in photo_principale %}
+            <img src="{{ asset('uploads/medias/' ~ media.nomFichier) }}"
+                 alt=""
+                 style="max-width:300px; margin:10px 0;">
+        {% endfor %}
+    </div>
+{% else %}
+    <p>Aucune photo principale.</p>
+{% endif %}
+
+<hr>
+
+{# ============================
+   PHOTOS SUPPLÉMENTAIRES
+   ============================ #}
+<h2>Photos supplémentaires</h2>
+
+{% set photos_supp = producteurice.medias|filter(m => m.role == 'photo_supplementaire') %}
+
+{% if photos_supp is not empty %}
+    <div class="photos-supplementaires" style="display:flex; flex-wrap:wrap; gap:10px;">
+        {% for media in photos_supp %}
+            <img src="{{ asset('uploads/medias/' ~ media.nomFichier) }}"
+                 alt=""
+                 style="max-width:150px;">
+        {% endfor %}
+    </div>
+{% else %}
+    <p>Aucune photo supplémentaire.</p>
+{% endif %}
+
+<hr>
+
+{# ============================
+   SITE WEB + LIEN PRODUITS
+   ============================ #}
+<h2>Informations</h2>
+
+<ul>
+    <li>
+        <strong>Site web :</strong>
+        <a href="{{ producteurice.site }}" target="_blank">{{ producteurice.site }}</a>
+    </li>
+
+    {% if producteurice.lienProduits %}
+        <li>
+            <strong>Produits :</strong>
+            <a href="{{ producteurice.lienProduits }}" target="_blank">
+                Voir les produits
+            </a>
+        </li>
+    {% endif %}
+</ul>
+
+<hr>
+
+{# ============================
+   PRODUITS ASSOCIÉS
+   ============================ #}
+<h2>Produits associés</h2>
+
+{% if producteurice.produits is empty %}
+    <p>Aucun produit associé.</p>
+{% else %}
     <ul>
-        <li>Your controller at <code>C:/Users/EDW2425/Desktop/zest_symfony/src/Controller/ProducteuricesController.php</code></li>
-        <li>Your template at <code>C:/Users/EDW2425/Desktop/zest_symfony/templates/producteurices/index.html.twig</code></li>
+        {% for produit in producteurice.produits %}
+            <li>{{ produit.nom }}</li>
+        {% endfor %}
     </ul>
+{% endif %}
+
+<hr>
+
+{# ============================
+   FICHIERS (PDF, docs…)
+   ============================ #}
+<h2>Fichiers associés</h2>
+
+{% set fichiers = producteurice.medias|filter(m => m.role == 'fichier') %}
+
+{% if fichiers is empty %}
+    <p>Aucun fichier associé.</p>
+{% else %}
+    <ul>
+        {% for media in fichiers %}
+            <li>
+                <a href="{{ asset('uploads/medias/' ~ media.nomFichier) }}" download>
+                    {{ media.nomFichier }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
 </div>
 {% endblock %}

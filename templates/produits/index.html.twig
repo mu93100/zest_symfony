@@ -1,20 +1,116 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProduitsController!{% endblock %}
+{% block title %}Tous les produits{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div class="container-produit">
+    <h1>Liste des produits</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <div class="liste-produits">
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/EDW2425/Desktop/zest_symfony/src/Controller/ProduitsController.php</code></li>
-        <li>Your template at <code>C:/Users/EDW2425/Desktop/zest_symfony/templates/produits/index.html.twig</code></li>
-    </ul>
+        {% for produit in produits %}
+
+            <div class="produit" style="margin-bottom:50px;">
+
+                <h2>{{ produit.nom }}</h2>
+
+                <p>{{ produit.description|nl2br }}</p>
+
+                <hr>
+
+                {# ============================
+                   PHOTO PRINCIPALE
+                   ============================ #}
+                <h3>Photo principale</h3>
+
+                {% set photo_principale = produit.medias|filter(m => m.role == 'photo_principale') %}
+
+                {% if photo_principale is not empty %}
+                    <div class="photo-principale">
+                        {% for media in photo_principale %}
+                            <img src="{{ asset('uploads/medias/' ~ media.nomFichier) }}"
+                                 alt=""
+                                 style="max-width:250px; margin:10px 0;">
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>Aucune photo principale.</p>
+                {% endif %}
+
+                <hr>
+
+                {# ============================
+                   PHOTOS SUPPLÉMENTAIRES
+                   ============================ #}
+                <h3>Photos supplémentaires</h3>
+
+                {% set photos_supp = produit.medias|filter(m => m.role == 'photo_supplementaire') %}
+
+                {% if photos_supp is not empty %}
+                    <div class="photos-supplementaires" style="display:flex; flex-wrap:wrap; gap:10px;">
+                        {% for media in photos_supp %}
+                            <img src="{{ asset('uploads/medias/' ~ media.nomFichier) }}"
+                                 alt=""
+                                 style="max-width:120px;">
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>Aucune photo supplémentaire.</p>
+                {% endif %}
+
+                <hr>
+
+                {# ============================
+                   PRODUCTEURICES
+                   ============================ #}
+                <h3>Producteurices</h3>
+
+                {% if produit.producteurices is empty %}
+                    <p>Aucun producteurice associé.</p>
+                {% else %}
+                    <ul>
+                        {% for p in produit.producteurices %}
+                            <li>
+                                {{ p.nom }}
+                                {% if p.site %}
+                                    — <a href="{{ p.site }}" target="_blank">Site web</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <hr>
+
+                {# ============================
+                   FICHIERS
+                   ============================ #}
+                <h3>Fichiers associés</h3>
+
+                {% set fichiers = produit.medias|filter(m => m.role == 'fichier') %}
+
+                {% if fichiers is empty %}
+                    <p>Aucun fichier associé.</p>
+                {% else %}
+                    <ul>
+                        {% for media in fichiers %}
+                            <li>
+                                <a href="{{ asset('uploads/medias/' ~ media.nomFichier) }}" download>
+                                    {{ media.nomFichier }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+            </div>
+
+            <hr>
+
+        {% else %}
+            <p>Aucun produit trouvé.</p>
+        {% endfor %}
+
+    </div>
 </div>
 {% endblock %}

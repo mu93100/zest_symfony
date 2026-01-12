@@ -9,9 +9,7 @@ use App\Entity\Recette;
 use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
 #[Vich\Uploadable]
@@ -21,61 +19,52 @@ class Media
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-    
+
+    // upload simple
     // activer le bundle VichUploader pour uploader TOUT format de fichier
     // terminal : composer require vich/uploader-bundle / pas de colonne file en BDD
     // et création de src/EventListener/MediaMultipleUploadSubscriber.php
-    #[Vich\UploadableField(mapping: 'medias', fileNameProperty: 'nomFichier')] 
+    #[Vich\UploadableField(mapping: 'medias', fileNameProperty: 'nomFichier')]
     private ?File $file = null;
 
-    // Champ NON mappé pour upload multiple 
-    private array $files = [];
-    
+    // Nom du fichier stocké (nullable pour permettre la suppression)
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nomFichier = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 50)] 
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $page = null; // page d'affichage: recette, produit, producteurice, ressource
 
-    #[ORM\Column(length: 50)]
-    private ?string $role = null; // photo_principale, photo_supplementaire, 
-                                  // fichier, video, logo
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $role = null; // photo_principale, photo_supplementaire, fichier, video, logo
+
 
     //---------------- r e l a t i o n s  ManyToOne
     #[ORM\ManyToOne(targetEntity: Recette::class, inversedBy: 'medias')]
-    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
     private ?Recette $recette = null;
 
-    #[ORM\ManyToOne(inversedBy: 'medias')]
+    #[ORM\ManyToOne(targetEntity: Produit::class, inversedBy: 'medias')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
     private ?Produit $produit = null;
 
-    #[ORM\ManyToOne(inversedBy: 'medias')]
+    #[ORM\ManyToOne(targetEntity: Producteurice::class, inversedBy: 'medias')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
     private ?Producteurice $producteurice = null;
 
-    #[ORM\ManyToOne(inversedBy: 'medias')]
+    #[ORM\ManyToOne(targetEntity: Ressource::class, inversedBy: 'medias')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
     private ?Ressource $ressource = null;
 
+    // ---------------- GETTERS / SETTERS ----------------
 
-    
     public function getId(): ?int
     {
         return $this->id;
     }
 
-// Champ NON mappé pour upload multiple
-public function getFiles(): array
-    {
-        return $this->files;
-    }
-
-    public function setFiles(array $files): void
-    {
-        $this->files = $files;
-    }
-    
     public function getFile(): ?File
     {
         return $this->file;
@@ -102,7 +91,7 @@ public function getFiles(): array
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
         return $this;
@@ -113,44 +102,18 @@ public function getFiles(): array
         return $this->page;
     }
 
-    public function setPage(string $page): static
+    public function setPage(?string $page): static
     {
         $this->page = $page;
         return $this;
     }
-
-        public function isPageRecette(): bool
-    {
-        return $this->page === 'recette';
-    }
-
-    public function isPageProduit(): bool
-    {
-        return $this->page === 'produit';
-    }
-
-    public function isPageProducteurice(): bool
-    {
-        return $this->page === 'producteurice';
-    }
-
-    public function isPageRessource(): bool
-    {
-        return $this->page === 'ressource';
-    }
-    public function isPage(string $page): bool
-{
-    return $this->page === $page;
-}
-
-
 
     public function getRole(): ?string
     {
         return $this->role;
     }
 
-    public function setRole(string $role): static
+    public function setRole(?string $role): static
     {
         $this->role = $role;
         return $this;
@@ -161,14 +124,14 @@ public function getFiles(): array
         return $this->recette;
     }
 
-    public function setRecette(?Recette $recette): static 
-    { 
-        $this->recette = $recette; 
-        if ($recette !== null) { 
-            $this->page = 'recette'; 
-        } 
-        return $this; 
-    } 
+    public function setRecette(?Recette $recette): static
+    {
+        $this->recette = $recette;
+        if ($recette) {
+            $this->page = 'recette';
+        }
+        return $this;
+    }
 
     public function getProduit(): ?Produit
     {
@@ -178,6 +141,9 @@ public function getFiles(): array
     public function setProduit(?Produit $produit): static
     {
         $this->produit = $produit;
+        if ($produit) {
+            $this->page = 'produit';
+        }
         return $this;
     }
 
@@ -189,6 +155,9 @@ public function getFiles(): array
     public function setProducteurice(?Producteurice $producteurice): static
     {
         $this->producteurice = $producteurice;
+        if ($producteurice) {
+            $this->page = 'producteurice';
+        }
         return $this;
     }
 
@@ -200,11 +169,14 @@ public function getFiles(): array
     public function setRessource(?Ressource $ressource): static
     {
         $this->ressource = $ressource;
+        if ($ressource) {
+            $this->page = 'ressource';
+        }
         return $this;
     }
+
     public function __toString(): string
     {
-        return $this->nomFichier . ' (' . $this->role . ')';
+        return $this->nomFichier ?? 'Media';
     }
 }
-

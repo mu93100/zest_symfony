@@ -8,8 +8,6 @@ use App\Repository\ProduitRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
@@ -44,7 +42,7 @@ class Produit
     /**
      * @var Collection<int, Media>
      */
-    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'produit', cascade: ['persist', 'remove'], orphanRemoval: true )]
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'produit')]
     private Collection $medias;
 
 
@@ -156,16 +154,6 @@ class Produit
             ->map(fn(Media $m) => $m->getNomFichier() ?? 'Media')
             ->toArray()
         );
-    }
-
-    public function getPhotos(): array 
-    { 
-        return $this->photos; 
-    } 
-    public function setPhotos(array $photos): self 
-    { 
-        $this->photos = $photos; 
-        return $this; 
     }
 
     public function __toString(): string

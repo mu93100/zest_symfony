@@ -10,7 +10,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-
 #[ORM\Entity(repositoryClass: ProducteuriceRepository::class)]
 class Producteurice
 {
@@ -37,27 +36,25 @@ class Producteurice
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
-    /** pour upload plusieurs photos 
-     * @var UploadedFile[] 
-     */ 
+    /** pour upload plusieurs photos
+     * @var UploadedFile[]
+     */
     private array $photos = [];
 
     // “s” obligatoire pour les collections pour variable et inverseBy (Many->s)
     //----------------r e l a t i o n   ManyToMany /côté pas propriétaire = inverse
-    /** 
+    /**
      * @var Collection<int, Produit>
      */
     #[ORM\ManyToMany(targetEntity: Produit::class, mappedBy: 'producteurices')]
     private Collection $produits;
-    
+
     //---------------- r e l a t i o n s  OneToMany
     /**
      * @var Collection<int, Media>
      */
-    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'producteurice', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'producteurice')]
     private Collection $medias;
-
-
 
     public function __construct()
     {
@@ -65,74 +62,82 @@ class Producteurice
         $this->medias = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
+    public function getId(): ?int 
+    { 
+        return $this->id; 
     }
 
-    public function getNom(): ?string
-    {
-        return $this->nom;
+    public function getNom(): ?string 
+    { 
+        return $this->nom; 
+    }
+    public function setNom(string $nom): static 
+    { 
+        $this->nom = $nom; 
+        return $this; 
     }
 
-    public function setNom(string $nom): static
-    {
-        $this->nom = $nom;
-        return $this;
+    public function isCoop(): ?bool 
+    { 
+        return $this->isCoop; 
+    }
+    public function setIsCoop(bool $isCoop): static 
+    { 
+        $this->isCoop = $isCoop; 
+        return $this; 
     }
 
-    public function isCoop(): ?bool
-    {
-        return $this->isCoop;
+    public function getSite(): ?string 
+    { 
+        return $this->site; 
+    }
+    public function setSite(string $site): static 
+    { 
+        $this->site = $site; 
+        return $this; 
     }
 
-    public function setIsCoop(bool $isCoop): static
-    {
-        $this->isCoop = $isCoop;
-        return $this;
+    public function getLienProduits(): ?string 
+    { 
+        return $this->lienProduits; 
+    }
+    public function setLienProduits(?string $lienProduits): static 
+    { 
+        $this->lienProduits = $lienProduits; 
+        return $this; 
     }
 
-    public function getSite(): ?string
-    {
-        return $this->site;
+    public function getDescription(): ?string 
+    { 
+        return $this->description; 
+    }
+    public function setDescription(string $description): static 
+    { 
+        $this->description = $description; 
+        return $this; 
     }
 
-    public function setSite(string $site): static
-    {
-        $this->site = $site;
-        return $this;
+    public function getSlug(): ?string 
+    { 
+        return $this->slug; 
+    }
+    public function setSlug(string $slug): static 
+    { 
+        $this->slug = $slug; 
+        return $this; 
     }
 
-    public function getLienProduits(): ?string
+    /**
+     * @return UploadedFile[]
+     */
+    public function getPhotos(): array
     {
-        return $this->lienProduits;
+        return $this->photos;
     }
 
-    public function setLienProduits(?string $lienProduits): static
+    public function setPhotos(array $photos): self
     {
-        $this->lienProduits = $lienProduits;
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): static
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(string $slug): static
-    {
-        $this->slug = $slug;
+        $this->photos = $photos;
         return $this;
     }
 
@@ -161,18 +166,6 @@ class Producteurice
         return $this;
     }
 
-    public function getNomProduits(): string
-    {
-        if ($this->produits->isEmpty()) {
-            return '—';
-        }
-
-        return implode(', ', $this->produits
-            ->map(fn(Produit $p) => $p->getNom())
-            ->toArray()
-        );
-    }
-
     /**
      * @return Collection<int, Media>
      */
@@ -194,30 +187,24 @@ class Producteurice
     {
         if ($this->medias->removeElement($media)) {
             if ($media->getProducteurice() === $this) {
-                $media->setProducteurice(null); // synchronisation OneToMany
+                $media->setProducteurice(null);
             }
         }
         return $this;
     }
 
-    public function getLogoMedia(): ?Media // récupérer le logo (ROLE='logo')
+    public function getNomMedias(): string
     {
-        return $this->medias
-            ->filter(fn (Media $m) => $m->getRole() === 'logo')
-            ->first() ?: null;
+        if ($this->medias->isEmpty()) {
+            return '—';
+        }
+
+        return implode(', ', $this->medias
+            ->map(fn(Media $m) => $m->getNomFichier() ?? 'Media')
+            ->toArray()
+        );
     }
 
-    public function getPhotos(): array 
-    { 
-        return $this->photos; 
-    } 
-    
-    public function setPhotos(array $photos): self 
-    { 
-        $this->photos = $photos; 
-        return $this; 
-    }
-    
     public function __toString(): string
     {
         return $this->nom ?? 'Producteurice';

@@ -35,15 +35,15 @@ class MediaCrudController extends AbstractCrudController
                 ->setLabel('Photo principale') 
                 ->onlyOnForms(),
 
-            Field::new('files')
-                ->setFormType(FileType::class)
-                ->setFormTypeOptions([ 
-                    'multiple' => true, 
-                    'mapped' => false, 
-                    'required' => false, 
-                ]) 
-                ->setLabel('Photos supplémentaires') 
-                ->onlyOnForms(),
+            // Field::new('files')
+            //     ->setFormType(FileType::class)
+            //     ->setFormTypeOptions([ 
+            //         'multiple' => true, 
+            //         'mapped' => false, 
+            //         'required' => false, 
+            //     ]) 
+            //     ->setLabel('Photos supplémentaires') 
+            //     ->onlyOnForms(),
 
             ChoiceField::new('page')
                 ->setChoices([
