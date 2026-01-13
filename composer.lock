@@ -1199,22 +1199,21 @@
         },
         {
             "name": "easycorp/easyadmin-bundle",
-            "version": "v4.27.4",
+            "version": "v4.27.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EasyCorp/EasyAdminBundle.git",
-                "reference": "6d94c62bca8393bbedbcf66112066e763cd1d20b"
+                "reference": "ece70f2111f006262cd30af16dc10b1720704e10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EasyCorp/EasyAdminBundle/zipball/6d94c62bca8393bbedbcf66112066e763cd1d20b",
-                "reference": "6d94c62bca8393bbedbcf66112066e763cd1d20b",
+                "url": "https://api.github.com/repos/EasyCorp/EasyAdminBundle/zipball/ece70f2111f006262cd30af16dc10b1720704e10",
+                "reference": "ece70f2111f006262cd30af16dc10b1720704e10",
                 "shasum": ""
             },
             "require": {
                 "doctrine/doctrine-bundle": "^2.5|^3.0",
                 "doctrine/orm": "^2.12|^3.0",
-                "ext-json": "*",
                 "php": ">=8.1",
                 "symfony/asset": "^5.4|^6.0|^7.0|^8.0",
                 "symfony/cache": "^5.4|^6.0|^7.0|^8.0",
@@ -1241,6 +1240,9 @@
                 "twig/extra-bundle": "^3.17",
                 "twig/html-extra": "^3.17",
                 "twig/twig": "^3.20"
+            },
+            "conflict": {
+                "symfony/error-handler": "<5.4.35"
             },
             "require-dev": {
                 "doctrine/doctrine-fixtures-bundle": "^3.4|3.5.x-dev|^4.0",
@@ -1290,7 +1292,7 @@
             ],
             "support": {
                 "issues": "https://github.com/EasyCorp/EasyAdminBundle/issues",
-                "source": "https://github.com/EasyCorp/EasyAdminBundle/tree/v4.27.4"
+                "source": "https://github.com/EasyCorp/EasyAdminBundle/tree/v4.27.6"
             },
             "funding": [
                 {
@@ -1298,7 +1300,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-20T19:08:03+00:00"
+            "time": "2026-01-04T09:25:06+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -7461,16 +7463,16 @@
         },
         {
             "name": "symfony/ux-twig-component",
-            "version": "v2.31.0",
+            "version": "v2.32.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-twig-component.git",
-                "reference": "6f7ecc103cdb51adb6d76d32e374fcd1d33ff2fa"
+                "reference": "0a300088327d1b766733fdcd81ae4a77852d6177"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-twig-component/zipball/6f7ecc103cdb51adb6d76d32e374fcd1d33ff2fa",
-                "reference": "6f7ecc103cdb51adb6d76d32e374fcd1d33ff2fa",
+                "url": "https://api.github.com/repos/symfony/ux-twig-component/zipball/0a300088327d1b766733fdcd81ae4a77852d6177",
+                "reference": "0a300088327d1b766733fdcd81ae4a77852d6177",
                 "shasum": ""
             },
             "require": {
@@ -7524,7 +7526,7 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-twig-component/tree/v2.31.0"
+                "source": "https://github.com/symfony/ux-twig-component/tree/v2.32.0"
             },
             "funding": [
                 {
@@ -7544,7 +7546,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-10-17T06:14:35+00:00"
+            "time": "2025-12-25T09:25:01+00:00"
         },
         {
             "name": "symfony/validator",

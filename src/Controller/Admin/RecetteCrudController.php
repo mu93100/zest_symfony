@@ -12,9 +12,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
+// use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
-use EasyCorp\Bundle\EasyAdminBundle\Field\FileField;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 
@@ -79,30 +79,40 @@ class RecetteCrudController extends AbstractCrudController
                 
                     $url = $this->uploaderHelper->asset($media, 'file');
                 
-                    return sprintf('<img src="%s" style="height:3rem;border-radius:4px;">', $url);
+                    return sprintf('<img src="%s" style="height:3rem;width: 3.7rem;border-radius:4px;">', $url);
                 })
                 ->renderAsHtml(),
             
-            TextField::new('titre', 'Photo actuelle')
-                ->onlyOnForms()
-                ->formatValue(function ($value, $recette) {
-                    $media = $recette->getMedias()
-                        ->filter(fn($m) => $m->getRole() === 'photo_principale')
-                        ->first();
 
-                    if (!$media) {
-                        return '';
-                    }
+// ------------------ajout modif/change photo MAIS RIEN NE BOUGE------------------
+            // TextField::new('titre', 'Photo actuelle')
+            //     ->onlyOnForms()
+            //     ->formatValue(function ($value, $recette) {
+            //         $media = $recette->getMedias()
+            //             ->filter(fn($m) => $m->getRole() === 'photo_principale')
+            //             ->first();
 
-                    $filename = $media->getNomFichier();
-                    return sprintf('<div style="display:flex;align-items:center;gap:1rem;">
-                        <span>%s</span>
-                        <button type="button" onclick="document.getElementById(\'changer-photo\').click()" style="padding:0.3rem 0.6rem;">Changer la photo…</button>
-                    </div>', $filename);
-                })
-                ->renderAsHtml(),
+            //         if (!$media) {
+            //             return '';
+            //         }
 
-            FileField::new('newPhoto', 'Changer la photo')
+            //         $filename = $media->getNomFichier();
+
+            //         return sprintf(
+            //             '<div style="display:flex;align-items:center;gap:1rem;">
+            //                 <span>%s</span>
+            //                 <button type="button"
+            //                     onclick="document.getElementById(\'changer-photo\').click()"
+            //                     style="padding:0.3rem 0.6rem;border:1px solid #ccc;border-radius:4px;background:#f9f9f9;">
+            //                     Changer la photo
+            //                 </button>
+            //             </div>',
+            //             $filename
+            //     );
+            // })
+            // ->renderAsHtml(),
+// ------------------
+            Field::new('newPhoto', '')
                 ->setFormType(FileType::class)
                 ->setFormTypeOptions([
                     'mapped' => false,
@@ -111,14 +121,18 @@ class RecetteCrudController extends AbstractCrudController
                 ])
                 ->onlyOnForms(),
 
-
+// ------------------ soit celui ci ------------------
+            // CollectionField::new('medias', 'Photos / Fichiers')
+            //     ->onlyOnForms()
+            //     ->setTemplatePath('admin/recette/_media_readonly.html.twig'),
+// ------------------ soit celui ci ------------------
             CollectionField::new('medias', 'Photos / Fichiers')
                 ->useEntryCrudForm(MediaCrudController::class)
                 ->setFormTypeOptions(['by_reference' => false])
                 ->onlyOnForms(),
         ];
     }
-
+///////// OK
 
     public function updateEntity(EntityManagerInterface $em, $entityInstance): void 
     { 
