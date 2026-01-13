@@ -5,7 +5,7 @@
 
     {% if saisons is not empty %}
         <form method="get" action="{{ app.request.uri }}" style="margin-top:1rem; background-color: #00ff9d;padding:1rem;border-radius:0.5rem;">
-            <label for="saison" style="color: #00ff9d;">Saison :</label>
+            <label for="saison" style="color: #00ff9d;font-weight: bolder;">Saison :</label>
             <select id="saison" name="saison" onchange="this.form.submit()">
                 {% for saison in saisons %}
                     <option value="{{ saison.id }}"

@@ -146,18 +146,33 @@ class Produit
         return $this;
     }
 
-    public function getNomMedias(): string
-    {
-        if ($this->medias->isEmpty()) {
-            return '—';
-        }
+    // public function getNomMedias(): string
+    // {
+    //     if ($this->medias->isEmpty()) {
+    //         return '—';
+    //     }
 
-        return implode(', ', $this->medias
-            ->map(fn(Media $m) => $m->getNomFichier() ?? 'Media')
-            ->toArray()
-        );
+    //     return implode(', ', $this->medias
+    //         ->map(fn(Media $m) => $m->getNomFichier() ?? 'Media')
+    //         ->toArray()
+    //     );
+    // }
+// rajouté 13 01
+    public function getNomMedias(): string
+{
+    $validMedias = $this->medias->filter(fn($m) => $m instanceof Media);
+
+    if ($validMedias->isEmpty()) {
+        return '—';
     }
 
+    return implode(', ', $validMedias
+        ->map(fn(Media $m) => $m->getNomFichier() ?? 'Media')
+        ->toArray()
+    );
+}// rajouté 13 01
+
+    
     public function getPhotos(): array 
     { 
         return $this->photos; 

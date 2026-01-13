@@ -102,10 +102,15 @@
                 <div class="description">{{ recette.description }}</div>
 
                 <div class="recette-photo">
-                {% set photo = recette.medias|filter(m => m.role == 'photo_principale')|first %}
+                    {% set photo = recette.medias|filter(m => m.role == 'photo_principale')|first %}
                     {% if photo %}
-                    <img src="{{ asset('uploads/' ~ photo.nomFichier) }}" alt="{{ photo.description }}">
+                    <img src="{{ asset('uploads/' ~ photo.nomFichier) }}" alt="{{ recette.titre }}">
                     {% endif %}
+{#                    {% set photo = recette.medias|filter(m => m.role == 'photo_principale')|first %}
+                    {% if photo %}
+                        <img src="{{ vich_uploader_asset(photo, 'file') }}" alt="{{ recette.titre }}">
+                    {% endif %}
+#} 
                 </div>
             </div>  
             

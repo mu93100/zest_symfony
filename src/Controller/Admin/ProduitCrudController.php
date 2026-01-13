@@ -48,7 +48,7 @@ class ProduitCrudController extends AbstractCrudController
                 ->formatValue(function ($value, Produit $produit) 
                 {
                     $mediasProduit = $produit->getMedias()->filter(
-                        fn(Media $m) => $m->getPage() === 'produit'
+                        fn(Media $m) => $m->getRole() === 'photo_supplementaire'
                     );
 
                     if ($mediasProduit->isEmpty()) {

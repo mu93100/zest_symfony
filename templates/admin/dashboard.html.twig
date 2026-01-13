@@ -5,7 +5,7 @@
 		<h1>Dashboard</h1>
 
 		<form method="get" action="{{ path('admin') }}">
-			<label for="saison">Choisir une saison :</label>
+			<label style=" font-weight: bolder;" for="saison">Choisir une saison :</label>
 			<select name="saison" id="saison">
 				{% for saison in saisons %}
 				<option value="{{ saison.id }}" {% if saisonEnCours and saison.id == saisonEnCours.id %} selected {% endif %}>
@@ -13,7 +13,7 @@
 				</option>
 			{% endfor %}
 		</select>
-		<button type="submit">Afficher</button>
+		<button style="color: #00ff9d;" type="submit">Afficher</button>
 	</form>
 
 	{% if saisonEnCours %}

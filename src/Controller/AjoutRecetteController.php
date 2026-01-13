@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 final class AjoutRecetteController extends AbstractController
@@ -18,7 +17,7 @@ final class AjoutRecetteController extends AbstractController
     #[Route('/ajout/recette', name: 'app_ajout_recette')]
     #[IsGranted('ROLE_USER')] 
 
-    public function index(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
+    public function index(Request $request, EntityManagerInterface $em): Response
     {
         $recette = new Recette();
         $recette->setDatePublication(new \DateTimeImmutable());
@@ -29,28 +28,41 @@ final class AjoutRecetteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 // dump($form->getErrors(true, false));
-            // gestion de la photo
-            $photoFile = $form->get('photo')->getData();
 
-            if ($photoFile) {
-                // Nom de fichier sécurisé
-                $originalName = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeName = $slugger->slug($originalName);
-                $newFilename = $safeName . '-' . uniqid() . '.' . $photoFile->guessExtension();
-                // Déplacement du fichier
-                $photoFile->move($this->getParameter('uploads_directory'), $newFilename);
+            $uploadedFile = $form->get('photo')->getData();
 
-                // 🔥 Création du Media
+            if ($uploadedFile) {
                 $media = new Media();
-                $media->setNomFichier($newFilename);
-                $media->setDescription("Photo de la recette : " . $recette->getTitre());
-                $media->setPage("recette");
-                $media->setRole("photo_principale");
-
-                // 🔥 Lier le media à la recette
+                $media->setFile($uploadedFile);
+                $media->setRole('photo_principale');
+                $media->setPage('recette');
                 $media->setRecette($recette);
+            
                 $em->persist($media);
             }
+
+            // gestion de la photo
+            // $photoFile = $form->get('photo')->getData();
+
+            // if ($photoFile) {
+            //     // Nom de fichier sécurisé
+            //     $originalName = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
+            //     $safeName = $slugger->slug($originalName);
+            //     $newFilename = $safeName . '-' . uniqid() . '.' . $photoFile->guessExtension();
+            //     // Déplacement du fichier
+            //     $photoFile->move($this->getParameter('uploads_directory'), $newFilename);
+
+            //     // 🔥 Création du Media
+            //     $media = new Media();
+            //     $media->setNomFichier($newFilename);
+            //     // $media->setDescription("Photo de la recette : " . $recette->getTitre());
+            //     $media->setPage("recette");
+            //     $media->setRole("photo_principale");
+
+            //     // 🔥 Lier le media à la recette
+            //     $media->setRecette($recette);
+            //     $em->persist($media);
+            // }
 
             $em->persist($recette);
             $em->flush();
