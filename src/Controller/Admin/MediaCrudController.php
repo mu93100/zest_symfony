@@ -50,7 +50,7 @@ class MediaCrudController extends AbstractCrudController
                     'Logo' => 'logo',
                 ]), 
 
-            // affichage des titres et noms des objets (avec le -toString dans entité)     
+            // affichage des titres et noms des instances (avec le -toString dans entité)     
             AssociationField::new('recette'),
             AssociationField::new('produit'),
             AssociationField::new('producteurice'),

@@ -13,14 +13,19 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 // use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
-use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
+// avec VICH dans entity media utilisé sur propriété file 
+// #[Vich\UploadableField(mapping: 'medias', fileNameProperty: 'nomFichier')]
+//     private ?File $file = null;
 
 
 class RecetteCrudController extends AbstractCrudController
 {
-    private UploaderHelper $uploaderHelper; 
+    private UploaderHelper $uploaderHelper; // --------pour uploader les photos avec VICH
     public function __construct(UploaderHelper $uploaderHelper) 
     { 
         $this->uploaderHelper = $uploaderHelper; 
@@ -30,7 +35,7 @@ class RecetteCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Recette::class;
-    }
+    }                                       //----------------
 
 
     public function configureFields(string $pageName): iterable
@@ -44,11 +49,11 @@ class RecetteCrudController extends AbstractCrudController
 
             IntegerField::new('nombreMangeurs', 'Nombre de mangeurs'),
 
-            TextareaField::new('ingredients', 'Ingrédients'),
+            TextEditorField::new('ingredients', 'Ingrédients'),
 
-            TextareaField::new('description', 'Description'),
+            TextEditorField::new('description', 'Description'),
 
-            // produit : champ liste dans l’index 
+            //  champ liste produits dans l’index 
             AssociationField::new('produit', 'Produits utilisés')
                 ->formatValue(function ($value, $entity) {
                     return implode(
@@ -60,14 +65,13 @@ class RecetteCrudController extends AbstractCrudController
                 })
                 ->onlyOnIndex(),
 
-            // produit : champ liste deroulante dans le formulaire
+            // champ liste deroulante produits dans le formulaire
             AssociationField::new('produit', 'Produits utilisés')
                 ->setFormTypeOptions(['by_reference' => false])
                 ->onlyOnForms(),
 
-            // champ miniature photo 
+            // champ miniature photo en index
             TextField::new('titre', 'Photo')
-                ->onlyOnIndex()
                 ->formatValue(function ($value, $recette) {
                     $media = $recette->getMedias()
                         ->filter(fn($m) => $m->getRole() === 'photo_principale')
@@ -81,7 +85,8 @@ class RecetteCrudController extends AbstractCrudController
                 
                     return sprintf('<img src="%s" style="height:3rem;width: 3.7rem;border-radius:4px;">', $url);
                 })
-                ->renderAsHtml(),
+                ->renderAsHtml()
+                ->onlyOnIndex(),
             
 
 // ------------------ajout modif/change photo MAIS RIEN NE BOUGE------------------
@@ -118,7 +123,9 @@ class RecetteCrudController extends AbstractCrudController
                     'mapped' => false,
                     'required' => false,
                     'attr' => ['id' => 'changer-photo', 'style' => 'display:none;'],
+                    // 'attr' => ['id' => 'changer-photo', 'style' => 'display:none;'],
                 ])
+                ->setLabel('Modifier la photo principale')
                 ->onlyOnForms(),
 
 // ------------------ soit celui ci ------------------
@@ -126,10 +133,10 @@ class RecetteCrudController extends AbstractCrudController
             //     ->onlyOnForms()
             //     ->setTemplatePath('admin/recette/_media_readonly.html.twig'),
 // ------------------ soit celui ci ------------------
-            CollectionField::new('medias', 'Photos / Fichiers')
-                ->useEntryCrudForm(MediaCrudController::class)
-                ->setFormTypeOptions(['by_reference' => false])
-                ->onlyOnForms(),
+            // CollectionField::new('medias', 'Photos / Fichiers')
+            //     ->useEntryCrudForm(MediaCrudController::class)
+            //     ->setFormTypeOptions(['by_reference' => false])
+            //     ->onlyOnForms(),
         ];
     }
 ///////// OK

@@ -177,7 +177,6 @@ class Recette
             $this->medias->add($media);
             $media->setRecette($this);
         }
-
         return $this;
     }
 
@@ -188,7 +187,6 @@ class Recette
                 $media->setRecette(null);
             }
         }
-
         return $this;
     }
 

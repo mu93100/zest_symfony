@@ -7,76 +7,116 @@ use App\Entity\Media;
 use App\Controller\Admin\MediaCrudController;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Doctrine\Common\Collections\ArrayCollection; // pour miniature photos supplementaires en index
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField; // pour description (longText)
+
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
+// avec VICH dans entity media utilisé sur propriété file 
+// #[Vich\UploadableField(mapping: 'medias', fileNameProperty: 'nomFichier')]
+//     private ?File $file = null;
+
 
 class ProduitCrudController extends AbstractCrudController
 {
+    private UploaderHelper $uploaderHelper; // --------pour uploader les photos avec VICH
+
+    public function __construct(UploaderHelper $uploaderHelper) 
+    { 
+        $this->uploaderHelper = $uploaderHelper; 
+    }
+    
     public static function getEntityFqcn(): string
     {
         return Produit::class;
-    }
+    }                                       //--------------------------------------------
 
     public function configureFields(string $pageName): iterable
     {
         return [
-
             IdField::new('id')->hideOnForm(),
 
             TextField::new('nom', 'Nom'),
 
-            TextField::new('description', 'Description'),
-            
-            // Producteurices : voir les noms des prod dans INDEX/ vue dashboard
+            TextEditorField::new('description', 'Description'),
+
+            // producteurices : voir les noms des prod dans INDEX
             TextField::new('nomProducteurices', 'Producteurices')
                 ->onlyOnIndex(), 
-
-            // Producteurices : voir les cases à cocher dans edit
-            AssociationField::new('producteurices', 'Producteurices') // cases à cocher
-                ->setFormTypeOption('expanded', true)
-                ->setFormTypeOption('multiple', true)
-                ->setFormTypeOption('by_reference', false)
-                ->onlyOnForms(),
-
-
-            // Affichage des médias liés au produit (en index)
-            TextField::new('nomMedias', 'Médias')
-                ->formatValue(function ($value, Produit $produit) 
-                {
-                    $mediasProduit = $produit->getMedias()->filter(
-                        fn(Media $m) => $m->getRole() === 'photo_supplementaire'
-                    );
-
-                    if ($mediasProduit->isEmpty()) {
-                        return '—';
-                    }
-
-                    return implode(', ', $mediasProduit
-                        ->map(fn(Media $m) => $m->getNomFichier())
-                        ->toArray());
-                })
-                ->onlyOnIndex()
-                ->renderAsHtml(),
-
-            // OneToMany Medias : édition des médias existants via MediaCrudController
-            CollectionField::new('medias', 'Photos / Fichiers')
-                ->useEntryCrudForm(MediaCrudController::class)
+            
+            // producteurices : champ liste deroulante dans FORM
+            AssociationField::new('producteurices', 'Producteurices') 
                 ->setFormTypeOptions(['by_reference' => false])
                 ->onlyOnForms(),
 
-            // Upload multiple : champ NON mappé
-            Field::new('photos')
-                ->setFormType(FileType::class)
-                ->setFormTypeOptions([
-                    'multiple' => true,
-                    'required' => false,
-                ])
-                ->setLabel('Photos supplémentaires')
+            // champ miniature photo_principale en INDEX
+            TextField::new('nom', 'Photo')
+                ->formatValue(function ($value, $produit) {
+                    $media = $produit->getMedias()
+                        ->filter(fn($m) => $m->getRole() === 'photo_principale')
+                        ->first();
+                
+                    if (!$media) {return '';}
+
+                    $url = $this->uploaderHelper->asset($media, 'file');
+
+                    return sprintf('<img src="%s" style="height:3rem;width: 3.7rem;border-radius:4px;">', $url);
+                })
+                ->renderAsHtml()
+                ->onlyOnIndex(),
+
+            // affichage des photos supplementaires en INDEX
+            TextField::new('nom', 'Photos supplementaires')
+                ->formatValue(function ($value, $produit) {
+                    $medias = $produit->getMedias() 
+                        ->filter(fn($m) => $m->getRole() === 'photo_supplementaire') 
+                        ->slice(0, 7); // slice() renvoie un array
+                    
+                    if (empty($medias)) return '';
+
+                    $images = array_map(function($media) {
+                            $url = $this->uploaderHelper->asset($media, 'file');
+                            return sprintf('<img src="%s" style="height:3rem;width: 3.7rem;border-radius:4px;">', $url);
+                        }, $medias);
+
+                        return implode('', $images);
+                    })
+                    ->renderAsHtml()
+                    ->onlyOnIndex(),
+// ------------------
+            // affichage des médias existants pour modif dans FORM
+            CollectionField::new('medias', 'Photos / Fichiers')
+                ->useEntryCrudForm(MediaCrudController::class)
+                ->setFormTypeOptions(['by_reference' => false])
+                ->setLabel('Modifier les photos')
                 ->onlyOnForms(),
+
+                            // affichage url des medias/ text
+            // // TextField::new('nomMedias', 'Médias')
+            // TextField::new('nom', 'Médias')
+            //     ->formatValue(function ($value, Produit $produit) 
+            //     {
+            //         $mediasProduit = $produit->getMedias()->filter(
+            //             fn(Media $m) => $m->getRole() === 'photo_supplementaire'
+            //         );
+
+            //         if ($mediasProduit->isEmpty()) {
+            //             return '—';
+            //         }
+
+                    
+            //         return implode(', ', $mediasProduit
+            //             ->map(fn(Media $m) => $m->getNomFichier())
+            //             ->toArray());
+            //     })
+            //     ->onlyOnIndex()
+            //     ->renderAsHtml(),
         ];
     }
 

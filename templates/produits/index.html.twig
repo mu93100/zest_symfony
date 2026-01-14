@@ -14,78 +14,90 @@
 
                 <h2>{{ produit.nom }}</h2>
 
-                <p>{{ produit.description|nl2br }}</p>
-
-                <hr>
-
                 {# ============================
                    PHOTO PRINCIPALE
                    ============================ #}
-                <h3>Photo principale</h3>
+                <h5>[ Photo principale ]</h5>
 
                 {% set photo_principale = produit.medias|filter(m => m.role == 'photo_principale') %}
 
                 {% if photo_principale is not empty %}
                     <div class="photo-principale">
                         {% for media in photo_principale %}
-                            <img src="{{ asset('uploads/medias/' ~ media.nomFichier) }}"
+                            <img src="{{ vich_uploader_asset(media, 'file') }}"
                                  alt=""
-                                 style="max-width:250px; margin:10px 0;">
+                                 style="max-width:10rem; margin:1rem;">
                         {% endfor %}
                     </div>
                 {% else %}
                     <p>Aucune photo principale.</p>
                 {% endif %}
 
-                <hr>
+                 
+
+                <p>{{ produit.description|nl2br }}</p>
+
+             
 
                 {# ============================
                    PHOTOS SUPPLÉMENTAIRES
                    ============================ #}
-                <h3>Photos supplémentaires</h3>
+                 <h5>[ Photos supplémentaires ]</h3>
 
                 {% set photos_supp = produit.medias|filter(m => m.role == 'photo_supplementaire') %}
 
                 {% if photos_supp is not empty %}
-                    <div class="photos-supplementaires" style="display:flex; flex-wrap:wrap; gap:10px;">
+                    <div class="photos-supplementaires" style="display:flex; flex-wrap:wrap; gap:1rem; width:120rem;">
                         {% for media in photos_supp %}
-                            <img src="{{ asset('uploads/medias/' ~ media.nomFichier) }}"
+                            <img src="{{ vich_uploader_asset(media, 'file') }}"
                                  alt=""
-                                 style="max-width:120px;">
+                                 style="width:10rem; height:10rem; margin:1rem; border-radius:1rem; object-fit:cover;">
                         {% endfor %}
                     </div>
                 {% else %}
                     <p>Aucune photo supplémentaire.</p>
                 {% endif %}
 
-                <hr>
+                 
 
                 {# ============================
                    PRODUCTEURICES
                    ============================ #}
-                <h3>Producteurices</h3>
+                 <h5>[ Producteurices ]</h3>
 
-                {% if produit.producteurices is empty %}
-                    <p>Aucun producteurice associé.</p>
-                {% else %}
-                    <ul>
-                        {% for p in produit.producteurices %}
-                            <li>
-                                {{ p.nom }}
-                                {% if p.site %}
-                                    — <a href="{{ p.site }}" target="_blank">Site web</a>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
+{% if produit.producteurices is empty %}
+    <p>Aucun producteurice associé.</p>
+{% else %}
+    <ul>
+        {% for p in produit.producteurices %}
+            <li>
+                <strong>{{ p.nom }}</strong>
+
+                {% if p.site %}
+                    — <a href="{{ p.site }}" target="_blank">Site web</a>
                 {% endif %}
 
-                <hr>
+                {# Logos du producteurice #}
+                {% set logos = p.medias|filter(m => m.role == 'logo') %}
+
+                {% if logos|length > 0 %}
+                    {% for logo in logos %}
+                        <img src="{{ vich_uploader_asset(logo, 'file') }}"
+                             alt="Logo de {{ p.nom }}"
+                             style="max-width:10rem; margin:1rem;">
+                    {% endfor %}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+                 
 
                 {# ============================
                    FICHIERS
                    ============================ #}
-                <h3>Fichiers associés</h3>
+                 <h5>[ Fichiers associés ]</h3>
 
                 {% set fichiers = produit.medias|filter(m => m.role == 'fichier') %}
 

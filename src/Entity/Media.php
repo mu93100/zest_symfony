@@ -9,7 +9,6 @@ use App\Entity\Ressource;
 use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-// use Symfony\Component\HttpFoundation\File\UploadedFile;  // ça sert ?
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]

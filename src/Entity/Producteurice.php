@@ -132,7 +132,7 @@ class Producteurice
     public function addProduit(Produit $produit): static
     {
         if (!$this->produits->contains($produit)) {
-            $this->produits->add($produit);
+            $this->produits[] = $produit;
             $produit->addProducteurice($this);
         }
         return $this;

@@ -4,16 +4,26 @@ namespace App\Controller\Admin;
 
 use App\Entity\Producteurice;
 use App\Entity\Media;
+use App\Controller\Admin\MediaCrudController;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField; // a commenter
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField; // a commenter
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Doctrine\Common\Collections\ArrayCollection; // pour miniature photos supplementaires en index
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField; // pour description (longText)
+
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
+// avec VICH dans entity media utilisé sur propriété file 
+// #[Vich\UploadableField(mapping: 'medias', fileNameProperty: 'nomFichier')]
+//     private ?File $file = null;
+
 
 class ProducteuriceCrudController extends AbstractCrudController
 {
@@ -41,11 +51,6 @@ class ProducteuriceCrudController extends AbstractCrudController
 
         ImageField::new('photoPrincipalePath', 'Photo principale')
             ->setBasePath('uploads/medias')
-            ->onlyOnIndex(),
-
-        Field::new('photosSupplementairesPaths', 'Photos ++')
-            ->setCustomOption('mapped', false)
-            ->setTemplatePath('admin/fields/photos_supplementaires.html.twig')
             ->onlyOnIndex(),
 
         TextField::new('nomProduits', 'Produits')->onlyOnIndex(),
