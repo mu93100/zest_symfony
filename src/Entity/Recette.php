@@ -28,7 +28,7 @@ class Recette
     #[ORM\Column]
     private ?int $nombreMangeurs = null;
 
-    #[ORM\Column(length: 500)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $ingredients = null;
 
     #[ORM\Column(type: Types::TEXT)]

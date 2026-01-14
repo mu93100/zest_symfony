@@ -45,7 +45,7 @@ class RecetteCrudController extends AbstractCrudController
 
             TextField::new('titre', 'Titre'),
 
-            AssociationField::new('auteurice', 'Auteurice')->hideOnForm(),
+            AssociationField::new('auteurice', 'Auteurice'),
 
             IntegerField::new('nombreMangeurs', 'Nombre de mangeurs'),
 
@@ -133,10 +133,10 @@ class RecetteCrudController extends AbstractCrudController
             //     ->onlyOnForms()
             //     ->setTemplatePath('admin/recette/_media_readonly.html.twig'),
 // ------------------ soit celui ci ------------------
-            // CollectionField::new('medias', 'Photos / Fichiers')
-            //     ->useEntryCrudForm(MediaCrudController::class)
-            //     ->setFormTypeOptions(['by_reference' => false])
-            //     ->onlyOnForms(),
+            CollectionField::new('medias', 'Photos / Fichiers')
+                ->useEntryCrudForm(MediaCrudController::class)
+                ->setFormTypeOptions(['by_reference' => false])
+                ->onlyOnForms(),
         ];
     }
 ///////// OK

@@ -39,23 +39,7 @@ class ProducteuriceCrudController extends AbstractCrudController
         return Producteurice::class;
     }                                       //-------------------------------------------
 
-
-
-
-    // private EntityManagerInterface $em;
-
-    // public function __construct(EntityManagerInterface $em)
-    // {
-    //     $this->em = $em;
-    // }
-
-    // public static function getEntityFqcn(): string
-    // {
-    //     return Producteurice::class;
-    // }
-
-    public function configureFields(string $pageName): iterable // affichage des champs dans admin
-    
+    public function configureFields(string $pageName): iterable // affichage des champs dans admin 
     {
         return [
 
@@ -70,7 +54,7 @@ class ProducteuriceCrudController extends AbstractCrudController
             TextField::new('nomProduits', 'Produits')->onlyOnIndex(),
 
             // produits : voir les noms des produits dans FORM
-            AssociationField::new('produit', 'Produits') 
+            AssociationField::new('produits', 'Produits') 
                 ->setFormTypeOptions(['by_reference' => false])
                 ->onlyOnForms(),
 
@@ -152,20 +136,40 @@ class ProducteuriceCrudController extends AbstractCrudController
 
         parent::updateEntity($em, $entityInstance);
     }
-
-    private function handleUploads(Producteurice $producteurice): void // function handleUploads = gestion des uploads
-    {
-        foreach ($produit->getPhotos() as $uploadedFile) {
-            if ($uploadedFile === null) {continue;}
-
-            $media = new Media();
-            $media->setFile($uploadedFile); // Vich va gérer l’upload
-            $media->setProduit($produit); // ManyToOne vers Produit
-            $media->setRole('photo_supplementaire');
-
-            $produit->addMedia($media); // cascade persist = OK
-        }
-
-        $produit->setPhotos([]); // on vide le “sac”
+    
+private function handleUploads(Producteurice $p): void 
+{    
+    if ($p->getLogo()) {
+        $media = new Media();
+        $media->setFile($p->getLogo());
+        $media->setProducteurice($p);
+        $media->setRole('logo');
+        $p->addMedia($media);
     }
+    
+    if ($p->getPhotoPrincipale()) {
+        $media = new Media();
+        $media->setFile($p->getPhotoPrincipale());
+        $media->setProducteurice($p);
+        $media->setRole('photo_principale');
+        $p->addMedia($media);
+    }
+    
+    foreach ($p->getPhotosSupplementaires() as $file) {
+        if ($file) {
+            $media = new Media();
+            $media->setFile($file);
+            $media->setProducteurice($p);
+            $media->setRole('photo_supplementaire');
+            $p->addMedia($media);
+        }
+    }
+    
+    // Reset des champs upload
+    $p->setLogo(null);
+    $p->setPhotoPrincipale(null);
+    $p->setPhotosSupplementaires([]);
+}
+
+
 }
