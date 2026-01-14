@@ -88,5 +88,9 @@ class MontantAdhesion
         }
 
         return $this;
-    }       
+    }  
+    public function __toString(): string
+    {
+        return $this->montant ?? 'Montant non défini';
+    }     
 }

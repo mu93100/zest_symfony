@@ -22,6 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 //     fields: ['user', 'saison'],
 //     message: 'Vous avez déjà une adhésion pour cette saison.'
 // )]
+
 class Adhesion 
 {
     #[ORM\Id]
@@ -38,9 +39,11 @@ class Adhesion
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $competencesTexte = null;
 
-    // paiement validé par admin
-    #[ORM\Column(type: 'boolean')]
-    private bool $paiement = false;
+    #[ORM\Column(type: 'boolean')] // paiement validé par admin
+    private bool $paiementValide = false;
+
+    #[ORM\Column(nullable: true)] // montant du paiement si paiement libre  
+    private ?int $montantPaiementLibre = null;
 
     //----------------r e l a t i o n s  ManyToOne
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'adhesions')]
@@ -51,6 +54,7 @@ class Adhesion
     private ?Groupe $groupe = null;
 
     #[ORM\ManyToOne(targetEntity: MontantAdhesion::class, inversedBy: 'adhesions')]
+    #[Assert\NotNull(message: '[ E R R O R  choisis un montant d\'adhésion ]')]
     private ?MontantAdhesion $montantAdhesion = null;
 
     #[ORM\ManyToOne(targetEntity: Saison::class, inversedBy: 'adhesions')]
@@ -58,16 +62,15 @@ class Adhesion
     private ?Saison $saison = null;
 
     //----------------r e l a t i o n s  ManyToMany
-    // #[ORM\ManyToMany(targetEntity: Motivation::class)]
-    // private Collection $motivations;
     #[ORM\ManyToMany(targetEntity: Motivation::class, inversedBy: 'adhesionMotiv')]
     private Collection $motivations;
 
     #[ORM\ManyToMany(targetEntity: Dispo::class, inversedBy: 'adhesions')]
     private Collection $dispos;
 
-    #[ORM\ManyToMany(targetEntity: Pole::class)]
+    #[ORM\ManyToMany(targetEntity: Pole::class, inversedBy: 'adhesions')]
     private Collection $poles;
+
 
 
 
@@ -130,14 +133,14 @@ class Adhesion
         return $this;
     }
 
-    public function isPaiement(): bool
+    public function isPaiementValide(): bool
     {
-        return $this->paiement;
+        return $this->paiementValide;
     }
 
-    public function setPaiement(bool $paiement): self
+    public function setPaiementValide(bool $paiementValide): self
     {
-        $this->paiement = $paiement;
+        $this->paiementValide = $paiementValide;
 
         return $this;
     }
@@ -249,6 +252,18 @@ class Adhesion
         $this->montantAdhesion = $montant; 
         
         return $this; 
+    }
+
+    public function getMontantPaiementLibre(): ?int
+    {
+        return $this->montantPaiementLibre;
+    }
+
+    public function setMontantPaiementLibre(?int $montantPaiementLibre): static
+    {
+        $this->montantPaiementLibre = $montantPaiementLibre;
+
+        return $this;
     }
 
 }

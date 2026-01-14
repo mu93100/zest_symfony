@@ -86,11 +86,14 @@ class Saison
         return $this;
     }
 
-    // 🔹 Compteur d’adhésions
+    //  Compteur d’adhésions
     public function countAdhesions(): int
     {
         return $this->adhesions->count();
     }
 
-    
+    public function __toString(): string
+    {
+        return $this->nom ?? 'Produit';
+    }    
 }

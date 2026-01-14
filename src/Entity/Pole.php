@@ -29,17 +29,25 @@ class Pole
     #[ORM\Column]
     private ?int $volume_horaire = null;
 
+    //----------------r e l a t i o n s  ManyToMany  
     /**
      * @var Collection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'pole')]
     private Collection $users;
 
+    /**
+     * @var Collection<int, Adhesion>
+     */
+    #[ORM\ManyToMany(targetEntity: Adhesion::class, mappedBy: 'poles')]
+    private Collection $adhesions;
+
 
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->adhesions = new ArrayCollection();
     }
 
     
