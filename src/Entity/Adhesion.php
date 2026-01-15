@@ -40,7 +40,7 @@ class Adhesion
     private ?string $competencesTexte = null;
 
     #[ORM\Column(type: 'boolean')] // paiement validé par admin
-    private bool $paiementValide = false;
+    private ?bool $paiementValide = null;
 
     #[ORM\Column(nullable: true)] // montant du paiement si paiement libre  
     private ?int $montantPaiementLibre = null;
@@ -53,8 +53,7 @@ class Adhesion
     #[ORM\ManyToOne(targetEntity: Groupe::class, inversedBy: 'adhesions')]
     private ?Groupe $groupe = null;
 
-    #[ORM\ManyToOne(targetEntity: MontantAdhesion::class, inversedBy: 'adhesions', cascade: ['persist'])]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\ManyToOne(targetEntity: MontantAdhesion::class, inversedBy: 'adhesions')]
     #[Assert\NotNull(message: '[ E R R O R  choisis un montant d\'adhésion ]')]
     private ?MontantAdhesion $montantAdhesion = null;
 
@@ -134,7 +133,7 @@ class Adhesion
         return $this;
     }
 
-    public function isPaiementValide(): bool
+    public function PaiementValide(): bool
     {
         return $this->paiementValide;
     }

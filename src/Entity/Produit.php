@@ -78,7 +78,8 @@ class Produit
 
     public function setDescription(string $description): static 
     { 
-        $this->description = $description; return $this; 
+        $this->description = $description; 
+        return $this; 
     }
 
     public function getSlug(): ?string 

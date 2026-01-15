@@ -69,7 +69,7 @@ class AdhesionCrudController extends AbstractCrudController
             
             AssociationField::new('montantAdhesion', 'Montant'),
             
-            BooleanField::new('paiementValide', 'Paiement effectué')->onlyOnIndex(),
+            BooleanField::new('paiementValide', 'Paiement effectué'),
             // integerField::new('paiement', 'Montant libre'),
             IntegerField::new('montantPaiementLibre', 'Montant libre')
                 ->formatValue(function ($value) {

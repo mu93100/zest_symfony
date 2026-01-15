@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use App\Repository\MontantAdhesionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+
 #[ORM\Entity(repositoryClass: MontantAdhesionRepository::class)]
 class MontantAdhesion
 {

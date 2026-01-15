@@ -1,116 +1,140 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ producteurice.nom }}{% endblock %}
+{% block title %}les producteur.ices{% endblock %}
 
 {% block body %}
 <div class ="container-producteurice">
-<h1>{{ producteurice.nom }}</h1>
+    <h1 style="color: black;">producteur.ices</h1>
 
-<p>{{ producteurice.description|nl2br }}</p>
+    {% for producteurice in producteurices %}
+    <div class="producteurice" style="margin-bottom:50px;">
+        <h5>{{ producteurice.nom }}</h5>
 
-<hr>
+        <p>{{ producteurice.description}}</p>
 
-{# ============================
-   PHOTO PRINCIPALE
-   ============================ #}
-<h2>Photo principale</h2>
+        {# ============================
+           LOGO
+           ============================ #}
+        <h5>[ logo ]</h5>
 
-{% set photo_principale = producteurice.medias|filter(m => m.role == 'photo_principale') %}
+        {% set logo = producteurice.medias|filter(m => m.role == 'logo') %}
 
-{% if photo_principale is not empty %}
-    <div class="photo-principale">
-        {% for media in photo_principale %}
-            <img src="{{ asset('uploads/medias/' ~ media.nomFichier) }}"
-                 alt=""
-                 style="max-width:300px; margin:10px 0;">
-        {% endfor %}
-    </div>
-{% else %}
-    <p>Aucune photo principale.</p>
-{% endif %}
+        {% if logo is not empty %}
+            <div class="logo-producteurice">
+                {% for media in logo %}
+                    img src="{{ vich_uploader_asset(media, 'file') }}"
+                         alt=""
+                         style="max-width:300px; margin:10px 0;">
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Aucun logo</p>
+        {% endif %}
+        
+        {# ============================
+           PHOTO PRINCIPALE
+           ============================ #}
+        <h5>[ Photo principale ]</h5>
 
-<hr>
+        {% set photo_principale = producteurice.medias|filter(m => m.role == 'photo_principale') %}
 
-{# ============================
-   PHOTOS SUPPLÉMENTAIRES
-   ============================ #}
-<h2>Photos supplémentaires</h2>
+        {% if photo_principale is not empty %}
+            <div class="photo-principale">
+                {% for media in photo_principale %}
+                    <img src="{{ vich_uploader_asset(media, 'file') }}"
+                         alt=""
+                         style="max-width:300px; margin:10px 0;">
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Aucune photo principale</p>
+        {% endif %}
 
-{% set photos_supp = producteurice.medias|filter(m => m.role == 'photo_supplementaire') %}
+        {# ============================
+           PHOTOS SUPPLÉMENTAIRES
+           ============================ #}
+        <h5>[ Photos supplémentaires ]</h5>
 
-{% if photos_supp is not empty %}
-    <div class="photos-supplementaires" style="display:flex; flex-wrap:wrap; gap:10px;">
-        {% for media in photos_supp %}
-            <img src="{{ asset('uploads/medias/' ~ media.nomFichier) }}"
-                 alt=""
-                 style="max-width:150px;">
-        {% endfor %}
-    </div>
-{% else %}
-    <p>Aucune photo supplémentaire.</p>
-{% endif %}
+        {% set photos_supp = producteurice.medias|filter(m => m.role == 'photo_supplementaire') %}
 
-<hr>
+        {% if photos_supp is not empty %}
+            <div class="photos-supplementaires" style="display:flex; flex-wrap:wrap; gap:10px;">
+                {% for media in photos_supp %}
+                    <img src="{{ vich_uploader_asset(media, 'file') }}"
+                         alt=""
+                         style="max-width:150px;">
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Aucune photo supplémentaire</p>
+        {% endif %}
 
-{# ============================
-   SITE WEB + LIEN PRODUITS
-   ============================ #}
-<h2>Informations</h2>
+        <hr>
 
-<ul>
-    <li>
-        <strong>Site web :</strong>
-        <a href="{{ producteurice.site }}" target="_blank">{{ producteurice.site }}</a>
-    </li>
+        {# ============================
+           SITE WEB + LIEN PRODUITS
+           ============================ #}
+        <h5>Informations</h5>
 
-    {% if producteurice.lienProduits %}
-        <li>
-            <strong>Produits :</strong>
-            <a href="{{ producteurice.lienProduits }}" target="_blank">
-                Voir les produits
-            </a>
-        </li>
-    {% endif %}
-</ul>
-
-<hr>
-
-{# ============================
-   PRODUITS ASSOCIÉS
-   ============================ #}
-<h2>Produits associés</h2>
-
-{% if producteurice.produits is empty %}
-    <p>Aucun produit associé.</p>
-{% else %}
-    <ul>
-        {% for produit in producteurice.produits %}
-            <li>{{ produit.nom }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-
-<hr>
-
-{# ============================
-   FICHIERS (PDF, docs…)
-   ============================ #}
-<h2>Fichiers associés</h2>
-
-{% set fichiers = producteurice.medias|filter(m => m.role == 'fichier') %}
-
-{% if fichiers is empty %}
-    <p>Aucun fichier associé.</p>
-{% else %}
-    <ul>
-        {% for media in fichiers %}
+        <ul>
             <li>
-                <a href="{{ asset('uploads/medias/' ~ media.nomFichier) }}" download>
-                    {{ media.nomFichier }}
-                </a>
+                <strong>Site web :</strong>
+                <a href="{{ producteurice.site }}" target="_blank">{{ producteurice.site }}</a>
             </li>
-        {% endfor %}
-    </ul>
-{% endif %}
+
+            {% if producteurice.lienProduits %}
+                <li>
+                    <strong>Produits :</strong>
+                    <a href="{{ producteurice.lienProduits }}" target="_blank">
+                        Voir les produits
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+
+        <hr>
+
+        {# ============================
+           PRODUITS ASSOCIÉS
+           ============================ #}
+        <h5>Produits associés</h5>
+
+        {% if producteurice.produits is empty %}
+            <p>Aucun produit associé</p>
+        {% else %}
+            <ul>
+                {% for produit in producteurice.produits %}
+                    <li>{{ produit.nom }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <hr>
+
+        {# ============================
+           FICHIERS (PDF, docs…)
+           ============================ #}
+        <h5>Fichiers associés</h5>
+
+        {% set fichiers = producteurice.medias|filter(m => m.role == 'fichier') %}
+
+        {% if fichiers is empty %}
+            <p>Aucun fichier associé</p>
+        {% else %}
+            <ul>
+                {% for media in fichiers %}
+                    <li>
+                        <a href="{{ asset('uploads/medias/' ~ media.nomFichier) }}" download>
+                            {{ media.nomFichier }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    <hr>
+    {% else %}
+        <p>Aucun.ne producteur.ice trouvé.e</p>
+    {% endfor %}   
+    </div>
 </div>
 {% endblock %}

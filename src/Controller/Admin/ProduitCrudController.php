@@ -97,26 +97,6 @@ class ProduitCrudController extends AbstractCrudController
                 ->setLabel('Modifier les photos')
                 ->onlyOnForms(),
 
-                            // affichage url des medias/ text
-            // // TextField::new('nomMedias', 'Médias')
-            // TextField::new('nom', 'Médias')
-            //     ->formatValue(function ($value, Produit $produit) 
-            //     {
-            //         $mediasProduit = $produit->getMedias()->filter(
-            //             fn(Media $m) => $m->getRole() === 'photo_supplementaire'
-            //         );
-
-            //         if ($mediasProduit->isEmpty()) {
-            //             return '—';
-            //         }
-
-                    
-            //         return implode(', ', $mediasProduit
-            //             ->map(fn(Media $m) => $m->getNomFichier())
-            //             ->toArray());
-            //     })
-            //     ->onlyOnIndex()
-            //     ->renderAsHtml(),
         ];
     }
 

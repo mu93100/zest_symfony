@@ -15,6 +15,7 @@ use App\Entity\Produit;
 use App\Entity\Recette;
 use App\Entity\Saison;
 use App\Entity\Media;
+use App\Entity\MontantAdhesion;
 use App\Repository\SaisonRepository;
 use App\Repository\AdhesionRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
@@ -75,6 +76,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::subMenu('O R G A N I S A T I O N', '')->setSubItems([
             MenuItem::linkToCrud('Pôles', '', Pole::class),
             MenuItem::linkToCrud('Adhésions', '', Adhesion::class),
+            MenuItem::linkToCrud('Montant adhésions', '', MontantAdhesion::class),
             MenuItem::linkToCrud('Motivations', '', Motivation::class),
             MenuItem::linkToCrud('Disponibilités', '', Dispo::class),
         ]);

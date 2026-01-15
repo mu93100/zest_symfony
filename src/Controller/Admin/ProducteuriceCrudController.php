@@ -33,7 +33,6 @@ class ProducteuriceCrudController extends AbstractCrudController
         $this->uploaderHelper = $uploaderHelper; 
     }
 
-
     public static function getEntityFqcn(): string
     {
         return Producteurice::class;
@@ -42,11 +41,10 @@ class ProducteuriceCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable // affichage des champs dans admin 
     {
         return [
-
             IdField::new('id')->hideOnForm(),
             TextField::new('nom', 'Nom'),
             TextField::new('slug')->onlyOnForms(),
-            BooleanField::new('isCoop', 'Coopérative ?')->onlyOnIndex(),
+            BooleanField::new('isCoop', 'Coop ?'),
             TextField::new('site', 'Site web'),
             // TextField::new('lienProduits', 'Lien externe vers produits'),
 
@@ -60,7 +58,8 @@ class ProducteuriceCrudController extends AbstractCrudController
 
             TextEditorField::new('description', 'Description'),
 
-            // champ miniature photo_principale en INDEX
+            // ------------------ M E D I A S ------------------
+            // champ miniature logo en INDEX
             TextField::new('nom', 'logo')
                 ->formatValue(function ($value, $produit) {
                     $media = $produit->getMedias()
@@ -76,6 +75,7 @@ class ProducteuriceCrudController extends AbstractCrudController
                 ->renderAsHtml()
                 ->onlyOnIndex(),
 
+            // champ miniature photo_principale en INDEX
             TextField::new('nom', 'Photo principale')
                 ->formatValue(function ($value, $produit) {
                     $media = $produit->getMedias()
@@ -91,7 +91,7 @@ class ProducteuriceCrudController extends AbstractCrudController
                 ->renderAsHtml()
                 ->onlyOnIndex(),
 
-            // affichage des photos supplementaires en INDEX
+            // champ miniature photo_supplementaires en INDEX
             TextField::new('nom', 'Photos supplementaires')
                 ->formatValue(function ($value, $produit) {
                     $medias = $produit->getMedias() 
@@ -137,38 +137,42 @@ class ProducteuriceCrudController extends AbstractCrudController
         parent::updateEntity($em, $entityInstance);
     }
     
-private function handleUploads(Producteurice $p): void 
-{    
-    if ($p->getLogo()) {
-        $media = new Media();
-        $media->setFile($p->getLogo());
-        $media->setProducteurice($p);
-        $media->setRole('logo');
-        $p->addMedia($media);
-    }
-    
-    if ($p->getPhotoPrincipale()) {
-        $media = new Media();
-        $media->setFile($p->getPhotoPrincipale());
-        $media->setProducteurice($p);
-        $media->setRole('photo_principale');
-        $p->addMedia($media);
-    }
-    
-    foreach ($p->getPhotosSupplementaires() as $file) {
-        if ($file) {
+    private function handleUploads(Producteurice $p): void 
+    {    
+        if ($p->getLogo()) {
             $media = new Media();
-            $media->setFile($file);
+            $media->setFile($p->getLogo());
             $media->setProducteurice($p);
-            $media->setRole('photo_supplementaire');
+            $media->setRole('logo');
             $p->addMedia($media);
         }
-    }
-    
+
+        if ($p->getPhotoPrincipale()) {
+            $media = new Media();
+            $media->setFile($p->getPhotoPrincipale());
+            $media->setProducteurice($p);
+            $media->setRole('photo_principale');
+            $p->addMedia($media);
+        }
+
+        foreach ($p->getPhotosSupplementaires() as $file) {
+            if ($file) {
+                $media = new Media();
+                $media->setFile($file);
+                $media->setProducteurice($p);
+                $media->setRole('photo_supplementaire');
+                $p->addMedia($media);
+            }
+        }
+
     // Reset des champs upload
     $p->setLogo(null);
     $p->setPhotoPrincipale(null);
     $p->setPhotosSupplementaires([]);
+
+    // CRUCIAL : vide les champs upload
+    // $entity->clearUploadFields();
+    
 }
 
 
