@@ -22,11 +22,12 @@ use Symfony\Component\HttpFoundation\Response;  //à supprimer
 // use EasyCorp\Bundle\EasyAdminBundle\Config\Templates;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;  //à supprimer
 use Symfony\Component\HttpFoundation\Request; //à supprimer
-use Doctrine\ORM\EntityManagerInterface; //à supprimer
+use Doctrine\ORM\EntityManagerInterface; //à supprimer NON
 use EasyCorp\Bundle\EasyAdminBundle\Config\Templates;
 use App\Repository\SaisonRepository;
 use App\Repository\AdhesionRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+
 
 
 class AdhesionCrudController extends AbstractCrudController
@@ -46,12 +47,12 @@ class AdhesionCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
+            IdField::new('id')->hideOnForm(),
             
             DateTimeField::new('dateAdhesion', 'Date d\'adhésion'),
             AssociationField::new('user', 'Adhérent'),
             AssociationField::new('groupe', 'Groupe'),
-            AssociationField::new('saison', 'Saison'),
+            // AssociationField::new('saison', 'Saison'),
             // ->formatValue(function ($value, $entity) {
             //         return implode(
             //             ', ',
@@ -65,17 +66,14 @@ class AdhesionCrudController extends AbstractCrudController
             AssociationField::new('saison')
                 ->setLabel('Saison')
                 ->setRequired(true),
-        // autres champs de Adhesion...
             
             AssociationField::new('montantAdhesion', 'Montant'),
             
-            // MoneyField::new('montantAdhesion.montant', 'Montant payé')
-                // ->setCurrency('EUR'), afficher le montant,   
-            BooleanField::new('paiementValide', 'Paiement effectué')->hideOnForm(),
+            BooleanField::new('paiementValide', 'Paiement effectué')->onlyOnIndex(),
             // integerField::new('paiement', 'Montant libre'),
-            TextField::new('montantPaiementLibre', 'Montant libre')
+            IntegerField::new('montantPaiementLibre', 'Montant libre')
                 ->formatValue(function ($value) {
-                    return $value ? $value . '€' : '—';
+                    return $value ? $value . ' €' : '—';
                 })
                 ->onlyOnIndex(),
 
@@ -89,15 +87,25 @@ class AdhesionCrudController extends AbstractCrudController
             //     ->onlyOnForms(),
 
             // ✅ Liste déroulante ASSOCIÉE (pas IntegerField)
-            AssociationField::new('montantAdhesion', 'Montant pré-défini')
-                ->setFormTypeOptions([
-                    'by_reference' => false,
-                    'choice_label' => 'montant',  // ← Affiche libelle
-                    'required' => false
-                ])
-                ->autocomplete()  // ← Liste déroulante fluide
-                ->onlyOnForms(),
-                
+            // AssociationField::new('montantAdhesion', 'Montant pré-défini')
+            //     ->setFormTypeOptions([
+            //         'by_reference' => false,
+            //         'choice_label' => 'montant',  // ← Affiche libelle
+            //         'required' => false
+            //     ])
+            //     // ->autocomplete()  // ← Liste déroulante fluide
+            //     ->onlyOnForms(),
+    //         AssociationField::new('montantAdhesion', 'Montant pré-défini')
+    // ->setFormTypeOptions(['by_reference' => false, 'required' => false])
+    // ->onlyOnForms(),
+    
+    AssociationField::new('montantAdhesion', 'Montant choisi')
+    ->setFormTypeOptions([
+        'choice_label' => 'montant',  // Nom de la propriété à afficher
+        'required' => false
+    ])
+    ->onlyOnForms(),
+
             // ✅ + Montant libre (input numérique)
             IntegerField::new('montantPaiementLibre', 'OU Montant libre (€)')
                 ->setFormTypeOptions([
@@ -117,5 +125,6 @@ class AdhesionCrudController extends AbstractCrudController
 //     private ?int $montantPaiementLibre = null;
 
     }
+    
 
 }

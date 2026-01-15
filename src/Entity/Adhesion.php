@@ -53,7 +53,8 @@ class Adhesion
     #[ORM\ManyToOne(targetEntity: Groupe::class, inversedBy: 'adhesions')]
     private ?Groupe $groupe = null;
 
-    #[ORM\ManyToOne(targetEntity: MontantAdhesion::class, inversedBy: 'adhesions')]
+    #[ORM\ManyToOne(targetEntity: MontantAdhesion::class, inversedBy: 'adhesions', cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: true)]
     #[Assert\NotNull(message: '[ E R R O R  choisis un montant d\'adhésion ]')]
     private ?MontantAdhesion $montantAdhesion = null;
 
