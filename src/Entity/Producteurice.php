@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 
+use App\Entity\Media;
+use App\Entity\Produit;
 use App\Repository\ProducteuriceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 
 #[ORM\Entity(repositoryClass: ProducteuriceRepository::class)]
 class Producteurice
@@ -34,17 +37,20 @@ class Producteurice
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
-    // --- CHAMPS D’UPLOAD (non mappés) ---
-    private ?UploadedFile $logo = null;
-    private ?UploadedFile $photoPrincipale = null;
-    private array $photosSupplementaires = [];
+    //---------------- CHAMPS D’UPLOAD pour photos+logo (non mappés) 
+    /** * @var UploadedFile[] */ 
+    private array $photos = [];
 
-    // --- RELATION MEDIA ---
+    //---------------- r e l a t i o n s  OneToMany
     #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'producteurice', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $medias;
 
+    //---------------- r e l a t i o n s  ManyToMany
     #[ORM\ManyToMany(targetEntity: Produit::class, mappedBy: 'producteurices')]
     private Collection $produits;
+
+
+
 
     public function __construct()
     {
@@ -183,61 +189,14 @@ class Producteurice
         return $this;
     }
 
-    // --- GETTERS POUR EASYADMIN ---
-
-    public function getLogoMediaPath(): ?string
-    {
-        $m = $this->medias->filter(fn(Media $m) => $m->getRole() === 'logo')->first();
-        return $m ? $m->getNomFichier() : null;
-    }
-
-    public function getPhotoPrincipalePath(): ?string
-    {
-        $m = $this->medias->filter(fn(Media $m) => $m->getRole() === 'photo_principale')->first();
-        return $m ? $m->getNomFichier() : null;
-    }
-
-    public function getPhotosSupplementairesPaths(): array
-    {
-        return $this->medias
-            ->filter(fn(Media $m) => $m->getRole() === 'photo_supplementaire')
-            ->map(fn(Media $m) => $m->getNomFichier())
-            ->toArray();
-    }
-
-    // --- CHAMPS UPLOAD ---
-
-    public function getLogo(): ?UploadedFile
-    {
-        return $this->logo;
-    }
-
-    public function setLogo(?UploadedFile $logo): self
-    {
-        $this->logo = $logo;
-        return $this;
-    }
-
-    public function getPhotoPrincipale(): ?UploadedFile
-    {
-        return $this->photoPrincipale;
-    }
-
-    public function setPhotoPrincipale(?UploadedFile $photoPrincipale): self
-    {
-        $this->photoPrincipale = $photoPrincipale;
-        return $this;
-    }
-
-    public function getPhotosSupplementaires(): array
-    {
-        return $this->photosSupplementaires;
-    }
-
-    public function setPhotosSupplementaires(array $photos): self
-    {
-        $this->photosSupplementaires = $photos;
-        return $this;
+        public function getPhotos(): array 
+    { 
+        return $this->photos; 
+    } 
+    public function setPhotos(array $photos): self 
+    { 
+        $this->photos = $photos; 
+        return $this; 
     }
 
     public function generateSlug(): void

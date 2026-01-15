@@ -136,4 +136,18 @@ class ProduitCrudController extends AbstractCrudController
 
         $produit->setPhotos([]); // on vide le “sac”
     }
+
+    private function handleUploads($entity): void 
+    {
+        $photosMethod = method_exists($entity, 'getPhotos') ? 'getPhotos' : 'getPhotosSupplementaires';
+        foreach ($entity->$photosMethod() as $file) {
+            $media = new Media();
+            $media->setFile($file);
+            $media->setEntity($entity);  // setProducteurice() ou setProduit()
+            $media->setRole('photo_supplementaire');  // TOUS = supp
+            $entity->addMedia($media);
+        }
+        $entity->setPhotos([]);  // Reset commun
+    }
+
 }
