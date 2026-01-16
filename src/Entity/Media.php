@@ -179,33 +179,4 @@ class Media
 {
     return $this->nomFichier ?? 'Media';
 }
-
-    // public function getFile(): ?File
-    // {
-    //     return $this->file;
-    // }
-
-    // public function setFile(?File $file): void
-    // {
-    //     if ($file instanceof UploadedFile) {
-    //         $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-    //         $extension = $file->guessExtension();
-
-    //         $filename = $this->getRole() . '-' . $originalName . '.' . $extension;
-    //         $file->move('uploads/medias', $filename);
-    //         $this->nomFichier = $filename;
-    //     }
-    //     $this->file = $file;
-    // }
-
-    // public function getProducteurice(): ?Producteurice
-    // {
-    //     return $this->producteurice;
-    // }
-
-    // public function setProducteurice(?Producteurice $producteurice): static
-    // {
-    //     $this->producteurice = $producteurice;
-    //     return $this;
-    // }
 }

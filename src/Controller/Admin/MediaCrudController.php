@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 
 
+
 class MediaCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
@@ -27,10 +28,18 @@ class MediaCrudController extends AbstractCrudController
             TextField::new('nomFichier', 'Nom du fichier')
                 ->onlyOnIndex(),
 
-            Field::new('file') // champ VichUploader pour uploader les fichiers
-                ->setFormType(VichFileType::class) 
-                ->setLabel('Photo principale') 
-                ->onlyOnForms(),
+            // remplace le label du champ File = upload photo/fichiers
+        Field::new('file', 'Photos/Fichiers')  // ✅ Label personnalisé
+            ->setFormType(VichFileType::class)     // ✅ Garde Vich
+            ->setFormTypeOptions([
+                'allow_delete' => true,
+                'required' => false,
+            ])
+            ->onlyOnForms(),
+            // Field::new('file') // champ VichUploader pour uploader les fichiers
+            //     ->setFormType(VichFileType::class) 
+            //     ->setLabel('Photo principale') 
+            //     ->onlyOnForms(),
 
             ChoiceField::new('page')
                 ->setChoices([
@@ -50,11 +59,7 @@ class MediaCrudController extends AbstractCrudController
                     'Logo' => 'logo',
                 ]), 
 
-            // affichage des titres et noms des instances (avec le -toString dans entité)     
-            AssociationField::new('recette'),
-            AssociationField::new('produit'),
-            AssociationField::new('producteurice'),
-            AssociationField::new('ressource'),
+                
         ];
     }
 }

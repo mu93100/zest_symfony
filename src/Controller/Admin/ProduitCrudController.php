@@ -44,7 +44,8 @@ class ProduitCrudController extends AbstractCrudController
 
             TextField::new('nom', 'Nom'),
 
-            TextEditorField::new('description', 'Description'),
+            TextEditorField::new('description', 'Description')
+                ->setTemplatePath('admin/fields/text_editor.html.twig'),
 
             // producteurices : voir les noms des prod dans INDEX
             TextField::new('nomProducteurices', 'Producteurices')
@@ -119,35 +120,49 @@ class ProduitCrudController extends AbstractCrudController
     }
 
 
-    private function handleUploads(Produit $produit): void
-    {
-        foreach ($produit->getPhotos() as $uploadedFile) {
-            if ($uploadedFile === null) {
-                continue;
-            }
+    // private function handleUploads(Produit $produit): void
+    // {
+    //     foreach ($produit->getPhotos() as $uploadedFile) {
+    //         if ($uploadedFile === null) {
+    //             continue;
+    //         }
 
-            $media = new Media();
-            $media->setFile($uploadedFile); // Vich va gérer l’upload
-            $media->setProduit($produit); // ManyToOne vers Produit
-            $media->setRole('photo_supplementaire');
+    //         $media = new Media();
+    //         $media->setFile($uploadedFile); // Vich va gérer l’upload
+    //         $media->setProduit($produit); // ManyToOne vers Produit
+    //         $media->setRole('photo_fichier'); // on trie TOUTES les photos/fichiers avec 'role'
 
-            $produit->addMedia($media); // cascade persist = OK
-        }
+    //         $produit->addMedia($media); // cascade persist = OK
+    //     }
 
-        $produit->setPhotos([]); // on vide le “sac”
+    //     $produit->setPhotos([]); // on vide le “sac”
+    // }
+
+
+private function handleUploads(Produit $produit): void
+{
+    foreach ($produit->getPhotos() as $file) {
+        $media = new Media();
+        $media->setFile($file);
+        $media->setProduit($produit);
+        $media->setRole('photo_fichier');  // ← TOUTES !
+        $produit->addMedia($media);
     }
+    $produit->setPhotos([]);
+}
 
-    private function handleUploads($entity): void 
-    {
-        $photosMethod = method_exists($entity, 'getPhotos') ? 'getPhotos' : 'getPhotosSupplementaires';
-        foreach ($entity->$photosMethod() as $file) {
-            $media = new Media();
-            $media->setFile($file);
-            $media->setEntity($entity);  // setProducteurice() ou setProduit()
-            $media->setRole('photo_supplementaire');  // TOUS = supp
-            $entity->addMedia($media);
-        }
-        $entity->setPhotos([]);  // Reset commun
-    }
+
+    // private function handleUploads($entity): void 
+    // {
+    //     $photosMethod = method_exists($entity, 'getPhotos') ? 'getPhotos' : 'getPhotosSupplementaires';
+    //     foreach ($entity->$photosMethod() as $file) {
+    //         $media = new Media();
+    //         $media->setFile($file);
+    //         $media->setEntity($entity);  // setProducteurice() ou setProduit()
+    //         $media->setRole('photo_supplementaire');  // TOUS = supp
+    //         $entity->addMedia($media);
+    //     }
+    //     $entity->setPhotos([]);  // Reset commun
+    // }
 
 }

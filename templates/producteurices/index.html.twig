@@ -10,7 +10,7 @@
     <div class="producteurice" style="margin-bottom:50px;">
         <h5>{{ producteurice.nom }}</h5>
 
-        <p>{{ producteurice.description}}</p>
+        <p>{{ producteurice.description|striptags|nl2br }}</p>
 
         {# ============================
            LOGO

@@ -90,7 +90,7 @@
             <div class="recette-texte">
                 <div class="ingredients">
                     <p>Ingrédients</p>
-                    {#<p class="ingredients-colonnes">{{ recette.ingredients|nl2br }}</p> #}
+                    {#<p class="ingredients-colonnes">{{ recette.ingredients|striptags|nl2br  }}</p> #}
                     {% set lignes = recette.ingredients|split("\n") %}
                     <ul class="ingredients-colonnes">
                         {% for ligne in lignes %}
@@ -99,19 +99,14 @@
                     </ul>
                 </div>
 
-                <div class="description">{{ recette.description }}</div>
+                <div class="description">{{ recette.description|striptags|nl2br  }}</div>
 
                 <div class="recette-photo">
-                    {% set photo = recette.medias|filter(m => m.role == 'photo_principale')|first %}
+        {% set photo = recette.medias|filter(m => m.role == 'photo_principale')|first %}
                     {% if photo %}
                     <img src="{{ asset('uploads/' ~ photo.nomFichier) }}" alt="{{ recette.titre }}">
                     {% endif %}
-{#                    {% set photo = recette.medias|filter(m => m.role == 'photo_principale')|first %}
-                    {% if photo %}
-                        <img src="{{ vich_uploader_asset(photo, 'file') }}" alt="{{ recette.titre }}">
-                    {% endif %}
-#} 
-                </div>
+               </div>
             </div>  
             
         </div>
