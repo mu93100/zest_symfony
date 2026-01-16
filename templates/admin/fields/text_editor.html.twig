@@ -1,0 +1,17 @@
+{#  indispensable pour affichage des TextEditorFields créés OU modifiés dans ADMIN avec mise en page = sans les <div></div><br>
+    sinon on a <div>ingrédients<br>ingrédients<br>ingrédients</div>  #}
+
+{% set html_id = 'ea-text-editor-' ~ field.uniqueId %}
+<a href="#" data-bs-toggle="modal" data-bs-target="#{{ html_id }}" class="btn btn-sm btn-outline-secondary">
+    <i class="far fa-file-alt"></i> Voir le contenu
+</a>
+<div class="modal fade" id="{{ html_id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                {#   remplace les <div></div> <br>div par \n + nl2br   #}
+                {{ field.value|replace({'<br>': "\n", '</br>': "\n", '</div>': "\n", '<div>': ''})|striptags|nl2br }}
+            </div>
+        </div>
+    </div>
+</div>

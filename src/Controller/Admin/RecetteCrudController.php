@@ -49,9 +49,12 @@ class RecetteCrudController extends AbstractCrudController
 
             IntegerField::new('nombreMangeurs', 'Nombre de mangeurs'),
 
-            TextEditorField::new('ingredients', 'Ingrédients')->setFormTypeOption('attr', ['rows' => 10]),
-                
-            TextEditorField::new('description', 'Description'),
+            TextEditorField::new('ingredients', 'Ingrédients')
+                ->setTemplatePath('admin/fields/text_editor.html.twig'), // indispensable pour affichage des TextEditorFields créés OU modifiés dans ADMIN
+                                                                        // avec mise en page = sans les <div></div> <br> 
+
+            TextEditorField::new('description', 'Description')
+                ->setTemplatePath('admin/fields/text_editor.html.twig'),
 
             //  champ liste produits dans l’index 
             AssociationField::new('produit', 'Produits utilisés')
