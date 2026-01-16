@@ -10,7 +10,13 @@
         <div class="modal-content">
             <div class="modal-body">
                 {#   remplace les <div></div> <br>div par \n + nl2br   #}
-                {{ field.value|replace({'<br>': "\n", '</br>': "\n", '</div>': "\n", '<div>': ''})|striptags|nl2br }}
+                {{ field.value|replace({
+                    '&nbsp;': ' ',
+                    '<br>': "\n",    
+                    '</div>': "\n", 
+                    '<div>': ''
+                })|striptags|nl2br }}
+
             </div>
         </div>
     </div>

@@ -1,139 +1,118 @@
-<?php
-namespace App\Controller\Admin;
-
-use App\Entity\Media;
-use App\Entity\Recette;
-use App\Controller\Admin\MediaCrudController;
-use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
-// use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-
-use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
-// avec VICH dans entity media utilisé sur propriété file 
-// #[Vich\UploadableField(mapping: 'medias', fileNameProperty: 'nomFichier')]
-//     private ?File $file = null;
 
 
-class RecetteCrudController extends AbstractCrudController
-{
-    private UploaderHelper $uploaderHelper; // --------pour uploader les photos avec VICH
-    public function __construct(UploaderHelper $uploaderHelper) 
-    { 
-        $this->uploaderHelper = $uploaderHelper; 
-    }
+{% block body %}
+<div class="container-recette">
+    <div class="section-nav-recette">
+        <h2>Les recettes</h2>
 
-
-    public static function getEntityFqcn(): string
-    {
-        return Recette::class;
-    }                                       //----------------
-
-
-    public function configureFields(string $pageName): iterable
-    {
-        return [
-            IdField::new('id')->hideOnForm(),
-
-            TextField::new('titre', 'Titre'),
-
-            AssociationField::new('auteurice', 'Auteurice'),
-
-            IntegerField::new('nombreMangeurs', 'Nombre de mangeurs'),
-
-            TextEditorField::new('ingredients', 'Ingrédients'),
-
-            TextEditorField::new('description', 'Description'),
-
-            //  champ liste produits dans l’index 
-            AssociationField::new('produit', 'Produits utilisés')
-                ->formatValue(function ($value, $entity) {
-                    return implode(
-                        ', ',
-                        $entity->getProduit()
-                            ->map(fn($p) => $p->__toString())
-                            ->toArray()
-                    );
-                })
-                ->onlyOnIndex(),
-
-            // champ liste deroulante produits dans le formulaire
-            AssociationField::new('produit', 'Produits utilisés')
-                ->setFormTypeOptions(['by_reference' => false])
-                ->onlyOnForms(),
-
-            // champ miniature photo en index
-            TextField::new('titre', 'Photo')
-                ->formatValue(function ($value, $recette) {
-                    $media = $recette->getMedias()
-                        ->filter(fn($m) => $m->getRole() === 'photo_principale')
-                        ->first();
-                
-                    if (!$media) {
-                        return '';
-                    }
-                
-                    $url = $this->uploaderHelper->asset($media, 'file');
-                
-                    return sprintf('<img src="%s" style="height:3rem;width: 3.7rem;border-radius:4px;">', $url);
-                })
-                ->renderAsHtml()
-                ->onlyOnIndex(),
-            
-
-            Field::new('newPhoto', '')
-                ->setFormType(FileType::class)
-                ->setFormTypeOptions([
-                    'mapped' => false,
-                    'required' => false,
-                    'attr' => ['id' => 'changer-photo', 'style' => 'display:none;'],
-                ])
-                ->setLabel('Modifier la photo principale')
-                ->onlyOnForms(),
-
-
-        ];
-
-    }
-    public function updateEntity(EntityManagerInterface $em, $entityInstance): void 
-    { 
-        $uploadedFile = $this->getContext()->getRequest()->files->get('Recette')['newPhoto'] ?? null; 
+        <div class="nav-recette">
+{# P I L L   rechercher #}            
+            <div class="nav-pill">
+                <form method="get" action="{{ path('app_recherche') }}" class="search-form">
+                    <input
+                        type="search"
+                        name="q"
+                        class="pill pill-search-input"
+                        placeholder="rechercher"
+                        value="{{ searchQuery ?? app.request.get('q') }}"
+                    >
+                    <input type="submit" style="display: none;">
+                </form>
+            </div>
         
-        if ($uploadedFile) { 
-            // Supprimer l’ancienne photo principale 
-            foreach ($entityInstance->getMedias() as $media) { 
-                if ($media->getRole() === 'photo_principale') { 
-                    $em->remove($media); 
-                } 
-            } 
-            // Créer le nouveau Media 
-            $media = new Media(); 
-            $media->setFile($uploadedFile); 
-            $media->setRole('photo_principale'); 
-            $media->setPage('recette'); 
-            $media->setRecette($entityInstance); 
 
-            $em->persist($media); 
-        } 
-        parent::updateEntity($em, $entityInstance); 
-    }
-    public function persistEntity(EntityManagerInterface $em, $entityInstance): void
-    {
-        if ($entityInstance instanceof Recette) {
-            // date automatique comme l'ID
-            if (!$entityInstance->getDatePublication()) {
-                $entityInstance->setDatePublication(new \DateTimeImmutable());
-            }
-        }
+            <div class="nav-page-pill">
+{# P I L L   ajouter une recette #} 
+                <div class="pill-group">
+                    <a class="pill {% if not app.user %}error-tooltip{% endif %}" 
+                       href="{% if app.user %}{{ path('app_ajout_recette') }}{% else %}#{% endif %}"
+                       onclick="{% if not app.user %}openLoginModal(); return false;{% endif %}">
+                        ajouter une recette
+                        {% if not app.user %}
+                            <span class="error-tooltip-text">E R R O R [ connecte-toi pour ajouter la recette ]</span>
+                        {% endif %}
+                    </a>
+                    <a href="{{ path('app_recettes') }}" class="pill pill-straight bg-reset">
+                        revenir à toutes les recettes
+                    </a>
+                </div>
+{# P I L L S  produit #} 
+                <div class="pill-group">
+                    <a class="pill pill-straight bgro" href="?produit=pates">PÂTES</a>
+                    <a class="pill pill-straight bgmc" href="?produit=riz">RIZ</a>
+                    <a class="pill pill-straight bgvc" href="?produit=legumineuses">LÉGUMINEUSES</a>
+                    <a class="pill pill-straight bgsaf" href="?produit=parmesan">PARMESAN</a>
+                    <a class="pill pill-straight bgj" href="?produit=agrumes">AGRUMES</a>
+                </div>
+{# P I L L S  producteurice #}
+                <div class="pill-group">
+                    <a class="pill pill-straight" href="?producteurice=galline-felici">Galline Felici</a>
+                    <a class="pill pill-straight" href="?producteurice=agricola-iris">Agricola IRIS</a>
+                    <a class="pill pill-straight" href="?producteurice=lesca-simone">Lesca Simone</a>
+                    <a class="pill pill-straight" href="?producteurice=astra-iris">Astra IRIS</a>
+                    <a class="pill pill-straight" href="?producteurice=antico-colle-fiorito">Antico Colle Fiorito</a>
+                    <a class="pill pill-straight" href="?producteurice=biosmurra">Biosmurra</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        parent::persistEntity($em, $entityInstance);
-    }
-}
+
+
+
+    <section class="section-recette">
+        {% for recette in recettes %}
+
+        <div class="recette">
+            <div class="recette-titre">
+                <p class="it">Publié le {{ recette.datePublication|date('d/m/Y') }} par {{ recette.auteurice.prenom }} du groupe {{ recette.auteurice.groupe.nom }}</p>
+                <div class="recette-titre-titre">
+                    <h4>{{ recette.titre }}</h4>
+                    <p class="it">pour {{ recette.nombreMangeurs }} personnes</p>
+                    <div class="pill-group tag-prod">
+                        {% for produit in recette.produit %}
+                        <span class="pill pill-straight tag-prod">
+                            {{ produit.nom }}
+                
+                            {% if produit.producteurices|length > 0 %}
+                            <span class="tag-prod">[ 
+                                {% for prod in produit.producteurices %}
+                                {{ prod.nom }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                             ]</span>
+                            {% endif %}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="recette-texte">
+                <div class="ingredients">
+                    <p>Ingrédients</p>
+                    <p class="ingredients-colonnes">{{ recette.ingredients|striptags|nl2br }}</p> 
+                </div>
+
+                <div class="description">{{ recette.description }}</div>
+{#                <div class="description">{{ recette.description|striptags|nl2br }}</div>
+#}
+                <div class="recette-photo">
+        {% set photo = recette.medias|filter(m => m.role == 'photo_principale')|first %}
+                    {% if photo %}
+                    <img src="{{ asset('uploads/' ~ photo.nomFichier) }}" alt="{{ recette.titre }}">
+                    {% endif %}
+               </div>
+            </div>  
+            
+        </div>
+        {% endfor %}
+    </section>
+
+    {# bouton voir + #}
+    {% if recettes|length == 3 %}
+        <div class="recette-pagination">
+          <a href="{{ path('app_recettes', {'page': page + 1}) }}" class="pill ">voir + de recettes</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
