@@ -49,8 +49,8 @@ class RecetteCrudController extends AbstractCrudController
 
             IntegerField::new('nombreMangeurs', 'Nombre de mangeurs'),
 
-            TextEditorField::new('ingredients', 'Ingrédients'),
-
+            TextEditorField::new('ingredients', 'Ingrédients')->setFormTypeOption('attr', ['rows' => 10]),
+                
             TextEditorField::new('description', 'Description'),
 
             //  champ liste produits dans l’index 
@@ -88,35 +88,6 @@ class RecetteCrudController extends AbstractCrudController
                 ->renderAsHtml()
                 ->onlyOnIndex(),
             
-
-// ------------------ajout modif/change photo MAIS RIEN NE BOUGE------------------
-            // TextField::new('titre', 'Photo actuelle')
-            //     ->onlyOnForms()
-            //     ->formatValue(function ($value, $recette) {
-            //         $media = $recette->getMedias()
-            //             ->filter(fn($m) => $m->getRole() === 'photo_principale')
-            //             ->first();
-
-            //         if (!$media) {
-            //             return '';
-            //         }
-
-            //         $filename = $media->getNomFichier();
-
-            //         return sprintf(
-            //             '<div style="display:flex;align-items:center;gap:1rem;">
-            //                 <span>%s</span>
-            //                 <button type="button"
-            //                     onclick="document.getElementById(\'changer-photo\').click()"
-            //                     style="padding:0.3rem 0.6rem;border:1px solid #ccc;border-radius:4px;background:#f9f9f9;">
-            //                     Changer la photo
-            //                 </button>
-            //             </div>',
-            //             $filename
-            //     );
-            // })
-            // ->renderAsHtml(),
-// ------------------
             Field::new('newPhoto', '')
                 ->setFormType(FileType::class)
                 ->setFormTypeOptions([

@@ -159,19 +159,21 @@ span {
 
 .ingredients p {
     margin-bottom: 0.45rem;
-    font-weight: 500;
+    font-weight: 700;
 }   
 
 .ingredients-colonnes {
+    font-weight: 200 !important;
     padding: 0;
-    margin: 0;
     list-style: none;
+    margin-bottom: 3rem; 
 }
 
-.ingredients-colonnes li {
+/* /// à supp car j'ai supp les ul/li */
+.ingredients-colonnes li { 
     line-height: 1.2;
-    margin-bottom: 0.35rem; /* espace entre les lignes */
-}
+     margin-bottom: 3rem; /*espace entre les lignes */
+}  
 
 .description{
     white-space: pre-wrap;  /* Garde les retours à la ligne */
