@@ -56,6 +56,7 @@ class ProduitCrudController extends AbstractCrudController
                 ->setFormTypeOptions(['by_reference' => false])
                 ->onlyOnForms(),
 
+            // ------------------ M E D I A S ------------------
             // champ miniature photo_principale en INDEX
             TextField::new('nom', 'Photo')
                 ->formatValue(function ($value, $produit) {

@@ -38,14 +38,22 @@ class Producteurice
     private ?string $slug = null;
 
     //---------------- CHAMPS D’UPLOAD pour photos+logo (non mappés) 
-    /** * @var UploadedFile[] */ 
+    /** 
+     * @var UploadedFile[] 
+     */ 
     private array $photos = [];
 
     //---------------- r e l a t i o n s  OneToMany
+    /**
+     * @var Collection<int, Media>
+     */
     #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'producteurice', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $medias;
 
     //---------------- r e l a t i o n s  ManyToMany
+    /**
+     * @var Collection<int, Produit>
+     */
     #[ORM\ManyToMany(targetEntity: Produit::class, mappedBy: 'producteurices')]
     private Collection $produits;
 
@@ -173,7 +181,8 @@ class Producteurice
     public function addMedia(Media $media): static
     {
         if (!$this->medias->contains($media)) {
-            $this->medias[] = $media;
+            // AVANT $this->medias[] = $media;    
+            $this->medias->add($media);   
             $media->setProducteurice($this);
         }
         return $this;

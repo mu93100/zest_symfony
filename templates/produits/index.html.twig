@@ -26,7 +26,13 @@
                 <p>Aucune photo principale</p>
             {% endif %}
              
-            <p>{{ produit.description|striptags|nl2br }}</p>
+            <div class="description">{{ produit.description|replace({
+                    '&nbsp;': ' ',
+                    '<br>': "\n",
+                    '</div>': "\n", 
+                    '<div>': ''
+                })|striptags|nl2br }}
+            </div>
          
             {# ============================
                PHOTOS SUPPLÉMENTAIRES

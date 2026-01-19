@@ -42,7 +42,7 @@ class Recette
     private Collection $produit;
     
 //----------------r e l a t i o n s  ManyToOne
-    #[ORM\ManyToOne(inversedBy: 'recette')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'recette')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $auteurice = null;
 
@@ -50,7 +50,7 @@ class Recette
     /**
      * @var Collection<int, Media>
      */
-    #[ORM\OneToMany(mappedBy: 'recette', targetEntity: Media::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'recette', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $medias;
 // orphanRemoval: true/ quand on supprime une recette : ça permet de supprimer le media relié à la recette = orphelin 
 
@@ -163,9 +163,6 @@ class Recette
         return $this;
     }
 
-    /**
-     * @return Collection<int, Media>
-     */
     public function getMedias(): Collection
     {
         return $this->medias;

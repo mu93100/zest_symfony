@@ -4,7 +4,9 @@ namespace App\Controller\Admin;
 
 use App\Entity\Producteurice;
 use App\Entity\Media;
+use App\Entity\Produit;
 use App\Controller\Admin\MediaCrudController;
+use App\Controller\Admin\ProduitCrudController;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -17,8 +19,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField; // a commenter
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Doctrine\Common\Collections\ArrayCollection; // pour miniature photos supplementaires en index
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField; // pour description (longText)
-
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 // avec VICH dans entity media utilisé sur propriété file 
 // #[Vich\UploadableField(mapping: 'medias', fileNameProperty: 'nomFichier')]
@@ -56,33 +56,38 @@ class ProducteuriceCrudController extends AbstractCrudController
                 ->setFormTypeOptions(['by_reference' => false])
                 ->onlyOnForms(),
 
-            TextEditorField::new('description', 'Description'),
+            // TextEditorField::new('description', 'Description'),
+            TextEditorField::new('description', 'Description')
+                ->setTemplatePath('admin/fields/text_editor.html.twig'),
 
             // ------------------ M E D I A S ------------------
             // champ miniature logo en INDEX
             TextField::new('nom', 'logo')
-                ->formatValue(function ($value, $produit) {
-                    $media = $produit->getMedias()
+                ->formatValue(function ($value, $producteurice) {
+                    $media = $producteurice->getMedias()
                         ->filter(fn($m) => $m->getRole() === 'logo')
                         ->first();
                 
-                    if (!$media) {return '';}
-
+                    if (!$media) {
+                        return '';
+                    }
                     $url = $this->uploaderHelper->asset($media, 'file');
 
-                    return sprintf('<img src="%s" style="height:3rem;width: 3.7rem;">', $url);
+                    return sprintf('<img src="%s" style="height:3rem;width: 3.7rem;border-radius:4px;">', $url);
                 })
                 ->renderAsHtml()
                 ->onlyOnIndex(),
 
             // champ miniature photo_principale en INDEX
             TextField::new('nom', 'Photo principale')
-                ->formatValue(function ($value, $produit) {
-                    $media = $produit->getMedias()
+                ->formatValue(function ($value, $producteurice) {
+                    $media = $producteurice->getMedias()
                         ->filter(fn($m) => $m->getRole() === 'photo_principale')
                         ->first();
                 
-                    if (!$media) {return '';}
+                    if (!$media) {
+                        return '';
+                    }
 
                     $url = $this->uploaderHelper->asset($media, 'file');
 
@@ -93,13 +98,17 @@ class ProducteuriceCrudController extends AbstractCrudController
 
             // champ miniature photo_supplementaires en INDEX
             TextField::new('nom', 'Photos supplementaires')
-                ->formatValue(function ($value, $produit) {
-                    $medias = $produit->getMedias() 
+                ->formatValue(function ($value, $producteurice) {
+                    $medias = $producteurice->getMedias() 
                         ->filter(fn($m) => $m->getRole() === 'photo_supplementaire') 
-                        ->slice(0, 7); // slice() renvoie un array
+                        ->slice(0, 7); // slice() renvoie un array max 7 photos
                     
                     if (empty($medias)) return '';
-
+                    // // ajout 19/01
+                    // if (!$media) { 
+                    //     return '';
+                    // }
+                    // ajout 19/01
                     $images = array_map(function($media) {
                             $url = $this->uploaderHelper->asset($media, 'file');
                             return sprintf('<img src="%s" style="height:3rem;width: 3.7rem;border-radius:4px;">', $url);

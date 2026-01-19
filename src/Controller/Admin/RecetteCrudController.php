@@ -10,7 +10,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -50,8 +49,9 @@ class RecetteCrudController extends AbstractCrudController
             IntegerField::new('nombreMangeurs', 'Nombre de mangeurs'),
 
             TextEditorField::new('ingredients', 'Ingrédients')
-                ->setTemplatePath('admin/fields/text_editor.html.twig'), // indispensable pour affichage des TextEditorFields créés OU modifiés dans ADMIN
-                                                                        // avec mise en page = sans les <div></div> <br> 
+                ->setTemplatePath('admin/fields/text_editor.html.twig'), 
+                // indispensable pour affichage des TextEditorFields créés OU modifiés dans ADMIN
+                 // pour mise en page = sans les <div></div> <br> 
 
             TextEditorField::new('description', 'Description')
                 ->setTemplatePath('admin/fields/text_editor.html.twig'),
@@ -83,7 +83,6 @@ class RecetteCrudController extends AbstractCrudController
                     if (!$media) {
                         return '';
                     }
-                
                     $url = $this->uploaderHelper->asset($media, 'file');
                 
                     return sprintf('<img src="%s" style="height:3rem;width: 3.7rem;border-radius:4px;">', $url);
@@ -91,16 +90,16 @@ class RecetteCrudController extends AbstractCrudController
                 ->renderAsHtml()
                 ->onlyOnIndex(),
             
-            Field::new('newPhoto', '')
-                ->setFormType(FileType::class)
-                ->setFormTypeOptions([
-                    'mapped' => false,
-                    'required' => false,
-                    'attr' => ['id' => 'changer-photo', 'style' => 'display:none;'],
-                    // 'attr' => ['id' => 'changer-photo', 'style' => 'display:none;'],
-                ])
-                ->setLabel('Modifier la photo principale')
-                ->onlyOnForms(),
+            // Field::new('newPhoto', '') a été supprimé 19/01 avant de traiter produit et producteurice
+            //     ->setFormType(FileType::class)
+            //     ->setFormTypeOptions([
+            //         'mapped' => false,
+            //         'required' => false,
+            //         'attr' => ['id' => 'changer-photo', 'style' => 'display:none;'],
+            //         // 'attr' => ['id' => 'changer-photo', 'style' => 'display:none;'],
+            //     ])
+            //     ->setLabel('Modifier la photo principale')
+            //     ->onlyOnForms(),
 
 // ------------------ soit celui ci ------------------
             // CollectionField::new('medias', 'Photos / Fichiers')
@@ -113,7 +112,6 @@ class RecetteCrudController extends AbstractCrudController
                 ->onlyOnForms(),
         ];
     }
-///////// OK
 
     public function updateEntity(EntityManagerInterface $em, $entityInstance): void 
     { 
@@ -145,7 +143,6 @@ class RecetteCrudController extends AbstractCrudController
                 $entityInstance->setDatePublication(new \DateTimeImmutable());
             }
         }
-
         parent::persistEntity($em, $entityInstance);
     }
 }
