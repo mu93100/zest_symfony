@@ -166,18 +166,12 @@ span {
     font-weight: 200 !important;
     padding: 0;
     list-style: none;
-    margin-bottom: 3rem; 
+    /* margin-bottom: 23rem;  */
+    line-height: 1.1;
+        white-space: pre-wrap;  /* Garde les retours à la ligne */
+
 }
 
-/* /// à supp car j'ai supp les ul/li */
-.ingredients-colonnes li { 
-    line-height: 1.2;
-     margin-bottom: 3rem; /*espace entre les lignes */
-}  
-
-.description{
-    white-space: pre-wrap;  /* Garde les retours à la ligne */
-}
 .recette-photo {
     width: 100%; 
     height: auto; 

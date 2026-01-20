@@ -111,7 +111,7 @@ class ProducteuriceCrudController extends AbstractCrudController
                     // ajout 19/01
                     $images = array_map(function($media) {
                             $url = $this->uploaderHelper->asset($media, 'file');
-                            return sprintf('<img src="%s" style="height:3rem;width: 3.7rem;border-radius:4px;">', $url);
+                            return sprintf('<img src="%s" style="height:3rem;width: 3.7rem;border-radius:4px;margin:0 0.2rem 0.2rem 0;">', $url);
                         }, $medias);
 
                         return implode('', $images);
@@ -146,38 +146,46 @@ class ProducteuriceCrudController extends AbstractCrudController
         parent::updateEntity($em, $entityInstance);
     }
     
-    private function handleUploads(Producteurice $p): void 
+    private function handleUploads(Producteurice $producteurice): void 
     {    
-        if ($p->getLogo()) {
-            $media = new Media();
-            $media->setFile($p->getLogo());
-            $media->setProducteurice($p);
-            $media->setRole('logo');
-            $p->addMedia($media);
-        }
+        foreach ($producteurice->getPhotos() as $file) {
+        $media = new Media();
+        $media->setFile($file);
+        $media->setProduit($producteurice);
+        $media->setRole('photo_fichier');  // ← TOUTES !
+        $produit->addMedia($media);
+    }
+    $producteurice->setPhotos([]);
+    //     if ($p->getLogo()) {
+    //         $media = new Media();
+    //         $media->setFile($p->getLogo());
+    //         $media->setProducteurice($p);
+    //         $media->setRole('logo');
+    //         $p->addMedia($media);
+    //     }
 
-        if ($p->getPhotoPrincipale()) {
-            $media = new Media();
-            $media->setFile($p->getPhotoPrincipale());
-            $media->setProducteurice($p);
-            $media->setRole('photo_principale');
-            $p->addMedia($media);
-        }
+    //     if ($p->getPhotoPrincipale()) {
+    //         $media = new Media();
+    //         $media->setFile($p->getPhotoPrincipale());
+    //         $media->setProducteurice($p);
+    //         $media->setRole('photo_principale');
+    //         $p->addMedia($media);
+    //     }
 
-        foreach ($p->getPhotosSupplementaires() as $file) {
-            if ($file) {
-                $media = new Media();
-                $media->setFile($file);
-                $media->setProducteurice($p);
-                $media->setRole('photo_supplementaire');
-                $p->addMedia($media);
-            }
-        }
+    //     foreach ($p->getPhotosSupplementaires() as $file) {
+    //         if ($file) {
+    //             $media = new Media();
+    //             $media->setFile($file);
+    //             $media->setProducteurice($p);
+    //             $media->setRole('photo_supplementaire');
+    //             $p->addMedia($media);
+    //         }
+    //     }
 
-    // Reset des champs upload
-    $p->setLogo(null);
-    $p->setPhotoPrincipale(null);
-    $p->setPhotosSupplementaires([]);
+    // // Reset des champs upload
+    // $p->setLogo(null);
+    // $p->setPhotoPrincipale(null);
+    // $p->setPhotosSupplementaires([]);
 
     // CRUCIAL : vide les champs upload
     // $entity->clearUploadFields();

@@ -84,7 +84,7 @@ class ProduitCrudController extends AbstractCrudController
 
                     $images = array_map(function($media) {
                             $url = $this->uploaderHelper->asset($media, 'file');
-                            return sprintf('<img src="%s" style="height:3rem;width: 3.7rem;border-radius:4px;">', $url);
+                            return sprintf('<img src="%s" style="height:3rem;width: 3.7rem;border-radius:4px;margin-right:0.2rem;">', $url);
                         }, $medias);
 
                         return implode('', $images);

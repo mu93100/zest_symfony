@@ -8,7 +8,7 @@
 
     {% for producteurice in producteurices %}
     <div class="producteurice" style="margin-bottom:50px;">
-        <h5>{{ producteurice.nom }}</h5>
+        <h3>{{ producteurice.nom }}</h3>
 
         <p>{{ producteurice.description|striptags|nl2br }}</p>
 
@@ -22,7 +22,7 @@
         {% if logo is not empty %}
             <div class="logo-producteurice">
                 {% for media in logo %}
-                    img src="{{ vich_uploader_asset(media, 'file') }}"
+                    <img src="{{ vich_uploader_asset(media, 'file') }}"
                          alt=""
                          style="max-width:300px; margin:10px 0;">
                 {% endfor %}

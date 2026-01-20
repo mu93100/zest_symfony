@@ -157,3 +157,10 @@ h5 {
     font-size: 1.2rem;
     cursor: pointer;
 }
+
+/* pour pages recette/ produit/ producteurice */
+.description {
+    line-height: 1.5; 
+    white-space: normal;
+    
+}
