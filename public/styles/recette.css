@@ -168,8 +168,7 @@ span {
     list-style: none;
     /* margin-bottom: 23rem;  */
     line-height: 1.1;
-        white-space: pre-wrap;  /* Garde les retours à la ligne */
-
+    white-space: pre-wrap;  /* Garde les retours à la ligne */
 }
 
 .recette-photo {

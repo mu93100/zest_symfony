@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Entity\Groupe;
-use App\Entity\Referent;
 use App\Entity\Pole;
 use App\Entity\Ressource;
 use App\Entity\Recette;
@@ -18,7 +17,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -80,15 +78,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\GreaterThanOrEqual(1)]
     private ?int $nombreEnfants = 0;
 
-    #[ORM\Column(type: 'boolean')]
-    private bool $isReferent = false;
-
-    //----------------r e l a t i o n s  ManyToOne
+//----------------r e l a t i o n   ManyToOne
     #[ORM\ManyToOne(inversedBy: 'membres')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Groupe $groupe = null;
     
-//----------------r e l a t i o n s  ManyToMany
+//----------------r e l a t i o n   ManyToMany
     /**
      * @var Collection<int, Pole>
      */
@@ -96,7 +91,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $pole;
 
 //----------------r e l a t i o n s  OneToMany
-
     #[ORM\OneToMany(targetEntity: Ressource::class, mappedBy: 'user')]
     private Collection $ressource;
 
@@ -106,23 +100,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Adhesion::class, cascade: ['persist', 'remove'])]
     private Collection $adhesions;
 
-    /**
-     * @var Collection<int, Referent>
-     */
-    #[ORM\OneToMany(targetEntity: Referent::class, mappedBy: 'user')]
-    private Collection $referents;
+//-----------------r e l a t i o n   OneToOne
+    #[ORM\OneToOne(targetEntity: Groupe::class, mappedBy: 'referent')]
+    private ?Groupe $groupeReferent = null;
 
 
 
-
-    //----------------f u n c t i o n s
+//----------------f u n c t i o n s
     public function __construct()
     {
         $this->recette = new ArrayCollection();
         $this->pole = new ArrayCollection();
         $this->ressource = new ArrayCollection();
         $this->adhesions = new ArrayCollection();
-        $this->referents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -195,6 +185,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->plainPassword = $plainPassword;
         return $this;
     }
+
     // sérialisation CRC32C : pour remplacer le vrai hash du mot de passe par une empreinte courte dans la session 
     public function __serialize(): array
     {
@@ -320,18 +311,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getGroupe(): ?Groupe
-    {
-        return $this->groupe;
-    }
-
-    public function setGroupe(?Groupe $groupe): static
-    {
-        $this->groupe = $groupe;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Pole>
      */
@@ -345,7 +324,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if (!$this->pole->contains($pole)) {
             $this->pole->add($pole);
         }
-
         return $this;
     }
 
@@ -394,7 +372,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->ressource->add($ressource);
             $ressource->setUser($this);
         }
-
         return $this;
     }
 
@@ -406,7 +383,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $ressource->setUser(null);
             }
         }
-
         return $this;
     }
 
@@ -424,7 +400,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->recette->add($recette);
             $recette->setAuteurice($this);
         }
-
         return $this;
     }
 
@@ -436,48 +411,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $recette->setAuteurice(null);
             }
         }
-
         return $this;
     }
 
-    public function isReferent(): bool
+    // Pour être membre d'un groupe
+    public function getGroupe(): ?Groupe
     {
-        return $this->isReferent;
+        return $this->groupe;
     }
 
-    public function setIsReferent(bool $isReferent): static
+    public function setGroupe(?Groupe $groupe): self
     {
-        $this->isReferent = $isReferent;
+        $this->groupe = $groupe;
         return $this;
     }
 
-    /**
-     * @return Collection<int, Referent>
-     */
-    public function getReferents(): Collection
+    public function removeGroupe(): self
+{
+    $this->groupe = null;
+    return $this;
+}
+
+    // Pour être référent d'un groupe (optionnel)
+    public function getGroupeReferent(): ?Groupe
     {
-        return $this->referents;
+        return $this->groupeReferent;
     }
 
-    public function addReferent(Referent $referent): static
+    public function setGroupeReferent(?Groupe $groupeReferent): self
     {
-        if (!$this->referents->contains($referent)) {
-            $this->referents->add($referent);
-            $referent->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReferent(Referent $referent): static
-    {
-        if ($this->referents->removeElement($referent)) {
-            // set the owning side to null (unless already changed)
-            if ($referent->getUser() === $this) {
-                $referent->setUser(null);
-            }
-        }
-
+        $this->groupeReferent = $groupeReferent;
         return $this;
     }
 

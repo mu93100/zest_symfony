@@ -133,7 +133,7 @@ class Adhesion
         return $this;
     }
 
-    public function PaiementValide(): bool
+    public function isPaiementValide(): bool
     {
         return $this->paiementValide;
     }

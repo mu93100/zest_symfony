@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use App\Entity\User;
-use App\Entity\Referent;
 use App\Entity\Adhesion;
 use App\Repository\GroupeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+
 
 #[ORM\Entity(repositoryClass: GroupeRepository::class)]
 class Groupe
@@ -28,26 +28,22 @@ class Groupe
     private ?string $ville = null;
 
     #[ORM\Column(type: 'boolean')]
-    private bool $isReferent = false;
-
-    #[ORM\Column(type: 'boolean')]
     private bool $isOpen = false;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $dateCreation = null;
 
-    //----------------r e l a t i o n s OneToMany
+    //----------------r e l a t i o n s  OneToMany
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'groupe')]
     private Collection $membres;
 
     #[ORM\OneToMany(mappedBy: 'groupe', targetEntity: Adhesion::class)]
     private Collection $adhesions;
 
-    /**
-     * @var Collection<int, Referent>
-     */
-    #[ORM\OneToMany(targetEntity: Referent::class, mappedBy: 'groupe')]
-    private Collection $referents;
+    //-----------------r e l a t i o n  OneToOne
+    #[ORM\OneToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name:'referent_id', referencedColumnName:'id', nullable: true)]
+    private ?User $referent = null;
 
 
 
@@ -57,7 +53,6 @@ class Groupe
         $this->membres = new ArrayCollection();
         $this->dateCreation = new \DateTimeImmutable();
         $this->adhesions = new ArrayCollection();
-        $this->referents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -101,28 +96,17 @@ class Groupe
         return $this;
     }
 
-    public function isReferent(): ?bool
-    {
-        return $this->isReferent;
-    }
+public function getReferent(): ?User
+{
+    return $this->referent;
+}
 
-    public function setIsReferent(bool $isReferent): static
-    {
-        $this->isReferent = $isReferent;
+public function setReferent(?User $referent): self
+{
+    $this->referent = $referent;
+    return $this;
+}
 
-        return $this;
-    }
-
-    // Fo qui renvoie le user référent du groupe (ou null si aucun).
-    public function getReferent(): ?User
-    {
-        foreach ($this->membres as $membre) {
-            if ($membre->isReferent()) {
-                return $membre;
-            }
-        }
-        return null;
-    }
 
     public function isOpen(): ?bool
     {
@@ -199,36 +183,6 @@ class Groupe
         if ($this->adhesions->removeElement($adhesion)) {
             if ($adhesion->getGroupe() === $this) {
                 $adhesion->setGroupe(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Referent>
-     */
-    public function getReferents(): Collection
-    {
-        return $this->referents;
-    }
-
-    public function addReferent(Referent $referent): static
-    {
-        if (!$this->referents->contains($referent)) {
-            $this->referents->add($referent);
-            $referent->setGroupe($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReferent(Referent $referent): static
-    {
-        if ($this->referents->removeElement($referent)) {
-            // set the owning side to null (unless already changed)
-            if ($referent->getGroupe() === $this) {
-                $referent->setGroupe(null);
             }
         }
 

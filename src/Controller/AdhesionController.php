@@ -104,7 +104,8 @@ final class AdhesionController extends AbstractController
 
 
             // --- Flag référent ---
-            $user->setIsReferent((bool) $adhesionForm->get('isReferent')->getData());
+            $user->setIsReferent((bool) 
+            $adhesionForm->get('isReferent')->getData());
 
             // --- Lier l’adhésion au user ---
             $adhesion->setUser($user);

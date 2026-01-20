@@ -69,7 +69,7 @@ class AdhesionFormType extends AbstractType
             ])
             // Référent
             ->add('isReferent', CheckboxType::class, [
-                'label' => 'Je suis référent·e de mon groupe',
+                'label' => 'Je suis référent·e de mon groupe pour la saison en cours',
                 'mapped' => false,
                 'required' => false,
             ])
@@ -142,7 +142,7 @@ class AdhesionFormType extends AbstractType
                 'label' => 'Je règle mon adhésion annuelle par virement dans les 15 jours - IBAN FR 0000 0000 0000 0000 000',
             ])
             // Paiement admin
-            ->add('paiement', CheckboxType::class, [
+            ->add('paiementValide', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Paiement validé (JUSTE POUR admin)',
             ]);
