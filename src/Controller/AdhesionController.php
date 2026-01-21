@@ -23,16 +23,16 @@ final class AdhesionController extends AbstractController
         if (!$user) {
             throw $this->createAccessDeniedException('[ Tu dois être connecté pour adhérer ]');
         } 
-        // Créer une nouvelle adhésion
+        // ------------- Créer une nouvelle adhésion
         $adhesion = new Adhesion();
 
-        // Saison en cours
+        // ------------- Saison en cours
         $saisonEnCours = $saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
         if ($saisonEnCours) {
             $adhesion->setSaison($saisonEnCours);
         }
 
-        // Créer le formulaire
+        // ------------- Créer le formulaire
         $adhesionForm = $this->createForm(AdhesionFormType::class, $adhesion, [
             'user' => $user,
         ]);
@@ -44,14 +44,43 @@ final class AdhesionController extends AbstractController
         // dd($adhesionForm->createView()->vars);     // ce qui part vers Twig
 
         if ($adhesionForm->isSubmitted() && $adhesionForm->isValid()) {
-            // --- Création d’un nouveau groupe ---
+            // ------------- récup groupe existant (mappé automatiquement)
+            $groupe = $adhesion->getGroupe();
+            // ------------- création d’un nouveau groupe 
             $nouveauNom = $adhesionForm->get('nouveauGroupe')->getData();
-            // --- Création d’un nouveau groupe ---
+                //         if ($nouveauNom) {
+                // // VERIFIER si le groupe n'existe pas
+                // $groupeExistant = $entityManager->getRepository(Groupe::class)
+                //     ->findOneBy(['nom' => $nouveauNom]);
+
+                // if ($groupeExistant) {
+                //     // Utiliser le groupe existant
+                //     $nouveauGroupe = $groupeExistant;
+                // } else {
+                //     // Créer nouveau
+                //     $nouveauGroupe = new Groupe();
+                //     $nouveauGroupe->setNom($nouveauNom);
+                //     $nouveauGroupe->setAdresseDistrib($adhesionForm->get('adresseDistrib')->getData());
+                
+                //     $ville = $adhesionForm->get('ville')->getData();
+                //     $nouveauGroupe->setVille($ville ?? 'Sans ville');
+                    
+                //     $nouveauGroupe->setIsOpen((bool) $adhesionForm->get('isOpen')->getData());
+
+                //     $entityManager->persist($nouveauGroupe);
+
+                //     $adhesion->setGroupe($nouveauGroupe);
+                //     $user->setGroupe($nouveauGroupe);
+                // }
+
             if ($nouveauNom) {
                 $nouveauGroupe = new Groupe();
                 $nouveauGroupe->setNom($nouveauNom);
                 $nouveauGroupe->setAdresseDistrib($adhesionForm->get('adresseDistrib')->getData());
-                $nouveauGroupe->setVille($adhesionForm->get('ville')->getData());
+                
+                $ville = $adhesionForm->get('ville')->getData();
+                $nouveauGroupe->setVille($ville ?? 'Sans ville');
+                
                 $nouveauGroupe->setIsOpen((bool) $adhesionForm->get('isOpen')->getData());
 
                 $entityManager->persist($nouveauGroupe);
@@ -59,7 +88,7 @@ final class AdhesionController extends AbstractController
                 $adhesion->setGroupe($nouveauGroupe);
                 $user->setGroupe($nouveauGroupe);
 
-                // --- Changement de groupe existant ---
+                // ------------- changement de groupe existant 
             } elseif ($adhesionForm->get('changeGroupe')->getData()) {
                 /** @var Groupe $groupeChoisi */
                 $groupeChoisi = $adhesionForm->get('changeGroupe')->getData();
@@ -79,7 +108,7 @@ final class AdhesionController extends AbstractController
                 $adhesion->setGroupe($groupeChoisi);
                 $user->setGroupe($groupeChoisi);
 
-                // --- Sinon garder le groupe actuel ---
+                // -------------  sinon garder le groupe actuel 
             } else {
                 /** @var Groupe|null $groupeActuel */
                 $groupeActuel = $user->getGroupe();
@@ -103,14 +132,37 @@ final class AdhesionController extends AbstractController
             }
 
 
-            // --- Flag référent ---
-            $user->setIsReferent((bool) 
-            $adhesionForm->get('isReferent')->getData());
+            // ------------- référent 
+            $isReferent = $adhesionForm->get('isReferent')->getData();
 
-            // --- Lier l’adhésion au user ---
+            // Récup du groupe du user (via son appartenance)
+            $groupe = $user->getGroupe(); // Suppose que User a une relation ManyToOne vers Groupe
+                    
+            if ($isReferent) {
+                // Si déjà référent, rien à faire
+                if ($groupe->getReferent() === $user) {
+                    // OK
+                } else {
+                    // Définir ce user comme référent (remplace l'ancien)
+                    $groupe->setReferent($user);
+                    // Sync côté inverse
+                    $user->setGroupeReferent($groupe);
+                }
+            } else {
+                // Optionnel : si était référent avant, le virer ? Selon votre logique métier
+                if ($groupe->getReferent() === $user) {
+                    $groupe->setReferent(null);
+                    $user->setGroupeReferent(null);
+                }
+            }
+            
+            $entityManager->persist($groupe); // Nécessaire car owning side
+            $entityManager->flush();
+            
+            // ------------- lier l’adhésion au user 
             $adhesion->setUser($user);
 
-            // Filet de sécurité final
+            // ------------- filet de sécurité final
             if (!$adhesion->getGroupe()) {
                 $adhesion->setGroupe($user->getGroupe());
                 if (!$adhesion->getGroupe()) {
@@ -119,12 +171,12 @@ final class AdhesionController extends AbstractController
             }
 
 
-            // --- Sauvegarde en base ---
+            // ------------- sauvegarde en base 
             $entityManager->persist($adhesion);
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // --- Flash recap ---
+            // ------------- flash recap 
             $this->addFlash('success', $this->renderView('adhesion/_recap.html.twig', [
                 'user' => $user,
                 'groupe' => $adhesion->getGroupe(),
@@ -133,11 +185,11 @@ final class AdhesionController extends AbstractController
                 'montantAdhesion' => $adhesion->getMontantAdhesion(),
             ]));
 
-            // Redirection pour éviter de rester sur le POST
+            // ------------- redirection pour éviter de rester sur le POST
             return $this->redirectToRoute('app_accueil');
         }
 
-        // 👉 Retour si formulaire non soumis ou invalide
+        // ------------- retour si formulaire non soumis ou invalide
         return $this->render('adhesion/index.html.twig', [
             'adhesionForm' => $adhesionForm->createView(),
             'saison' => $saisonEnCours,

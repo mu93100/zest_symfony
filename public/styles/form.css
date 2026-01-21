@@ -279,10 +279,10 @@ textarea {
 }
 /* ------------------- message d'erreur ------------------- */ 
 .invalid-feedback { 
-    color: #00ff9d; 
+    font-size: 1.1rem;
     font-weight: 900;  
 } 
-.is-invalid { 
+/* .is-invalid { 
     background-color: #00ff9d; 
     font-weight: 900; 
-}
+} */

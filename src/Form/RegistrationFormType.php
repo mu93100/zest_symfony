@@ -114,10 +114,10 @@ class RegistrationFormType extends AbstractType
                 'placeholder' => 'Nom du nouveau groupe'
                 ],
             ])
-            ->add('isReferent', CheckboxType::class, [
-                'label' => "Je suis référent·e de mon groupe",
-                'required' => false,
-            ])
+            // ->add('isReferent', CheckboxType::class, [
+            //     'label' => "Je suis référent·e de mon groupe",
+            //     'required' => false,
+            // ])
             ->add('plainPassword', PasswordType::class, [
                 // TOUJOURS = password est lu et encodé dans le controller et non dans entity
                 'mapped' => false,

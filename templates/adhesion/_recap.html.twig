@@ -11,11 +11,11 @@
     <ul>
         <li><strong>Prénom :</strong> {{ user.prenom }}</li>
         <li><strong>Email :</strong> {{ user.email }}</li>
-        <li><strong>Mon adhesion :</strong> {{ montantAdhesion.libelle ?? '—' }}</li>
+        <li><strong>Mon adhesion :</strong> {{ montantAdhesion.libelle ?? '—' }} €</li>
         <li><strong>Mon groupe :</strong> {{ groupe.nom }}</li>
         <li><strong>Adresse de distibution du groupe:</strong> {{ groupe.adresseDistrib ?? '—' }}</li>
         <li><strong>Ville :</strong> {{ groupe.ville ?? '—' }}</li>
-        {% if user.isReferent %}
+        {% if user.groupeReferent %}
             <li><strong>Je suis référent·e de mon groupe</strong></li>
         {% endif %}
         {% if groupe.isOpen %}

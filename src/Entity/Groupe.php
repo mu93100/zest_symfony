@@ -8,9 +8,15 @@ use App\Repository\GroupeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 #[ORM\Entity(repositoryClass: GroupeRepository::class)]
+#[UniqueEntity(
+    fields: ['nom'],
+    message: '[ E R R O R   ce nom de groupe existe déjà ]'
+)]
 class Groupe
 {
     #[ORM\Id]
@@ -18,6 +24,7 @@ class Groupe
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: '[ E R R O R   le nom est obligatoire ]')]
     #[ORM\Column(length: 45, nullable: false)]
     private string $nom;
 
@@ -40,7 +47,7 @@ class Groupe
     #[ORM\OneToMany(mappedBy: 'groupe', targetEntity: Adhesion::class)]
     private Collection $adhesions;
 
-    //-----------------r e l a t i o n  OneToOne
+    //-----------------r e l a t i o n  OneToOne / coté proprietaire
     #[ORM\OneToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name:'referent_id', referencedColumnName:'id', nullable: true)]
     private ?User $referent = null;

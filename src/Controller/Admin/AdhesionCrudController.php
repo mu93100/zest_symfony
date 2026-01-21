@@ -52,17 +52,11 @@ class AdhesionCrudController extends AbstractCrudController
             DateTimeField::new('dateAdhesion', 'Date d\'adhésion'),
             AssociationField::new('user', 'Adhérent'),
             AssociationField::new('groupe', 'Groupe'),
-            // AssociationField::new('saison', 'Saison'),
-            // ->formatValue(function ($value, $entity) {
-            //         return implode(
-            //             ', ',
-            //             $entity->getSaison()
-            //                 ->map(fn($p) => $p->__toString())
-            //                 ->toArray()
-            //         );
-            //     })
-            //     ->onlyOnIndex(),
-                
+            BooleanField::new('isReferent')
+                ->renderAsSwitch()
+                ->setLabel('Référent·e saison en cours'),
+
+    
             AssociationField::new('saison')
                 ->setLabel('Saison')
                 ->setRequired(true),
@@ -126,5 +120,10 @@ class AdhesionCrudController extends AbstractCrudController
 
     }
     
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        // Logique isReferent ici avec $entityInstance->getUser(), $entityInstance->getGroupe()
+        parent::persistEntity($entityManager, $entityInstance);
+    }
 
 }

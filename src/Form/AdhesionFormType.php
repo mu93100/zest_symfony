@@ -9,6 +9,7 @@ use App\Entity\Motivation;
 use App\Entity\Dispo;
 use App\Entity\Pole;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use App\Validator\Constraints\GroupeObligatoire;
+
 
 
 class AdhesionFormType extends AbstractType
@@ -33,6 +35,7 @@ class AdhesionFormType extends AbstractType
                 'data' => $options['user']->getGroupe(), // groupe pré rempli
             ]) // Important: ce champ DOIT être mappé (par défaut mappé = true) pour hydrater l’entite
 
+            // G R O U P E 
             // Choisir un autre groupe existant
             ->add('changeGroupe', EntityType::class, [
                 'mapped' => false,
@@ -48,6 +51,13 @@ class AdhesionFormType extends AbstractType
                 'label' => 'Je crée un nouveau groupe',
                 'required' => false,
                 'attr' => ['placeholder' => 'Nom du nouveau groupe'],
+                'constraints' => [
+                    new UniqueEntity([
+                        'entityClass' => Groupe::class,
+                        'fields' => 'nom',
+                        'message' => '[ E R R O R   ce nom de groupe existe déjà ]'
+                    ])
+                ],
             ])
             ->add('adresseDistribNouveau', TextType::class, [
                 'mapped' => false,
@@ -79,7 +89,8 @@ class AdhesionFormType extends AbstractType
                 'required' => false,
                 'label' => 'Mon groupe peut accueillir de nouveaux adhérent·es',
             ])
-            // Adresse distribution
+            // Champs pour MODIFIER groupe existant 
+            // Adresse distribution 
             ->add('adresseDistrib', TextType::class, [
                 'label' => "Modification de l'adresse de distribution du groupe",
                 'required' => false,
@@ -92,6 +103,7 @@ class AdhesionFormType extends AbstractType
                 'required' => false,
                 'mapped' => false,
             ])
+            // fin   G R O U P E 
             // Motivations
             ->add('motivations', EntityType::class, [
                 'class' => Motivation::class,

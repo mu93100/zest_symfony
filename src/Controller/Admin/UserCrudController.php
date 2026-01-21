@@ -37,6 +37,14 @@ class UserCrudController extends AbstractCrudController
             TextField::new('telephone'),
             AssociationField::new('groupe'),
 
+            AssociationField::new('referent', 'Référent')
+                // ->onlyOnIndex()
+                ->formatValue(function ($user) {
+                    return $user 
+                        ? $user->getPrenom() . ' ' . $user->getNom() . ' (' . $user->getEmail() . ' ' . $user->getTelephone() .')'
+                        : 'Aucun';
+                }),
+
             // BooleanField::new('isReferent')
             //     ->renderAsSwitch(false)
             //     ->onlyOnIndex(),
@@ -53,7 +61,7 @@ class UserCrudController extends AbstractCrudController
             ChoiceField::new('roles')
                 ->setLabel('Rôles')
                 ->setChoices([
-                    'Administrateur' => 'ROLE_ADMIN',
+                    'Admin' => 'ROLE_ADMIN',
                     'Contenus' => 'ROLE_CONTENU',
                     'Adhesions' => 'ROLE_ADHESION',
                     'Produits' => 'ROLE_PRODUIT',
