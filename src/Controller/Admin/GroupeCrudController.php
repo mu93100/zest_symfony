@@ -34,7 +34,10 @@ class GroupeCrudController extends AbstractCrudController
             TextField::new('adresseDistrib', 'Adresse de distribution'),
             TextField::new('ville', 'Ville'),
             BooleanField::new('isOpen', 'groupe OPEN')
+            ->onlyOnIndex()
                 ->renderAsSwitch(false), // rajout pour lecture seule dans index + modif dans form
+            BooleanField::new('isOpen', 'groupe OPEN')
+            ->onlyOnForms(),
 
             // --------- membres du groupe INDEX
             ArrayField::new('membres', 'Membres du groupe')

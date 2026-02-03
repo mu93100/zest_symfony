@@ -44,7 +44,11 @@ class ProducteuriceCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
             TextField::new('nom', 'Nom'),
             TextField::new('slug')->onlyOnForms(),
-            BooleanField::new('isCoop', 'Coop ?'),
+            BooleanField::new('isCoop', 'Coop ?')
+            ->onlyOnIndex()
+                ->renderAsSwitch(false), // rajout pour lecture seule dans index + modif dans form
+            BooleanField::new('isCoop', 'Coop ?')
+            ->onlyOnForms(),
             TextField::new('site', 'Site web'),
             // TextField::new('lienProduits', 'Lien externe vers produits'),
 

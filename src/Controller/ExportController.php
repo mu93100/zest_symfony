@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ExportController extends AbstractController
+class ExportController extends AbstractController // pour export CSV (tableau/liste )
 {
     #[Route('/admin/export/groupes', name: 'export_groupes')]
     public function export(GroupeRepository $repo): Response
@@ -17,8 +17,9 @@ class ExportController extends AbstractController
         $csv = fopen('php://temp', 'r+');
         fputcsv($csv, [
             'ID',
-            'Nom',
-            'Adresse',
+            'Nom du groupe',
+            'Adresse du groupe',
+            'Membres - NB',
             'Membres - nom',
             'Membres - tél.',
             'Membres - email',
@@ -41,6 +42,7 @@ class ExportController extends AbstractController
                         $groupe->getId(),
                         $groupe->getNom(),
                         $groupe->getVille().', '. $groupe->getAdresseDistrib(),
+                        $nbMembres = count($groupe->getMembres()),
                         $membre->getPrenom().' '.$membre->getNom(),
                         '="'.$membre->getTelephone().'"', // pour format telephone avec les 0 initiaux
                         $membre->getEmail(),

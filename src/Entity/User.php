@@ -79,7 +79,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $compositionFoyer = null;
 
     #[ORM\Column(type: 'integer', options: ['unsigned' => true], nullable: true)]
-    #[Assert\GreaterThanOrEqual(1)]
+    #[Assert\GreaterThanOrEqual(0)]
     private ?int $nombreEnfants = 0;
 
 //----------------r e l a t i o n   ManyToOne
