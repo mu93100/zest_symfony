@@ -11,6 +11,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use App\Repository\UserRepository; 
+use Doctrine\ORM\EntityRepository; 
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 
 class GroupeCrudController extends AbstractCrudController
@@ -19,15 +23,7 @@ class GroupeCrudController extends AbstractCrudController
     {
         return Groupe::class;
     }
-// rajout IA / pas nécessaire / a voir
-    // public function configureCrud(Crud $crud): Crud
-    // {
-    //     return $crud
-    //         ->setEntityLabelInSingular('Groupe')
-    //         ->setEntityLabelInPlural('Groupes')
-    //         ->setDefaultSort(['nom' => 'ASC']);
-    // }
-// FIN rajout IA  
+
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -35,55 +31,55 @@ class GroupeCrudController extends AbstractCrudController
             TextField::new('nom', 'Nom du groupe'),
             TextField::new('adresseDistrib', 'Adresse de distribution'),
             TextField::new('ville', 'Ville'),
-            BooleanField::new('isOpen', 'groupe OPEN'),
-//         yield BooleanField::new('isOpen');
+            BooleanField::new('isOpen', 'groupe OPEN')
+                ->renderAsSwitch(false),
 
-            // Liste des membres 
-            ArrayField::new('membres', 'Adhérents')
-                ->formatValue(function ($value, $entity) {
-                    return implode('<br>', $entity->getMembres()->map(
-                        fn($user) => sprintf('%s %s (%s, %s)', 
-                            $user->getPrenom(), 
-                            $user->getNom(), 
+            // --- MEMBRES (INDEX)
+            ArrayField::new('membres', 'Membres du groupe')
+                ->onlyOnIndex()
+                ->formatValue(function ($value, Groupe $groupe) {
+                    return implode('<br>', $groupe->getMembres()->map(
+                        fn(User $user) => sprintf(
+                            '%s %s (%s, %s)',
+                            $user->getPrenom(),
+                            $user->getNom(),
                             $user->getEmail(),
                             $user->getTelephone()
                         )
                     )->toArray());
                 }),
             
-
-            //  count des membres d'un groupe
-            AssociationField::new('membres', 'Nb membres')
-                ->onlyOnIndex(),
-
-            // // 2. Les détails du référent (virtuel)
-            // TextField::new('referentInfo', 'Référent')
-            //     ->setVirtual(true)
-            //     ->onlyOnIndex(),
-                        
-            // Dans GroupeCrudController
-            AssociationField::new('referent', 'Référent')
-                // ->onlyOnIndex()
-                ->formatValue(function ($user) {
-                    return $user 
-                        ? $user->getPrenom() . ' ' . $user->getNom() . ' (' . $user->getEmail() . ' ' . $user->getTelephone() .')'
-                        : 'Aucun';
+            // --- RÉFÉRENT (AFFICHAGE INDEX)
+            TextField::new('referent', 'Référent')
+                ->onlyOnIndex()
+                ->formatValue(function ($value, Groupe $groupe) {
+                    $user = $groupe->getReferent();
+                    return $user
+                        ? $user->getPrenom().' '.$user->getNom().' ('.$user->getEmail().' '.$user->getTelephone().')'
+                        : '⚠️ aucun';
                 }),
-                
-            // OU
-            // AssociationField::new('referent', 'Référent')
-            //     ->onlyOnIndex()
-            //     ->formatValue(function ($user) {
-            //         return $user 
-            //             ? sprintf('%s %s (%s)', 
-            //                 $user->getPrenom(), 
-            //                 $user->getNom(), 
-            //                 $user->getEmail()
-            //             ) 
-            //             : 'Aucun';
-            //     }),
-            
 
+            // --- RÉFÉRENT (AFFICHAGE form)
+            AssociationField::new('referent', 'Référent')
+                ->onlyOnForms('edit')
+                ->setFormTypeOptions([
+                    'query_builder' => function (UserRepository $userRepository) {
+                        $groupe = $this->getContext()->getEntity()->getInstance();
+                        
+                        return $userRepository->createQueryBuilder('u')
+                            ->innerJoin('u.groupe', 'g')  // ⚠️ NOM DE TA RELATION User->Groupe
+                            ->andWhere('g.id = :groupeId')
+                            ->setParameter('groupeId', $groupe->getId());
+                    },
+                    'placeholder' => 'Aucun(e)',
+                    'required' => false,
+                ]),           
         ];
+    }
+
+        public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setPageTitle(Crud::PAGE_INDEX, 'Groupes [ <span style="font-weight:lighter;font-size:0.5em">⚠️ la liste des membres se modifie dans la section Adhérents - impossible dans Groupes</span> ]');
     }
 }

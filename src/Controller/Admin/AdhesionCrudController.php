@@ -56,7 +56,6 @@ class AdhesionCrudController extends AbstractCrudController
                 ->renderAsSwitch()
                 ->setLabel('Référent·e saison en cours'),
 
-    
             AssociationField::new('saison')
                 ->setLabel('Saison')
                 ->setRequired(true),

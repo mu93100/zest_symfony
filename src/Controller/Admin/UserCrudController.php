@@ -35,29 +35,16 @@ class UserCrudController extends AbstractCrudController
             TextField::new('nom'),
             EmailField::new('email'),
             TextField::new('telephone'),
-            AssociationField::new('groupe'),
-
-            AssociationField::new('referent', 'Référent')
-                // ->onlyOnIndex()
-                ->formatValue(function ($user) {
-                    return $user 
-                        ? $user->getPrenom() . ' ' . $user->getNom() . ' (' . $user->getEmail() . ' ' . $user->getTelephone() .')'
-                        : 'Aucun';
+// modif 03/02 copilot
+            // AssociationField::new('groupe'),
+            AssociationField::new('groupe', 'Groupe'),
+            AssociationField::new('groupeReferent', 'Référent du groupe')
+                ->formatValue(function ($groupe) {
+                    return $groupe 
+                        ? $groupe->getNom()
+                        : '--';
                 }),
-
-            // BooleanField::new('isReferent')
-            //     ->renderAsSwitch(false)
-            //     ->onlyOnIndex(),
-            // BooleanField::new('isReferent')
-            // ->onlyOnForms(),
-            AssociationField::new('referent', 'Référent')
-                ->onlyOnIndex()
-                ->formatValue(function ($user) {
-                    return $user 
-                        ? $user->getPrenom() . ' ' . $user->getNom() . ' (' . $user->getEmail() . ')'
-                        : 'Aucun';
-                }),
-
+            
             ChoiceField::new('roles')
                 ->setLabel('Rôles')
                 ->setChoices([
@@ -67,7 +54,6 @@ class UserCrudController extends AbstractCrudController
                     'Produits' => 'ROLE_PRODUIT',
                     'Poles' => 'ROLE_POLE',
                     'Utilisateur' => 'ROLE_USER',
-                    'Vérifié' => 'ROLE_VERIFIED',
                 ])
                 ->allowMultipleChoices()
                 ->renderExpanded(),
@@ -76,28 +62,29 @@ class UserCrudController extends AbstractCrudController
             TextField::new('codePostal'),
             TextField::new('ville'),
             DateField::new('dateDeNaissance'),
+
             IntegerField::new('nombreEnfants')
-            ->setFormTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'min' => 0,
-                    'step' => 1,
-                ]
-            ]),
+                ->setFormTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'min' => 0,
+                        'step' => 1,
+                    ]
+                ]),
             IntegerField::new('compositionFoyer')
-            ->setFormTypeOptions([
-                'required' => false,
-                'attr' => [
-                    'min' => 1,
-                    'step' => 1,
-                ]
-            ]),
+                ->setFormTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'min' => 1,
+                        'step' => 1,
+                    ]
+                ]),
 
             TextField::new('plainPassword') // utilisation de  plainPassword et non pas password car on rentre un password non hashé
                 ->setLabel('Mot de passe')
                 ->setFormType(PasswordType::class)
                 ->onlyOnForms()
-        ];
+            ];
     }
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
