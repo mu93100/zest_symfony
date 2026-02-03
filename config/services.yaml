@@ -30,3 +30,6 @@ services:
     #     tags:
     #         - { name: kernel.event_subscriber }
 
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']

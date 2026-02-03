@@ -15,6 +15,8 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityRepository; 
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 
 
 class GroupeCrudController extends AbstractCrudController
@@ -32,9 +34,9 @@ class GroupeCrudController extends AbstractCrudController
             TextField::new('adresseDistrib', 'Adresse de distribution'),
             TextField::new('ville', 'Ville'),
             BooleanField::new('isOpen', 'groupe OPEN')
-                ->renderAsSwitch(false),
+                ->renderAsSwitch(false), // rajout pour lecture seule dans index + modif dans form
 
-            // --- MEMBRES (INDEX)
+            // --------- membres du groupe INDEX
             ArrayField::new('membres', 'Membres du groupe')
                 ->onlyOnIndex()
                 ->formatValue(function ($value, Groupe $groupe) {
@@ -48,8 +50,11 @@ class GroupeCrudController extends AbstractCrudController
                         )
                     )->toArray());
                 }),
+            // --------- count des membres d'un groupe
+            AssociationField::new('membres', 'Nb membres')
+                ->onlyOnIndex(),
             
-            // --- RÉFÉRENT (AFFICHAGE INDEX)
+            // --------- référent INDEX
             TextField::new('referent', 'Référent')
                 ->onlyOnIndex()
                 ->formatValue(function ($value, Groupe $groupe) {
@@ -59,7 +64,7 @@ class GroupeCrudController extends AbstractCrudController
                         : '⚠️ aucun';
                 }),
 
-            // --- RÉFÉRENT (AFFICHAGE form)
+            // ----------- référent FORM
             AssociationField::new('referent', 'Référent')
                 ->onlyOnForms('edit')
                 ->setFormTypeOptions([
@@ -77,9 +82,30 @@ class GroupeCrudController extends AbstractCrudController
         ];
     }
 
-        public function configureCrud(Crud $crud): Crud
+    public function configureCrud(Crud $crud): Crud
     {
         return $crud
             ->setPageTitle(Crud::PAGE_INDEX, 'Groupes [ <span style="font-weight:lighter;font-size:0.5em">⚠️ la liste des membres se modifie dans la section Adhérents - impossible dans Groupes</span> ]');
     }
+
+    // ajout button EXPORTER LA PAGE(CVS = tableau) avec fichier ExportController.php
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->add(Crud::PAGE_INDEX, Action::new('export_groupes', 'Exporter Groupes')
+                ->linkToRoute('export_groupes')
+                ->setCssClass('btn btn-secondary')
+                ->createAsGlobalAction())
+
+            ->add(Crud::PAGE_INDEX, Action::new('export_mails_membres', 'Exporter mails membres')
+                ->linkToRoute('export_mails_membres')
+                ->setCssClass('btn btn-info')
+                ->createAsGlobalAction())
+
+            ->add(Crud::PAGE_INDEX, Action::new('export_mails_referents', 'Exporter mails référents')
+                ->linkToRoute('export_mails_referents')
+                ->setCssClass('btn btn-info')
+                ->createAsGlobalAction());
+    }
 }
+
