@@ -52,9 +52,9 @@ class AdhesionCrudController extends AbstractCrudController
             DateTimeField::new('dateAdhesion', 'Date d\'adhésion'),
             AssociationField::new('user', 'Adhérent'),
             AssociationField::new('groupe', 'Groupe'),
-            BooleanField::new('isReferent')
-                ->renderAsSwitch()
-                ->setLabel('Référent·e saison en cours'),
+            // BooleanField::new('isReferent')
+            //     ->renderAsSwitch()
+            //     ->setLabel('Référent·e saison en cours'),
 
             AssociationField::new('saison')
                 ->setLabel('Saison')
@@ -62,8 +62,12 @@ class AdhesionCrudController extends AbstractCrudController
             
             AssociationField::new('montantAdhesion', 'Montant'),
             
-            BooleanField::new('paiementValide', 'Paiement effectué'),
-            // integerField::new('paiement', 'Montant libre'),
+            BooleanField::new('paiementValide', 'Paiement OK')
+                ->onlyOnIndex()
+                ->renderAsSwitch(false), // rajout pour lecture seule dans index + modif dans form
+            BooleanField::new('paiementValide', 'Paiement OK')
+                ->onlyOnForms(),
+            
             IntegerField::new('montantPaiementLibre', 'Montant libre')
                 ->formatValue(function ($value) {
                     return $value ? $value . ' €' : '—';

@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Groupe;
 use App\Entity\User;
+use App\Entity\Saison;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -15,12 +16,31 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityRepository; 
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;// pour export CSV (tableau/liste )
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-
+use Symfony\Component\HttpFoundation\RequestStack;
+use App\Repository\SaisonRepository;
 
 class GroupeCrudController extends AbstractCrudController
 {
+    public function __construct(
+        private RequestStack $requestStack, // pile des requêtes : pour récupérer la saison
+        private SaisonRepository $saisonRepository
+    ) {}
+
+    private function getSaisonCourante(): ?Saison
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $saisonId = $request->query->get('saison');
+
+        if ($saisonId) {
+            return $this->saisonRepository->find($saisonId);
+        }
+
+        // fallback : saison la plus récente
+        return $this->saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
+    }
+
     public static function getEntityFqcn(): string
     {
         return Groupe::class;
@@ -34,10 +54,10 @@ class GroupeCrudController extends AbstractCrudController
             TextField::new('adresseDistrib', 'Adresse de distribution'),
             TextField::new('ville', 'Ville'),
             BooleanField::new('isOpen', 'groupe OPEN')
-            ->onlyOnIndex()
+                ->onlyOnIndex()
                 ->renderAsSwitch(false), // rajout pour lecture seule dans index + modif dans form
             BooleanField::new('isOpen', 'groupe OPEN')
-            ->onlyOnForms(),
+                ->onlyOnForms(),
 
             // --------- membres du groupe INDEX
             ArrayField::new('membres', 'Membres du groupe')
@@ -87,27 +107,34 @@ class GroupeCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
+        $saison = $this->getSaisonCourante();
+        $nom = $saison ? $saison->getNom() : '—';
+
         return $crud
-            ->setPageTitle(Crud::PAGE_INDEX, 'Groupes [ <span style="font-weight:lighter;font-size:0.5em">⚠️ la liste des membres se modifie dans la section Adhérents - impossible dans Groupes</span> ]');
+            ->setPageTitle(
+                Crud::PAGE_INDEX,
+                sprintf(
+                    'Groupes %s <span style="font-weight:lighter;font-size:0.5em">⚠️ impossible de modifier la liste des membres se modifie dans Groupes - possible dans Users</span>',
+                    $nom
+                )[ <span style="font-weight:lighter;font-size:0.5em">⚠️ impossible de modifier la liste des membres se modifie dans Groupes - possible dans Users</span> ]');
+            );
     }
 
+                                                                                                            
     // ajout button EXPORTER LA PAGE(CVS = tableau) avec fichier ExportController.php
     public function configureActions(Actions $actions): Actions
     {
         return $actions
             ->add(Crud::PAGE_INDEX, Action::new('export_groupes', 'Exporter Groupes')
                 ->linkToRoute('export_groupes')
-                ->setCssClass('btn btn-secondary')
-                ->createAsGlobalAction())
+                ->createAsGlobalAction())                
 
             ->add(Crud::PAGE_INDEX, Action::new('export_mails_membres', 'Exporter mails membres')
                 ->linkToRoute('export_mails_membres')
-                ->setCssClass('btn btn-info')
                 ->createAsGlobalAction())
 
             ->add(Crud::PAGE_INDEX, Action::new('export_mails_referents', 'Exporter mails référents')
                 ->linkToRoute('export_mails_referents')
-                ->setCssClass('btn btn-info')
                 ->createAsGlobalAction());
     }
 }

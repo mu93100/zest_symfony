@@ -1,0 +1,89 @@
+/* body {
+    background-color: rgb(127, 163, 255);
+    outline: 5px solid red !important;
+} */
+
+.dashboard-container {
+    color: #00ff9d;
+    font-size: 5rem;
+    font-weight: 800;
+    line-height: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dashboard-container h1 {
+    color: #00ff9d;
+    font-size: 5rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* .dashboard-container select, .dashboard-container select option {
+    font-size: 5rem;
+    font-weight: 800;
+    line-height: 1;
+    background-color: none !important;
+    border: none !important;
+}
+.dashboard-container select, .dashboard-container select option {
+    font-size: 5rem;
+    font-weight: 800;
+    line-height: 1;
+
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+}
+.dashboard-container select:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+.dashboard-container select:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+} */
+.dashboard-container select {
+    font-size: 5rem;
+    font-weight: 800;
+    line-height: 1;
+
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+}
+
+.dashboard-container select:focus,
+.dashboard-container select:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.dashboard-container select:focus {
+    background-color: transparent !important;
+}
+
+ /* alignement des cases à cocher pour user.roles */
+.form-check {
+    display: inline-block;
+    margin-right: 1.5rem !important;
+}
+
+.ea-form-element[data-label="Produits"] .form-widget-multiple {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 1rem;
+}

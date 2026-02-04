@@ -24,31 +24,73 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Templates;
-
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
 {
+    public function configureAssets(): Assets
+    {
+        return Assets::new()
+            ->addCssFile('/styles/admin.css');
+    }
+
     public function __construct(
         private SaisonRepository $saisonRepository,
-        private AdhesionRepository $adhesionRepository
+        private AdhesionRepository $adhesionRepository,
+        private RequestStack $requestStack // pile des requêtes : pour récupérer la saison
     ) {}
 
-    public function index(): Response
-    {
-        // Saison en cours par défaut (la plus récente)
-        $saisonEnCours = $this->saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
 
-        // Compteur d’adhésions pour la saison sélectionnée
-        $nbAdhesions = $saisonEnCours
-            ? $this->adhesionRepository->count(['saison' => $saisonEnCours])
-            : 0;
+public function index(): Response
+{
+    // Récupérer la Request courante
+    $request = $this->requestStack->getCurrentRequest();
 
-        return $this->render('admin/dashboard.html.twig', [
-            'nbAdhesions' => $nbAdhesions,
-        ]);
+    // 1. Récupérer toutes les saisons pour le select
+    $saisons = $this->saisonRepository->findBy([], ['dateCreation' => 'DESC']);
+
+    // 2. Récupérer l'id de saison depuis l'URL (?saison=123)
+    $saisonId = $request->query->get('saison');
+
+    $saisonEnCours = null;
+
+    if ($saisonId) {
+        $saisonEnCours = $this->saisonRepository->find($saisonId);
     }
+
+    if (!$saisonEnCours) {
+        $saisonEnCours = $this->saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
+    }
+
+    // 3. Compter les adhésions pour la saison sélectionnée
+    $nbAdhesions = $saisonEnCours
+        ? $this->adhesionRepository->count(['saison' => $saisonEnCours])
+        : 0;
+
+    return $this->render('admin/dashboard.html.twig', [
+        'saisons'       => $saisons,
+        'saisonEnCours' => $saisonEnCours,
+        'nbAdhesions'   => $nbAdhesions,
+    ]);
+}
+
+    // public function index(): Response
+    // {
+    //     // Saison en cours par défaut (la plus récente)
+    //     $saisonEnCours = $this->saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
+
+    //     // Compteur d’adhésions pour la saison sélectionnée
+    //     $nbAdhesions = $saisonEnCours
+    //         ? $this->adhesionRepository->count(['saison' => $saisonEnCours])
+    //         : 0;
+
+    //     return $this->render('admin/dashboard.html.twig', [
+    //         'nbAdhesions' => $nbAdhesions,
+    //     ]);
+    // }
 //
     public function configureTemplates(Templates $templates): Templates
     {
@@ -68,33 +110,36 @@ class DashboardController extends AbstractDashboardController
         // Organisation dashboard si beaucoup d’entités -> avec menu et sous menu
         // Utilisateurs & Groupes
         yield MenuItem::subMenu('A D H E R E N T S')->setSubItems([
-            MenuItem::linkToCrud('Adhérents', '', User::class),
-            MenuItem::linkToCrud('Groupes', '', Groupe::class),            
+            MenuItem::linkToCrud('users', '', User::class),
+            MenuItem::linkToCrud('groupes', '', Groupe::class),            
         ]);
 
         // Organisation interne
         yield MenuItem::subMenu('O R G A N I S A T I O N', '')->setSubItems([
-            MenuItem::linkToCrud('Pôles', '', Pole::class),
-            MenuItem::linkToCrud('Adhésions', '', Adhesion::class),
-            MenuItem::linkToCrud('Montant adhésions', '', MontantAdhesion::class),
-            MenuItem::linkToCrud('Motivations', '', Motivation::class),
-            MenuItem::linkToCrud('Disponibilités', '', Dispo::class),
+            MenuItem::linkToCrud('pôles', '', Pole::class),
+            MenuItem::linkToCrud('adhésions', '', Adhesion::class),
+            MenuItem::linkToCrud('montant adhésions', '', MontantAdhesion::class),
+            MenuItem::linkToCrud('motivations', '', Motivation::class),
+            MenuItem::linkToCrud('disponibilités', '', Dispo::class),
         ]);
 
         // Contenus & médias
         yield MenuItem::subMenu('C O N T E N U S', '')->setSubItems([
-            MenuItem::linkToCrud('Recettes', '', Recette::class),
-            MenuItem::linkToCrud('Ressources', '', Ressource::class),
-            MenuItem::linkToCrud('Catégories', '', Categorie::class),
-            MenuItem::linkToCrud('Medias - photos/fichiers', '', Media::class),
+            MenuItem::linkToCrud('recettes', '', Recette::class),
+            MenuItem::linkToCrud('ressources', '', Ressource::class),
+            MenuItem::linkToCrud('catégories', '', Categorie::class),
+            MenuItem::linkToCrud('medias - photos/fichiers', '', Media::class),
         ]);
 
         // Produits & producteurs
         yield MenuItem::subMenu('P R O D U I T S', '')->setSubItems([
-            MenuItem::linkToCrud('Produits', '', Produit::class),
-            MenuItem::linkToCrud('Producteur·ices', '', Producteurice::class),
+            MenuItem::linkToCrud('produits', '', Produit::class),
+            MenuItem::linkToCrud('producteur·ices', '', Producteurice::class),
         ]);
     }
+
+
+
 
     // à rajouter : compteur d’adhésions par montant
     // use App\Entity\MontantAdhesion;

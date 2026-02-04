@@ -19,13 +19,13 @@ class AdhesionListener
         $this->twig = $twig;
     }
 
-    // 🔹 Après insertion en base
+    // postPersist → envoie un mail à la création de l’adhésion (paiementValide = false)
     public function postPersist(LifecycleEventArgs $args): void
     {
         $this->handleAdhesion($args);
     }
 
-    // 🔹 Après mise à jour en base
+    // postUpdate → envoie un mail à chaque modification, même pour changement de groupe ou saison
     public function postUpdate(LifecycleEventArgs $args): void
     {
         $this->handleAdhesion($args);
@@ -40,7 +40,7 @@ class AdhesionListener
         }
 
         // 🔹 Si paiement = false → envoi du mail
-        if (!$entity->isPaiement()) {
+        if (!$entity->isPaiementValide()) {
             $htmlContent = $this->twig->render('emails/paiement_non_valide.html.twig', [
                 'user' => $entity->getUser(),
                 'saison' => $entity->getSaison()->getNom(),
