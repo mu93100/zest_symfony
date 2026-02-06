@@ -27,9 +27,13 @@ final class AdhesionController extends AbstractController
         $adhesion = new Adhesion();
 
         // ------------- Saison en cours
-        $saisonEnCours = $saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
+        $saisonEnCours = $saisonRepository->findSaisonCourante();
+
         if ($saisonEnCours) {
             $adhesion->setSaison($saisonEnCours);
+        } else{
+            $this->addFlash("[ Impossible d'adhérer pour la saison actuelle. Merci de contacter <strong>adhesion@corto-zest.org</strong> ]"); 
+            return $this->redirectToRoute('app_accueil');
         }
 
         // ------------- Créer le formulaire

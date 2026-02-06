@@ -19,10 +19,15 @@ class Saison
     #[ORM\Column(length: 9, unique: true)]
     private ?string $nom = null;
 
-    #[ORM\Column(type: 'datetime_immutable')] // date pas obligatoire // à voir si on la garde ou pas
-    private ?\DateTimeImmutable $dateCreation = null;
+    // début de saison : 1er septembre
+    #[ORM\Column(type: 'date')]
+    private ?\DateTimeInterface $dateDebut = null;
 
-    //----------------r e l a t i o n s  OneToMany
+    // Fin de saison : 31 août
+    #[ORM\Column(type: 'date')]
+    private ?\DateTimeInterface $dateFin = null;
+
+    //---------------- r e l a t i o n s  OneToMany
     #[ORM\OneToMany(mappedBy: 'saison', targetEntity: Adhesion::class, cascade: ['remove'])]
     private Collection $adhesions;
 
@@ -30,7 +35,6 @@ class Saison
     
     public function __construct()
     {
-        $this->dateCreation = new \DateTimeImmutable(); // auto à la création
         $this->adhesions = new ArrayCollection();
     }
 
@@ -47,23 +51,31 @@ class Saison
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
-
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTimeInterface
+    public function getDateDebut(): ?\DateTimeInterface
     {
-        return $this->dateCreation;
+        return $this->dateDebut;
     }
 
-    public function setDateCreation(\DateTimeInterface $dateCreation): static
+    public function setDateDebut(\DateTimeInterface $dateDebut): static
     {
-        $this->dateCreation = $dateCreation;
-
+        $this->dateDebut = $dateDebut;
         return $this;
     }
 
-    // 🔹 Relation avec Adhesion
+    public function getDateFin(): ?\DateTimeInterface
+    {
+        return $this->dateFin;
+    }
+
+    public function setDateFin(\DateTimeInterface $dateFin): static
+    {
+        $this->dateFin = $dateFin;
+        return $this;
+    }
+
     public function getAdhesions(): Collection
     {
         return $this->adhesions;
@@ -78,15 +90,12 @@ class Saison
         return $this;
     }
 
-    // removeAdhesion() → enlève une adhésion de cette collection.
-// 👉 En clair : c’est une méthode utilitaire pour gérer la relation bidirectionnelle. Elle permet de maintenir la cohérence entre les deux côtés de la relation (Saison et Adhesion)
     public function removeAdhesion(Adhesion $adhesion): static
     {
         $this->adhesions->removeElement($adhesion);
         return $this;
     }
 
-    //  Compteur d’adhésions
     public function countAdhesions(): int
     {
         return $this->adhesions->count();
@@ -94,6 +103,6 @@ class Saison
 
     public function __toString(): string
     {
-        return $this->nom ?? 'Produit';
-    }    
+        return $this->nom ?? 'Saison';
+    }
 }

@@ -31,15 +31,17 @@ class GroupeCrudController extends AbstractCrudController
     private function getSaisonCourante(): ?Saison
     {
         $request = $this->requestStack->getCurrentRequest();
-        $saisonId = $request->query->get('saison');
-
+        $session = $request->getSession();
+    
+        $saisonId = $session->get('saisonCourante');
+    
         if ($saisonId) {
             return $this->saisonRepository->find($saisonId);
         }
-
-        // fallback : saison la plus récente
+    
         return $this->saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
     }
+    
 
     public static function getEntityFqcn(): string
     {
@@ -73,6 +75,7 @@ class GroupeCrudController extends AbstractCrudController
                         )
                     )->toArray());
                 }),
+
             // --------- count des membres d'un groupe
             AssociationField::new('membres', 'Nb membres')
                 ->onlyOnIndex(),
@@ -105,6 +108,7 @@ class GroupeCrudController extends AbstractCrudController
         ];
     }
 
+    // --------- titre 
     public function configureCrud(Crud $crud): Crud
     {
         $saison = $this->getSaisonCourante();
@@ -114,14 +118,13 @@ class GroupeCrudController extends AbstractCrudController
             ->setPageTitle(
                 Crud::PAGE_INDEX,
                 sprintf(
-                    'Groupes %s <span style="font-weight:lighter;font-size:0.5em">⚠️ impossible de modifier la liste des membres se modifie dans Groupes - possible dans Users</span>',
+                    'Groupes %s <span style="font-weight:lighter;font-size:0.5em"> [ ⚠️ impossible de modifier la liste des membres se modifie dans Groupes - possible dans Users ]</span>',
                     $nom
-                )[ <span style="font-weight:lighter;font-size:0.5em">⚠️ impossible de modifier la liste des membres se modifie dans Groupes - possible dans Users</span> ]');
+                )
             );
     }
-
-                                                                                                            
-    // ajout button EXPORTER LA PAGE(CVS = tableau) avec fichier ExportController.php
+                                                                                                    
+    // ajout buttons EXPORTER (CVS = tableau) avec fichier ExportController.php
     public function configureActions(Actions $actions): Actions
     {
         return $actions

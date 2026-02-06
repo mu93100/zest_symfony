@@ -112,7 +112,7 @@ class UserCrudController extends AbstractCrudController
         public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setPageTitle(Crud::PAGE_INDEX, 'Users [ <span style="font-weight:lighter;font-size:0.5em">⚠️ impossible de modifier la.e référent.e dans Users - possible dans Groupes</span> ]');
+            ->setPageTitle(Crud::PAGE_INDEX, 'Users <span style="font-weight:lighter;font-size:0.5em">[ ⚠️ impossible de modifier la.e référent.e dans Users - possible dans Groupes ]</span>');
     }
 
     public function configureActions(Actions $actions): Actions

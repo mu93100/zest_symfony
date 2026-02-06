@@ -25,8 +25,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Templates;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
-use Symfony\Component\HttpFoundation\RequestStack;
-
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Service\SaisonContext;
 
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
@@ -38,60 +38,24 @@ class DashboardController extends AbstractDashboardController
     }
 
     public function __construct(
-        private SaisonRepository $saisonRepository,
+        private SaisonContext $saisonContext,
         private AdhesionRepository $adhesionRepository,
-        private RequestStack $requestStack // pile des requêtes : pour récupérer la saison
     ) {}
 
+    public function index(): Response
+    {
+        $saisonEnCours = $this->saisonContext->getSaison();
+        $saisons = $this->saisonContext->getAll();
 
-public function index(): Response
-{
-    // Récupérer la Request courante
-    $request = $this->requestStack->getCurrentRequest();
+        $nbAdhesions = $this->adhesionRepository->count(['saison' => $saisonEnCours]);
 
-    // 1. Récupérer toutes les saisons pour le select
-    $saisons = $this->saisonRepository->findBy([], ['dateCreation' => 'DESC']);
-
-    // 2. Récupérer l'id de saison depuis l'URL (?saison=123)
-    $saisonId = $request->query->get('saison');
-
-    $saisonEnCours = null;
-
-    if ($saisonId) {
-        $saisonEnCours = $this->saisonRepository->find($saisonId);
+        return $this->render('admin/dashboard.html.twig', [
+            'saisons'       => $saisons,
+            'saisonEnCours' => $saisonEnCours,
+            'nbAdhesions'   => $nbAdhesions,
+        ]);
     }
 
-    if (!$saisonEnCours) {
-        $saisonEnCours = $this->saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
-    }
-
-    // 3. Compter les adhésions pour la saison sélectionnée
-    $nbAdhesions = $saisonEnCours
-        ? $this->adhesionRepository->count(['saison' => $saisonEnCours])
-        : 0;
-
-    return $this->render('admin/dashboard.html.twig', [
-        'saisons'       => $saisons,
-        'saisonEnCours' => $saisonEnCours,
-        'nbAdhesions'   => $nbAdhesions,
-    ]);
-}
-
-    // public function index(): Response
-    // {
-    //     // Saison en cours par défaut (la plus récente)
-    //     $saisonEnCours = $this->saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
-
-    //     // Compteur d’adhésions pour la saison sélectionnée
-    //     $nbAdhesions = $saisonEnCours
-    //         ? $this->adhesionRepository->count(['saison' => $saisonEnCours])
-    //         : 0;
-
-    //     return $this->render('admin/dashboard.html.twig', [
-    //         'nbAdhesions' => $nbAdhesions,
-    //     ]);
-    // }
-//
     public function configureTemplates(Templates $templates): Templates
     {
         // return $templates->addTemplate('layout', 'admin/layout.html.twig');
@@ -106,8 +70,7 @@ public function index(): Response
 
         yield MenuItem::linkToCrud('Créer une nouvelle saison', '', Saison::class);
 
-
-        // Organisation dashboard si beaucoup d’entités -> avec menu et sous menu
+        // Organisation dashboard avec menu et sous menu
         // Utilisateurs & Groupes
         yield MenuItem::subMenu('A D H E R E N T S')->setSubItems([
             MenuItem::linkToCrud('users', '', User::class),
@@ -137,55 +100,4 @@ public function index(): Response
             MenuItem::linkToCrud('producteur·ices', '', Producteurice::class),
         ]);
     }
-
-
-
-
-    // à rajouter : compteur d’adhésions par montant
-    // use App\Entity\MontantAdhesion;
-    // use Doctrine\ORM\EntityManagerInterface;
-
-    // public function index(EntityManagerInterface $em): Response
-    // {
-    //     $data = $em->createQueryBuilder()
-    //         ->select('m.libelle, COUNT(a.id) AS nbAdhesions')
-    //         ->from(MontantAdhesion::class, 'm')
-    //         ->leftJoin('m.adhesions', 'a')
-    //         ->groupBy('m.id')
-    //         ->getQuery()
-    //         ->getResult();
-
-    //     return $this->render('admin/dashboard.html.twig', [
-    //         'stats' => $data,
-    //     ]);
-    // }
 }
-
-
-// CORRECTION
-// public function index(
-//     Request $request,
-//     SaisonRepository $saisonRepository,
-//     AdhesionRepository $adhesionRepository
-// ): Response
-// {
-//     // 1) Choix de la saison: paramètre GET 'saison' ou saison en cours par défaut
-//     $saisonId = $request->query->get('saison');
-//     $saisonEnCours = $saisonId
-//         ? $saisonRepository->find($saisonId)
-//         : $saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
-
-//     // 2) Liste des saisons pour le sélecteur
-//     $toutesSaisons = $saisonRepository->findAll();
-
-//     // 3) Compteur d’adhésions pour la saison sélectionnée
-//     $nbAdhesions = $saisonEnCours
-//         ? $adhesionRepository->count(['saison' => $saisonEnCours])
-//         : 0;
-
-//     // 4) Rendu du dashboard personnalisé
-//     return $this->render('admin/dashboard.html.twig', [
-//         'saisonEnCours' => $saisonEnCours,
-//         'saisons' => $toutesSaisons,
-//         'nbAdhesions' => $nbAdhesions,
-    
