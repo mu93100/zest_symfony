@@ -24,13 +24,14 @@
 		{{ form_start(adhesionForm) }}
 
 		<div class="form-section">
-			<h3>modifier les infos groupe</h3>
+			<h3>modifier mes infos groupe</h3>
 			{# <a href="https://umap.openstreetmap.fr/fr/map/cartographie-zest-2024_1119693" target="_blank">
 				<img src="{{ asset('images/map.webp') }}" alt="Plan d'accès">
 			</a> #}
 			{{ form_row(adhesionForm.changeGroupe) }}
 			{{ form_row(adhesionForm.nouveauGroupe) }}
 			{{ form_row(adhesionForm.adresseDistribNouveau) }}
+			{{ form_row(adhesionForm.codePostalNouveau) }}
 			{{ form_row(adhesionForm.villeNouveau) }}
 			<h3>à remplir si je suis référent.e</h3>
 			<div class="form-check">
@@ -42,6 +43,7 @@
 				{{ form_label(adhesionForm.isOpen) }}
 			</div>
 			{{ form_row(adhesionForm.adresseDistrib) }}
+			{{ form_row(adhesionForm.codePostal) }}
 			{{ form_row(adhesionForm.ville) }}
 		</div>
 		<div class="form-section">
@@ -92,8 +94,8 @@
 
 		</div>
 		<div>
-			{# Réservé admin si tu veux : #}
-			{{ form_row(adhesionForm.paiementValide) }}
+			{# Réservé admin si tu veux : 
+			{{ form_row(adhesionForm.paiementValide) }}#}
 
 			<button type="submit" class="form-submit">j’adhère pour la saison</button>
 			{{ form_end(adhesionForm) }}

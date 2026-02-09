@@ -14,10 +14,30 @@
         <li><strong>Mon adhesion :</strong> {{ montantAdhesion.libelle ?? '—' }} €</li>
         <li><strong>Mon groupe :</strong> {{ groupe.nom }}</li>
         <li><strong>Adresse de distibution du groupe:</strong> {{ groupe.adresseDistrib ?? '—' }}</li>
-        <li><strong>Ville :</strong> {{ groupe.ville ?? '—' }}</li>
-        {% if user.groupeReferent %}
+        <li><strong>Code postal :</strong> {{ groupe.codePostal ?? '—' }}</li>
+    <li><strong>Ville :</strong> {{ groupe.ville ?? '—' }}</li>
+
+        {# ------------------ référent ------------------ #}
+        {% set saison = saison ?? null %}
+        {% set estReferent = false %}
+
+        {% if saison %}
+            {% for pivot in user.groupeReferentSaisons %}
+                {% if pivot.saison.id == saison.id %}
+                    {% set estReferent = true %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if estReferent %}
             <li><strong>Je suis référent·e de mon groupe</strong></li>
         {% endif %}
+{# ------------------ référent ------------------ 
+        {% if user.groupeReferentSaisons|filter(p => p.saison.id == saison.id)|length > 0 %}
+            <li><strong>Je suis référent·e de mon groupe</strong></li>
+        {% endif %}
+#}
+        {# ------------------ groupe open ------------------ #}
         {% if groupe.isOpen %}
             <li>
                 <strong>Mon groupe peut accueillir de nouvelleaux adhérent·e.s</strong>

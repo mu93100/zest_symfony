@@ -31,11 +31,18 @@ class Saison
     #[ORM\OneToMany(mappedBy: 'saison', targetEntity: Adhesion::class, cascade: ['remove'])]
     private Collection $adhesions;
 
+    /**
+     * @var Collection<int, GroupeReferentSaison>
+     */
+    #[ORM\OneToMany(targetEntity: GroupeReferentSaison::class, mappedBy: 'saison')]
+    private Collection $groupeReferentSaisons;
+
 
     
     public function __construct()
     {
         $this->adhesions = new ArrayCollection();
+        $this->groupeReferentSaisons = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -104,5 +111,35 @@ class Saison
     public function __toString(): string
     {
         return $this->nom ?? 'Saison';
+    }
+
+    /**
+     * @return Collection<int, GroupeReferentSaison>
+     */
+    public function getGroupeReferentSaisons(): Collection
+    {
+        return $this->groupeReferentSaisons;
+    }
+
+    public function addGroupeReferentSaison(GroupeReferentSaison $groupeReferentSaison): static
+    {
+        if (!$this->groupeReferentSaisons->contains($groupeReferentSaison)) {
+            $this->groupeReferentSaisons->add($groupeReferentSaison);
+            $groupeReferentSaison->setSaison($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupeReferentSaison(GroupeReferentSaison $groupeReferentSaison): static
+    {
+        if ($this->groupeReferentSaisons->removeElement($groupeReferentSaison)) {
+            // set the owning side to null (unless already changed)
+            if ($groupeReferentSaison->getSaison() === $this) {
+                $groupeReferentSaison->setSaison(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -64,6 +64,11 @@ class AdhesionFormType extends AbstractType
                 'label' => 'Adresse de distribution du nouveau groupe',
                 'required' => false,
             ])
+            ->add('codePostalNouveau', TextType::class, [
+                'mapped' => false,
+                'label' => 'Code postal du nouveau groupe',
+                'required' => false,
+            ])
             ->add('villeNouveau', TextType::class, [
                 'mapped' => false,
                 'label' => 'Ville du nouveau groupe',
@@ -92,10 +97,16 @@ class AdhesionFormType extends AbstractType
             // Champs pour MODIFIER groupe existant 
             // Adresse distribution 
             ->add('adresseDistrib', TextType::class, [
-                'label' => "Modification de l'adresse de distribution du groupe",
+                'label' => "Modifier l'adresse de distribution du groupe",
                 'required' => false,
                 'mapped' => false,
                 'attr' => ['placeholder' => 'Lieu de distribution des commandes'],
+            ])
+            ->add('codePostal', TextType::class, [
+                'label' => "Code postal",
+                'required' => false,
+                'mapped' => false,
+                'attr' => ['placeholder' => '93100'],
             ])
             // Ville
             ->add('ville', TextType::class, [
@@ -157,6 +168,7 @@ class AdhesionFormType extends AbstractType
             ->add('paiementValide', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Paiement validé (JUSTE POUR admin)',
+                'attr' => ['style' => 'display:none;'],
             ]);
     }
 

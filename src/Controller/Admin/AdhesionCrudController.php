@@ -3,13 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Adhesion;
-use App\Entity\Saison;
-use App\Entity\User;
-use App\Entity\Groupe;
-use App\Entity\MontantAdhesion;
-use App\Entity\Motivation;
-use App\Entity\Dispo;
-use App\Entity\Pole;
+use App\Service\SaisonContext; // pour saison en cours
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -18,29 +12,35 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use Symfony\Component\HttpFoundation\Response;  //à supprimer
-// use EasyCorp\Bundle\EasyAdminBundle\Config\Templates;
-use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;  //à supprimer
-use Symfony\Component\HttpFoundation\Request; //à supprimer
 use Doctrine\ORM\EntityManagerInterface; //à supprimer NON
-use EasyCorp\Bundle\EasyAdminBundle\Config\Templates;
-use App\Repository\SaisonRepository;
-use App\Repository\AdhesionRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use App\Repository\UserRepository; 
-use Doctrine\ORM\EntityRepository; 
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;// pour export CSV (tableau/liste )
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use App\Service\SaisonContext;
-
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action; 
+// filtrage par saison
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto; 
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto; 
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection; 
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 
 class AdhesionCrudController extends AbstractCrudController
 {
     public function __construct(
-        private SaisonContext $saisonContext
+        private SaisonContext $saisonContext // pour injecter saison en cours
     ) {}
+
+    private function getSaisonCourante(): Saison // pour saison obligatoire (au moins 1 saison séléctionnée)
+    {
+        $saison = $this->saisonContext->getSaison();
+
+        if (!$saison) {
+            throw new \LogicException("[ ⚠️ aucune saison sélectionnée  ]");
+        }
+
+        return $saison;
+    }
 
     public static function getEntityFqcn(): string
     {
@@ -53,7 +53,65 @@ class AdhesionCrudController extends AbstractCrudController
         //         ->addTemplate('layout', 'admin/easyadmin_layout.html.twig')
         //         ->addTemplate('field/produits', 'admin/fields/produits_flex_row.html.twig');
         // }
+    /** * Filtre automatique : n’affiche que les adhésions de la saison choisie */ 
     
+    public function createIndexQueryBuilder( // pour filtrer les adhésions par saison 
+        SearchDto $searchDto, 
+        EntityDto $entityDto, 
+        FieldCollection $fields, 
+        FilterCollection $filters 
+    ): QueryBuilder { 
+        $qb = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters); 
+
+        $saison = $this->saisonContext->getSaison(); 
+
+        if (!$saison) { 
+            throw new \LogicException("[ ⚠️ aucune saison sélectionnée ]"); } 
+        return $qb ->andWhere('entity.saison = :saison') ->setParameter('saison', $saison); 
+    }
+
+
+    // --------- titre + saison / selecteur de saison géré dans templates/admin/adhesion_index.html.twig
+    public function configureCrud(Crud $crud): Crud
+    {
+        $saison = $this->saisonContext->getSaison();
+        $nomSaison = $saison ? $saison->getNom() : '—';
+
+        return $crud
+            // ->setPageTitle(Crud::PAGE_INDEX, 'Adhésions')
+            // ->setPageTitle(
+            //     Crud::PAGE_INDEX,
+            //     'Adhésions ' . $nomSaison
+            // )
+            ->overrideTemplate('crud/index', 'admin/adhesion_index.html.twig');
+    }
+
+    public function configureResponseParameters(KeyValueStore $responseParameters): KeyValueStore
+    {
+        $responseParameters->set('saisons', $this->saisonContext->getAll());
+        $responseParameters->set('saisonEnCours', $this->saisonContext->getSaison());
+
+        return $responseParameters;
+    }
+
+
+    //  -------- buttons EXPORTER (CVS = tableau) avec fichier ExportController.php
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->add(Crud::PAGE_INDEX, Action::new('export_groupes', 'Exporter Groupes')
+                ->linkToRoute('export_groupes')
+                ->createAsGlobalAction())                
+
+            ->add(Crud::PAGE_INDEX, Action::new('export_mails_membres', 'Exporter mails membres')
+                ->linkToRoute('export_mails_membres')
+                ->createAsGlobalAction())
+
+            ->add(Crud::PAGE_INDEX, Action::new('export_mails_referents', 'Exporter mails référents')
+                ->linkToRoute('export_mails_referents')
+                ->createAsGlobalAction());
+    }
+
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -128,33 +186,5 @@ class AdhesionCrudController extends AbstractCrudController
     {
         // Logique isReferent ici avec $entityInstance->getUser(), $entityInstance->getGroupe()
         parent::persistEntity($entityManager, $entityInstance);
-    }
-
-    // --------- titre 
-    public function configureCrud(Crud $crud): Crud
-    {
-        $saison = $this->saisonContext->getSaison();
-
-        return $crud->setPageTitle(
-            Crud::PAGE_INDEX,
-            'Adhésions ' . $saison->getNom()
-        );
-    }
-
-    // ajout buttons EXPORTER (CVS = tableau) avec fichier ExportController.php
-    public function configureActions(Actions $actions): Actions
-    {
-        return $actions
-            ->add(Crud::PAGE_INDEX, Action::new('export_groupes', 'Exporter Groupes')
-                ->linkToRoute('export_groupes')
-                ->createAsGlobalAction())                
-
-            ->add(Crud::PAGE_INDEX, Action::new('export_mails_membres', 'Exporter mails membres')
-                ->linkToRoute('export_mails_membres')
-                ->createAsGlobalAction())
-
-            ->add(Crud::PAGE_INDEX, Action::new('export_mails_referents', 'Exporter mails référents')
-                ->linkToRoute('export_mails_referents')
-                ->createAsGlobalAction());
     }
 }

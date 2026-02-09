@@ -28,7 +28,7 @@ class Produit
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
-    //---------------- CHAMPS D’UPLOAD pour photos(non mappés) 
+    //---------------- CHAMPS D’UPLOAD pour plusieursphotos(non mappés) 
     /** * @var UploadedFile[] */ 
     private array $photos = [];
 

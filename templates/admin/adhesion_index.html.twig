@@ -1,0 +1,22 @@
+{#     affichage selecteur de saison dans le titre     #}
+
+{% extends '@EasyAdmin/crud/index.html.twig' %}
+
+{% block content_title %}
+    <div style="display:flex; align-items:center; gap:1rem;">
+        <span>Adhésions </span>
+
+        <form method="get" action="" style="display:inline;">
+            <select style="border: none; background-color: #FFFFFF;color: #333; font-weight: bold; " name="saison" onchange="this.form.submit()">
+                {% for s in saisons %}
+                    <option value="{{ s.id }}"
+                        {% if saisonEnCours and s.id == saisonEnCours.id %}selected{% endif %}
+                    >
+                        {{ s.nom }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+{% endblock %}
+

@@ -228,8 +228,9 @@ class Adhesion
 
     public function addPole(Pole $pole): self
     {
-        if (!$this->poles->contains($pole)) {
-            $this->poles->add($pole);
+        if (!$this->poles->contains($pole)) { 
+            $this->poles->add($pole); 
+            $pole->addAdhesion($this); // pour hydrater table adhesion avec choix des poles
         }
 
         return $this;
@@ -237,7 +238,9 @@ class Adhesion
 
     public function removePole(Pole $pole): self
     {
-        $this->poles->removeElement($pole);
+        if ($this->poles->removeElement($pole)) { 
+            $pole->removeAdhesion($this); // pour hydrater table adhesion avec choix des poles
+        }
 
         return $this;
     }

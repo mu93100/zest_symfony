@@ -55,6 +55,7 @@ class MediaCrudController extends AbstractCrudController
                     'Photo principale' => 'photo_principale',
                     'Photo supplémentaire' => 'photo_supplementaire',
                     'Fichier' => 'fichier',
+                    'Fichier supplementaire' => 'fichier_supplementaire',
                     'Vidéo' => 'video',
                     'Logo' => 'logo',
                 ]), 

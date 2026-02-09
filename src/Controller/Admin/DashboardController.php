@@ -14,6 +14,7 @@ use App\Entity\Producteurice;
 use App\Entity\Produit;
 use App\Entity\Recette;
 use App\Entity\Saison;
+use App\Service\SaisonContext; // pour saison en cours
 use App\Entity\Media;
 use App\Entity\MontantAdhesion;
 use App\Repository\SaisonRepository;
@@ -26,7 +27,6 @@ use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Templates;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use App\Service\SaisonContext;
 
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
@@ -58,7 +58,6 @@ class DashboardController extends AbstractDashboardController
 
     public function configureTemplates(Templates $templates): Templates
     {
-        // return $templates->addTemplate('layout', 'admin/layout.html.twig');
         return $templates
             ->addTemplate('layout', 'admin/easyadmin_layout.html.twig')
             ->addTemplate('field/produits', 'admin/fields/produits_flex_row.html.twig');
@@ -68,25 +67,38 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
 
-        yield MenuItem::linkToCrud('Créer une nouvelle saison', '', Saison::class);
+        // orga du menu en sous menu
+        // sous menu S A I S O N 
+        // $items = [
+        //     MenuItem::linkToCrud('Créer une nouvelle saison', '', Saison::class),
+        //     MenuItem::section('Saisons disponibles'),
+        // ];
 
-        // Organisation dashboard avec menu et sous menu
-        // Utilisateurs & Groupes
+        // foreach ($this->saisonContext->getAll() as $saison) {
+        //     $items[] = MenuItem::linkToUrl(
+        //         $saison->getNom(),
+        //         '',
+        //         '?saison=' . $saison->getId()
+        //     );
+        // }
+        // yield MenuItem::subMenu('S A I S O N S')->setSubItems($items);
+
+        yield MenuItem::linkToCrud('S A I S O N S', '', Saison::class);
+
         yield MenuItem::subMenu('A D H E R E N T S')->setSubItems([
             MenuItem::linkToCrud('users', '', User::class),
             MenuItem::linkToCrud('groupes', '', Groupe::class),            
         ]);
 
-        // Organisation interne
         yield MenuItem::subMenu('O R G A N I S A T I O N', '')->setSubItems([
-            MenuItem::linkToCrud('pôles', '', Pole::class),
             MenuItem::linkToCrud('adhésions', '', Adhesion::class),
-            MenuItem::linkToCrud('montant adhésions', '', MontantAdhesion::class),
-            MenuItem::linkToCrud('motivations', '', Motivation::class),
-            MenuItem::linkToCrud('disponibilités', '', Dispo::class),
+            MenuItem::linkToCrud('orga pôles', '', Pole::class),
+            MenuItem::linkToCrud('libellés pôles', '', Pole::class),
+            MenuItem::linkToCrud('libellés montant adhésions', '', MontantAdhesion::class),
+            MenuItem::linkToCrud('libellés motivations', '', Motivation::class),
+            MenuItem::linkToCrud('libellés disponibilités', '', Dispo::class),
         ]);
 
-        // Contenus & médias
         yield MenuItem::subMenu('C O N T E N U S', '')->setSubItems([
             MenuItem::linkToCrud('recettes', '', Recette::class),
             MenuItem::linkToCrud('ressources', '', Ressource::class),
@@ -94,7 +106,6 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('medias - photos/fichiers', '', Media::class),
         ]);
 
-        // Produits & producteurs
         yield MenuItem::subMenu('P R O D U I T S', '')->setSubItems([
             MenuItem::linkToCrud('produits', '', Produit::class),
             MenuItem::linkToCrud('producteur·ices', '', Producteurice::class),

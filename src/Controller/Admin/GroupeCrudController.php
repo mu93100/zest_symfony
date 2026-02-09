@@ -5,6 +5,9 @@ namespace App\Controller\Admin;
 use App\Entity\Groupe;
 use App\Entity\User;
 use App\Entity\Saison;
+use App\Entity\GroupeReferentSaison;
+use App\Service\SaisonContext; // pour saison en cours
+use App\Repository\UserRepository; 
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -12,40 +15,73 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use App\Repository\UserRepository; 
-use Doctrine\ORM\EntityRepository; 
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;// pour export CSV (tableau/liste )
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use Symfony\Component\HttpFoundation\RequestStack;
-use App\Repository\SaisonRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore; // pour selecteur de saison dans titre
+
 
 class GroupeCrudController extends AbstractCrudController
 {
     public function __construct(
-        private RequestStack $requestStack, // pile des requêtes : pour récupérer la saison
-        private SaisonRepository $saisonRepository
+        private SaisonContext $saisonContext
     ) {}
 
-    private function getSaisonCourante(): ?Saison
+    private function getSaisonCourante(): Saison
     {
-        $request = $this->requestStack->getCurrentRequest();
-        $session = $request->getSession();
-    
-        $saisonId = $session->get('saisonCourante');
-    
-        if ($saisonId) {
-            return $this->saisonRepository->find($saisonId);
+        $saison = $this->saisonContext->getSaison();
+
+        if (!$saison) {
+            throw new \LogicException("[ ⚠️ aucune saison sélectionnée  ]");
         }
-    
-        return $this->saisonRepository->findOneBy([], ['dateCreation' => 'DESC']);
+        return $saison;
     }
-    
 
     public static function getEntityFqcn(): string
     {
         return Groupe::class;
+    }
+
+
+    // --------- titre + saison 
+    public function configureCrud(Crud $crud): Crud
+    {
+        $saison = $this->saisonContext->getSaison();
+        $nomSaison = $saison ? $saison->getNom() : '—';
+
+        return $crud
+            ->setPageTitle(Crud::PAGE_INDEX, 'Adhésions')
+            ->setPageTitle(
+                Crud::PAGE_INDEX,
+                'Adhésions ' . $nomSaison
+            );
+    }
+
+    public function configureResponseParameters(KeyValueStore $responseParameters): KeyValueStore
+    {
+        $responseParameters->set('saisons', $this->saisonContext->getAll());
+        $responseParameters->set('saisonEnCours', $this->saisonContext->getSaison());
+
+        return $responseParameters;
+    }
+    
+    // --------- ajout buttons EXPORTER (CVS = tableau) avec fichier ExportController.php
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->add(Crud::PAGE_INDEX, Action::new('export_groupes', 'Exporter Groupes')
+                ->linkToRoute('export_groupes')
+                ->createAsGlobalAction())                
+
+            ->add(Crud::PAGE_INDEX, Action::new('export_mails_membres', 'Exporter mails membres')
+                ->linkToRoute('export_mails_membres')
+                ->createAsGlobalAction())
+
+            ->add(Crud::PAGE_INDEX, Action::new('export_mails_referents', 'Exporter mails référents')
+                ->linkToRoute('export_mails_referents')
+                ->createAsGlobalAction());
     }
 
     public function configureFields(string $pageName): iterable
@@ -54,6 +90,7 @@ class GroupeCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
             TextField::new('nom', 'Nom du groupe'),
             TextField::new('adresseDistrib', 'Adresse de distribution'),
+            TextField::new('codePostal', 'Code postal'),
             TextField::new('ville', 'Ville'),
             BooleanField::new('isOpen', 'groupe OPEN')
                 ->onlyOnIndex()
@@ -80,65 +117,101 @@ class GroupeCrudController extends AbstractCrudController
             AssociationField::new('membres', 'Nb membres')
                 ->onlyOnIndex(),
             
-            // --------- référent INDEX
-            TextField::new('referent', 'Référent')
+            // --------- référent INDEX avec entitée pivot GroupeReferentSaison
+            TextField::new('nom', 'Référent (saison active)')
                 ->onlyOnIndex()
                 ->formatValue(function ($value, Groupe $groupe) {
-                    $user = $groupe->getReferent();
-                    return $user
-                        ? $user->getPrenom().' '.$user->getNom().' ('.$user->getEmail().' '.$user->getTelephone().')'
-                        : '⚠️ aucun';
-                }),
+                    $saison = $this->saisonContext->getSaison();
+                
+                    if (!$saison) {
+                        return '⚠️ aucune saison';
+                    }
+                
+                    $pivot = $groupe->getGroupeReferentSaisons()
+                        ->filter(fn($grs) => $grs->getSaison() === $saison)
+                        ->first();
+                
+                    if (!$pivot || !$pivot->getReferent()) {
+                        return '⚠️ aucun référent';
+                    }
+                
+                    $u = $pivot->getReferent();
+                    return sprintf(
+                        '%s %s (%s %s)',
+                        $u->getPrenom(),
+                        $u->getNom(),
+                        $u->getEmail(),
+                        $u->getTelephone()
+                    );
+                })
+                ->setSortable(false),
 
-            // ----------- référent FORM
-            AssociationField::new('referent', 'Référent')
-                ->onlyOnForms('edit')
-                ->setFormTypeOptions([
-                    'query_builder' => function (UserRepository $userRepository) {
-                        $groupe = $this->getContext()->getEntity()->getInstance();
-                        
-                        return $userRepository->createQueryBuilder('u')
-                            ->innerJoin('u.groupe', 'g')  // ⚠️ NOM DE TA RELATION User->Groupe
-                            ->andWhere('g.id = :groupeId')
-                            ->setParameter('groupeId', $groupe->getId());
-                    },
-                    'placeholder' => 'Aucun(e)',
-                    'required' => false,
-                ]),           
+
+            // ----------- référent FORM (champ virtuel)
+            ChoiceField::new('changerReferent', 'Référent (saison active)')
+                ->onlyOnForms()
+                ->setChoices(function (Groupe $groupe) {
+                    $choices = [];
+                    foreach ($groupe->getMembres() as $membre) {
+                        $choices[$membre->getPrenom().' '.$membre->getNom()] = $membre->getId();
+                    }
+                    return $choices;
+                })
+                ->setRequired(true) // ← OBLIGATOIRE
+                ->setFormTypeOption('mapped', false),
         ];
     }
 
-    // --------- titre 
-    public function configureCrud(Crud $crud): Crud
+    public function persistEntity(EntityManagerInterface $em, $entityInstance): void
+    {
+        $this->saveReferent($em, $entityInstance);
+        parent::persistEntity($em, $entityInstance);
+    }
+
+    public function updateEntity(EntityManagerInterface $em, $entityInstance): void
+    {
+        $this->saveReferent($em, $entityInstance);
+        parent::updateEntity($em, $entityInstance);
+    }
+
+    private function saveReferent(EntityManagerInterface $em, Groupe $groupe): void
     {
         $saison = $this->getSaisonCourante();
-        $nom = $saison ? $saison->getNom() : '—';
 
-        return $crud
-            ->setPageTitle(
-                Crud::PAGE_INDEX,
-                sprintf(
-                    'Groupes %s <span style="font-weight:lighter;font-size:0.5em"> [ ⚠️ impossible de modifier la liste des membres se modifie dans Groupes - possible dans Users ]</span>',
-                    $nom
-                )
-            );
+        $request = $this->getContext()->getRequest();
+        $data = $request->get('Groupe');
+        $referentId = $data['changerReferent'] ?? null;
+
+        if (!$referentId) { 
+            throw new \LogicException("Un groupe doit toujours avoir un référent pour la saison active."); 
+        } 
+        $pivot = $em->getRepository(GroupeReferentSaison::class) 
+            ->findOneBy(['groupe' => $groupe, 'saison' => $saison]); 
+            
+        if (!$pivot) { 
+            $pivot = new GroupeReferentSaison(); 
+            $pivot->setGroupe($groupe); 
+            $pivot->setSaison($saison); 
+            $em->persist($pivot); 
+        } 
+        $user = $em->getRepository(User::class)->find($referentId); 
+        $pivot->setReferent($user);
     }
-                                                                                                    
-    // ajout buttons EXPORTER (CVS = tableau) avec fichier ExportController.php
-    public function configureActions(Actions $actions): Actions
+
+    public function deleteEntity(EntityManagerInterface $em, $entityInstance): void
     {
-        return $actions
-            ->add(Crud::PAGE_INDEX, Action::new('export_groupes', 'Exporter Groupes')
-                ->linkToRoute('export_groupes')
-                ->createAsGlobalAction())                
+        $saison = $this->getSaisonCourante();
 
-            ->add(Crud::PAGE_INDEX, Action::new('export_mails_membres', 'Exporter mails membres')
-                ->linkToRoute('export_mails_membres')
-                ->createAsGlobalAction())
+        $adhesions = $entityInstance->getAdhesions()->filter(
+            fn($a) => $a->getSaison() === $saison
+        );
 
-            ->add(Crud::PAGE_INDEX, Action::new('export_mails_referents', 'Exporter mails référents')
-                ->linkToRoute('export_mails_referents')
-                ->createAsGlobalAction());
+        if (count($adhesions) > 0) {
+            $this->addFlash('warning','[ ⚠️ Impossible de supprimer ce groupe : il a des adhésions pour la saison en cours ]');
+            return;
+        }
+
+        parent::deleteEntity($em, $entityInstance);
     }
 }
 

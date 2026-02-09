@@ -13,36 +13,27 @@ class SaisonContext
         private SaisonRepository $saisonRepository
     ) {}
 
-    public function getSaison(): Saison
+    public function getSaison(): ?Saison
     {
         $request = $this->requestStack->getCurrentRequest();
         $session = $request->getSession();
 
-        // Si l’utilisateur change la saison via ?saison=ID
+        // Si l’admin change la saison via ?saison=ID
         if ($request->query->get('saison')) {
             $session->set('saisonCourante', $request->query->get('saison'));
         }
 
-        // Saison choisie en session
+        // Saison en session
         if ($session->has('saisonCourante')) {
-            $saison = $this->saisonRepository->find($session->get('saisonCourante'));
-            if ($saison) {
-            return $saison;
+            return $this->saisonRepository->find($session->get('saisonCourante'));
         }
+
+        // Aucune saison choisie → on renvoie null
+        return null;
     }
 
-    // Sinon : saison courante selon la date du jour
-    $saison = $this->saisonRepository->findSaisonCourante();
-    if ($saison) {
-        $session->set('saisonCourante', $saison->getId());
-        return $saison;
+    public function getAll(): array
+    {
+        return $this->saisonRepository->findBy([], ['dateDebut' => 'DESC']);
     }
-
-    // Fallback : dernière saison créée
-    $saison = $this->saisonRepository->findOneBy([], ['dateDebut' => 'DESC']);
-    $session->set('saisonCourante', $saison->getId());
-
-    return $saison;
-}
-
 }

@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\User;
 use App\Entity\Adhesion; 
 use App\Entity\Saison;
+use App\Service\SaisonContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -31,12 +32,18 @@ class UserCrudController extends AbstractCrudController
         return User::class;
     }
 
-    public function __construct(private UserPasswordHasherInterface $passwordHasher) {}
+    public function __construct(
+    private UserPasswordHasherInterface $passwordHasher,
+    private SaisonContext $saisonContext
+) {}
+
+    // public function __construct(private UserPasswordHasherInterface $passwordHasher) {}
 
     public function configureFields(string $pageName): iterable
     {
         return [
             IdField::new('id')->hideOnForm(),
+
             ChoiceField::new('roles')
                 ->setLabel('Rôles')
                 ->setChoices([
@@ -54,18 +61,7 @@ class UserCrudController extends AbstractCrudController
             TextField::new('nom'),
             EmailField::new('email'),
             TextField::new('telephone'),
-            
             AssociationField::new('groupe', 'Groupe'),
-
-            // "je suis référent" non modifiable dans userAdmin car user n'est pas propriétaire de la relation/ 
-            // c'est groupe qui est owning side
-            BooleanField::new('groupeReferent', 'Je suis référent') 
-                ->onlyOnIndex()
-                ->renderAsSwitch(false)
-                ->formatValue(function ($value, User $user) {
-                    return $user->getGroupeReferent() !== null;
-                }),
-            
             TextField::new('adresse'),
             TextField::new('codePostal'),
             TextField::new('ville'),
@@ -112,7 +108,7 @@ class UserCrudController extends AbstractCrudController
         public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setPageTitle(Crud::PAGE_INDEX, 'Users <span style="font-weight:lighter;font-size:0.5em">[ ⚠️ impossible de modifier la.e référent.e dans Users - possible dans Groupes ]</span>');
+            ->setPageTitle(Crud::PAGE_INDEX, 'Users');
     }
 
     public function configureActions(Actions $actions): Actions
@@ -124,31 +120,32 @@ class UserCrudController extends AbstractCrudController
 
             ->add(Crud::PAGE_INDEX, Action::new('export_mails_membres', 'Exporter mails membres')
                 ->linkToRoute('export_mails_membres')
-                ->createAsGlobalAction())
-
-            ->add(Crud::PAGE_INDEX, Action::new('export_mails_referents', 'Exporter mails référents')
-                ->linkToRoute('export_mails_referents')
                 ->createAsGlobalAction());
     }
 
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void 
     { 
         if ($entityInstance instanceof User) { 
-            // 1. Récupérer la saison "active" = la plus récente 
+            // 1. Saison active = dernière créée
             $saisonActive = $entityManager->getRepository(Saison::class) 
-                ->findOneBy([], ['dateCreation' => 'DESC']); 
+                ->findOneBy([], ['id' => 'DESC']); 
+
             if ($saisonActive) { 
                 // 2. Récupérer l’adhésion du user pour cette saison 
                 $adhesion = $entityManager->getRepository(Adhesion::class) 
-                    ->findOneBy([ 'user' => $entityInstance, 'saison' => $saisonActive, ]); 
+                    ->findOneBy([
+                        'user' => $entityInstance,
+                        'saison' => $saisonActive,
+                    ]); 
 
-            // 3. Si une adhésion existe → mettre à jour son groupe 
-            if ($adhesion) { 
-                $adhesion->setGroupe($entityInstance->getGroupe()); 
-                $entityManager->persist($adhesion); 
+                // 3. Si une adhésion existe → mettre à jour son groupe 
+                if ($adhesion) { 
+                    $adhesion->setGroupe($entityInstance->getGroupe()); 
+                    $entityManager->persist($adhesion); 
+                } 
             } 
-        } 
-    } parent::updateEntity($entityManager, $entityInstance); 
+        }
+        parent::updateEntity($entityManager, $entityInstance); 
     }
 }
 

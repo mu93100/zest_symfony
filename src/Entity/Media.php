@@ -60,6 +60,9 @@ class Media
     #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: true)]
     private ?Ressource $ressource = null;
 
+    #[ORM\ManyToOne(inversedBy: 'medias')] 
+    private ?Pole $pole = null;
+
     // ---------------- GETTERS / SETTERS ----------------
     public function getId(): ?int
     {
@@ -175,8 +178,18 @@ class Media
         return $this;
     }
 
+    public function getPole(): ?Pole 
+    { 
+        return $this->pole; 
+    } 
+    
+    public function setPole(?Pole $pole): static 
+    { 
+        $this->pole = $pole; return $this; 
+    }
+
     public function __toString(): string
-{
-    return $this->nomFichier ?? 'Media';
-}
+    {
+        return $this->nomFichier ?? 'Media';
+    }
 }

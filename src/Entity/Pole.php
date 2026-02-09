@@ -23,11 +23,15 @@ class Pole
     #[ORM\Column(type: Types::TEXT)]
     private ?string $descriptif = null;
 
-    #[ORM\Column(length: 255, nullable: true)] // avec , nullable: true -> on force la base a avoir la colonne descriptif_pdf possiblement NULL, sinon NOT NULL
+    #[ORM\Column(length: 255, nullable: true)] // avec nullable: true -> on force la base a avoir la colonne descriptif_pdf possiblement NULL, sinon NOT NULL
     private ?string $descriptif_pdf = null;
 
     #[ORM\Column]
     private ?int $volume_horaire = null;
+
+    //---------------- CHAMPS D’UPLOAD pour champ plusieurs fichiers (non mappés) 
+    /** * @var UploadedFile[] */ 
+    private array $fichiers = [];
 
     //----------------r e l a t i o n s  ManyToMany  
     /**
@@ -42,12 +46,19 @@ class Pole
     #[ORM\ManyToMany(targetEntity: Adhesion::class, mappedBy: 'poles')]
     private Collection $adhesions;
 
+    //---------------- r e l a t i o n s  OneToMany
+    /**
+     * @var Collection<int, Media>
+     */
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'pole', cascade: ['persist', 'remove'], orphanRemoval: true )]
+    private Collection $medias;
 
-
+    //---------------- c o n s t r u c t e u r
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->adhesions = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     
@@ -105,6 +116,16 @@ class Pole
         return $this;
     }
 
+        public function getFichiers(): array 
+    { 
+        return $this->fichiers; 
+    } 
+    public function setFichiers(array $fichiers): self 
+    { 
+        $this->fichiers = $fichiers; 
+        return $this; 
+    }
+
     /**
      * @return Collection<int, User>
      */
@@ -130,5 +151,56 @@ class Pole
         }
 
         return $this;
+    }
+
+    public function getAdhesions(): Collection
+    {
+        return $this->adhesions;
+    }
+
+    public function addAdhesion(Adhesion $adhesion): self
+    {
+        if (!$this->adhesions->contains($adhesion)) {
+            $this->adhesions->add($adhesion);
+            $adhesion->addPole($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdhesion(Adhesion $adhesion): self
+    {
+        if ($this->adhesions->removeElement($adhesion)) {
+            $adhesion->removePole($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Media> 
+     */ 
+    public function getMedias(): Collection 
+    { 
+        return $this->medias; 
+    } 
+    
+    public function addMedia(Media $media): static 
+    { 
+        if (!$this->medias->contains($media)) { 
+            $this->medias->add($media); 
+            $media->setPole($this); 
+        } 
+        return $this; 
+    } 
+    
+    public function removeMedia(Media $media): static 
+    { 
+        if ($this->medias->removeElement($media)) { 
+            if ($media->getPole() === $this) { 
+                $media->setPole(null);  
+            } 
+        } 
+        return $this; 
     }
 }

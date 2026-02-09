@@ -37,7 +37,7 @@ class Producteurice
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
-    //---------------- CHAMPS D’UPLOAD pour photos+logo (non mappés) 
+    //---------------- CHAMPS D’UPLOAD pour champ plusieurs photos (non mappés) 
     /** 
      * @var UploadedFile[] 
      */ 

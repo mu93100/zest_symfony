@@ -103,10 +103,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Adhesion::class, cascade: ['persist', 'remove'])]
     private Collection $adhesions;
-
-//-----------------r e l a t i o n   OneToOne
-    #[ORM\OneToOne(targetEntity: Groupe::class, mappedBy: 'referent')]
-    private ?Groupe $groupeReferent = null;
+    /**
+     * @var Collection<int, GroupeReferentSaison>
+     */
+    #[ORM\OneToMany(targetEntity: GroupeReferentSaison::class, mappedBy: 'referent')]
+    private Collection $groupeReferentSaisons;
 
 
 
@@ -117,6 +118,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->pole = new ArrayCollection();
         $this->ressource = new ArrayCollection();
         $this->adhesions = new ArrayCollection();
+        $this->groupeReferentSaisons = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -431,20 +433,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     public function removeGroupe(): self
-{
-    $this->groupe = null;
-    return $this;
-}
-
-    // Pour être référent d'un groupe (optionnel)
-    public function getGroupeReferent(): ?Groupe
     {
-        return $this->groupeReferent;
+        $this->groupe = null;
+        return $this;
     }
 
-    public function setGroupeReferent(?Groupe $groupeReferent): self
+    /**
+     * @return Collection<int, GroupeReferentSaison>
+     */
+    public function getGroupeReferentSaisons(): Collection
     {
-        $this->groupeReferent = $groupeReferent;
+        return $this->groupeReferentSaisons;
+    }
+
+    public function addGroupeReferentSaison(GroupeReferentSaison $groupeReferentSaison): static
+    {
+        if (!$this->groupeReferentSaisons->contains($groupeReferentSaison)) {
+            $this->groupeReferentSaisons->add($groupeReferentSaison);
+            $groupeReferentSaison->setReferent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupeReferentSaison(GroupeReferentSaison $groupeReferentSaison): static
+    {
+        if ($this->groupeReferentSaisons->removeElement($groupeReferentSaison)) {
+            // set the owning side to null (unless already changed)
+            if ($groupeReferentSaison->getReferent() === $this) {
+                $groupeReferentSaison->setReferent(null);
+            }
+        }
+
         return $this;
     }
 

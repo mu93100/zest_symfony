@@ -21,7 +21,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Validator\Constraints\GroupeObligatoire;
 
 
-
 class CompteFormType extends AbstractType
 {
     private EntityManagerInterface $em;

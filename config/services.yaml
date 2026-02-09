@@ -17,13 +17,6 @@ services:
     App\:
         resource: '../src/'
 
-    # R A J O U T S
-    # extension twig pour {{ saison_actuelle() }} ou un filtre |saison
-    App\Twig\SaisonExtension:
-        arguments:
-            - '@App\Repository\SaisonRepository'
-            - '@request_stack'
-        tags: ['twig.extension']
 
     # pour possibilité ajout uploads multiples avec bundle VichUploader
     # App\EventListener\MediaMultipleUploadSubscriber:

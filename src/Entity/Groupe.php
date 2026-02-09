@@ -31,6 +31,9 @@ class Groupe
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $adresseDistrib = null;
 
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $codePostal = null;
+
     #[ORM\Column(length: 45)]
     private ?string $ville = null;
 
@@ -52,6 +55,12 @@ class Groupe
     #[ORM\JoinColumn(name:'referent_id', referencedColumnName:'id', nullable: true)]
     private ?User $referent = null;
 
+    /**
+     * @var Collection<int, GroupeReferentSaison>
+     */
+    #[ORM\OneToMany(targetEntity: GroupeReferentSaison::class, mappedBy: 'groupe')]
+    private Collection $groupeReferentSaisons;
+
 
 
 
@@ -60,6 +69,7 @@ class Groupe
         $this->membres = new ArrayCollection();
         $this->dateCreation = new \DateTimeImmutable();
         $this->adhesions = new ArrayCollection();
+        $this->groupeReferentSaisons = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -88,6 +98,18 @@ class Groupe
     {
         $this->adresseDistrib = $adresseDistrib;
 
+        return $this;
+    }
+
+    public function getCodePostal(): ?string
+    {
+        return $this->codePostal;
+    }
+
+    public function setCodePostal(?string $codePostal): self
+    {
+        $this->codePostal = $codePostal;
+        
         return $this;
     }
 
@@ -190,6 +212,36 @@ public function setReferent(?User $referent): self
         if ($this->adhesions->removeElement($adhesion)) {
             if ($adhesion->getGroupe() === $this) {
                 $adhesion->setGroupe(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GroupeReferentSaison>
+     */
+    public function getGroupeReferentSaisons(): Collection
+    {
+        return $this->groupeReferentSaisons;
+    }
+
+    public function addGroupeReferentSaison(GroupeReferentSaison $groupeReferentSaison): static
+    {
+        if (!$this->groupeReferentSaisons->contains($groupeReferentSaison)) {
+            $this->groupeReferentSaisons->add($groupeReferentSaison);
+            $groupeReferentSaison->setGroupe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupeReferentSaison(GroupeReferentSaison $groupeReferentSaison): static
+    {
+        if ($this->groupeReferentSaisons->removeElement($groupeReferentSaison)) {
+            // set the owning side to null (unless already changed)
+            if ($groupeReferentSaison->getGroupe() === $this) {
+                $groupeReferentSaison->setGroupe(null);
             }
         }
 

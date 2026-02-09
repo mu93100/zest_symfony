@@ -58,7 +58,7 @@ class ProduitCrudController extends AbstractCrudController
 
             // ------------------ M E D I A S ------------------
             // champ miniature photo_principale en INDEX
-            TextField::new('nom', 'Photo')
+            TextField::new('descriptif_pdf', 'Descriptif fichier')
                 ->formatValue(function ($value, $produit) {
                     $media = $produit->getMedias()
                         ->filter(fn($m) => $m->getRole() === 'photo_principale')
