@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
@@ -29,6 +30,7 @@ class PoleCrudController extends AbstractCrudController
 
             TextField::new('nom', 'Nom'),
 
+            IntegerField::new('volumeHoraire', 'Volume horaire annuel'),
             TextEditorField::new('descriptif', 'Descriptif')
                 ->setTemplatePath('admin/fields/text_editor.html.twig'),
 
