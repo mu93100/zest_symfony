@@ -52,10 +52,13 @@ class GroupeCrudController extends AbstractCrudController
         $nomSaison = $saison ? $saison->getNom() : '—';
 
         return $crud
-            ->setPageTitle(Crud::PAGE_INDEX, 'Adhésions')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Groupes')
             ->setPageTitle(
                 Crud::PAGE_INDEX,
-                'Adhésions ' . $nomSaison
+                sprintf(
+                    'Groupes %s <span style="font-weight:lighter;font-size:0.5em"> [ ⚠️ impossible de modifier la liste des membres dans Groupes - modifier dans Users ]</span>',
+                    $nomSaison
+                )
             );
     }
 

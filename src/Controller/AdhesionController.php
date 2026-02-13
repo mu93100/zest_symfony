@@ -35,12 +35,12 @@ final class AdhesionController extends AbstractController
         $adhesion = new Adhesion();
         $adhesion->setPaiementValide(false);
         // ------------- Saison en cours
-        $saisonEnCours = $saisonRepository->findSaisonCourante();
+        $saisonEnCours = $this->saisonContext->getSaison();
 
         if ($saisonEnCours) {
             $adhesion->setSaison($saisonEnCours);
         } else{
-            $this->addFlash("[ Impossible d'adhérer pour la saison actuelle. Merci de contacter <strong>adhesion@corto-zest.org</strong> ]"); 
+            $this->addFlash('danger',"[ Impossible d'adhérer pour la saison actuelle. Merci de contacter <strong>adhesion@corto-zest.org</strong> ]"); 
             return $this->redirectToRoute('app_accueil');
         }
 

@@ -2,34 +2,37 @@
 
 namespace App\Service;
 
-use Symfony\Component\HttpFoundation\RequestStack;
 use App\Repository\SaisonRepository;
 use App\Entity\Saison;
 
 class SaisonContext
 {
+    private ?Saison $saison = null;
+
     public function __construct(
-        private RequestStack $requestStack,
         private SaisonRepository $saisonRepository
     ) {}
 
     public function getSaison(): ?Saison
     {
-        $request = $this->requestStack->getCurrentRequest();
-        $session = $request->getSession();
-
-        // Si l’admin change la saison via ?saison=ID
-        if ($request->query->get('saison')) {
-            $session->set('saisonCourante', $request->query->get('saison'));
+        // Si déjà définie → OK
+        if ($this->saison) {
+            return $this->saison;
         }
 
-        // Saison en session
-        if ($session->has('saisonCourante')) {
-            return $this->saisonRepository->find($session->get('saisonCourante'));
+        // Sinon → dernière saison en base
+        $last = $this->saisonRepository->findOneBy([], ['dateDebut' => 'DESC']);
+
+        if ($last) {
+            $this->saison = $last;
         }
 
-        // Aucune saison choisie → on renvoie null
-        return null;
+        return $this->saison;
+    }
+
+    public function setSaison(?Saison $saison): void
+    {
+        $this->saison = $saison;
     }
 
     public function getAll(): array
