@@ -21,22 +21,12 @@ security:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
-                default_target_path: app_ajout_recette  # redirection pour ajout recette
+                use_referer: true  # pour rester sur la meme page apres connexion
+                #  éventuellement pour redirection : default_target_path: app_page de redirection 
 
             logout:
                 path: /logout 
-                # A V A N T. path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
-
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
+                
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
